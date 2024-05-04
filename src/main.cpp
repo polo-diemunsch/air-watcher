@@ -36,5 +36,10 @@ int main() {
         cout << attribute << endl;
     }
 
+    for (const Sensor & sensor : analyzer.GetSensors())
+    {
+        cout << sensor << endl;
+    }
+
     return EXIT_SUCCESS;
 } //----- fin de main
