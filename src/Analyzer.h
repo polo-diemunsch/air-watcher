@@ -17,6 +17,8 @@ using namespace std;
 #include <vector>
 
 #include "Attribute.h"
+#include "Sensor.h"
+#include "Measurement.h"
 
 //------------------------------------------------------------- Constantes
 
@@ -35,6 +37,12 @@ class Analyzer
 public:
 //----------------------------------------------------- Méthodes publiques
     vector<Attribute> GetMeasurementsAttributes ( );
+    // Mode d'emploi :
+    // 
+    // Contrat :
+    // 
+
+    vector<Sensor> GetSensors ( );
     // Mode d'emploi :
     // 
     // Contrat :
@@ -66,8 +74,15 @@ protected:
     // Contrat :
     //
 
+    void parseSensors ( const string sensorsPath );
+    // Mode d'emploi :
+    //
+    // Contrat :
+    //
+
 //----------------------------------------------------- Attributs protégés
     unordered_map<string, Attribute> attributes;
+    unordered_map<string, Sensor> sensors;
 
 };
 
