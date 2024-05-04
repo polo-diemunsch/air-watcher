@@ -22,12 +22,12 @@ using namespace std;
 //----------------------------------------------------------------- PUBLIC
 
 //----------------------------------------------------- Méthodes publiques
-string Attribute::GetID ( ) const
+string Attribute::GetId ( ) const
 // Algorithme :
 //
 {
     return id;
-} //----- Fin de GetID
+} //----- Fin de GetId
 
 string Attribute::GetUnit ( ) const
 // Algorithme :

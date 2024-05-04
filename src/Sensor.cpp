@@ -69,12 +69,12 @@ void Sensor::AddMeasurement ( Measurement & measurement )
 // Algorithme :
 //
 {
-    string attributeID = measurement.GetAttribute().GetID();
-    if (!measurements.count(attributeID)) {
+    string attributeId = measurement.GetAttribute().GetId();
+    if (!measurements.count(attributeId)) {
         map<time_t, Measurement> measurementsWithAttribute;
-        measurements.insert({attributeID, measurementsWithAttribute});
+        measurements.insert({attributeId, measurementsWithAttribute});
     }
-    measurements[attributeID].insert({measurement.GetTimestamp(), measurement});
+    measurements[attributeId].insert({measurement.GetTimestamp(), measurement});
 } //----- Fin de AddMeasurement
 
 

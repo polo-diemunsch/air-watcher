@@ -30,7 +30,7 @@ class Attribute
 
 public:
 //----------------------------------------------------- Méthodes publiques
-    string GetID ( ) const;
+    string GetId ( ) const;
     // Mode d'emploi :
     //
     // Contrat :
