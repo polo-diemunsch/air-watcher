@@ -48,16 +48,15 @@ public:
     // Contrat :
     //
 
-
 //------------------------------------------------- Surcharge d'opérateurs
-    friend ostream & operator << (ostream &, const Attribute &);
+    friend ostream & operator << (ostream & out, const Attribute & attribute);
     // Mode d'emploi :
     //
     // Contrat :
     //
 
 //-------------------------------------------- Constructeurs - destructeur
-    Attribute ( const string id, const string unit, const string description );
+    Attribute ( const string & id, const string & unit, const string & description );
     // Mode d'emploi :
     //
     // Contrat :
@@ -75,9 +74,9 @@ protected:
 //----------------------------------------------------- Méthodes protégées
 
 //----------------------------------------------------- Attributs protégés
-    string id;
-    string unit;
-    string description;
+    const string id;
+    const string unit;
+    const string description;
 };
 
 //-------------------------------- Autres définitions dépendantes de <Attribute>

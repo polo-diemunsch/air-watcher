@@ -49,12 +49,12 @@ ostream & operator << (ostream & out, const Attribute & attribute)
 // Algorithme :
 //
 {
-    out << attribute.id << " " << attribute.unit << " " << attribute.description;
+    out << "Attribute(id: " << attribute.id << ", unit: " << attribute.unit << ", description: " << attribute.description << ")";
     return out;
 } //----- Fin de operator <<
 
 //-------------------------------------------- Constructeurs - destructeur
-Attribute::Attribute ( const string id, const string unit, const string description ) :
+Attribute::Attribute ( const string & id, const string & unit, const string & description ) :
 id(id), unit(unit), description(description)
 // Algorithme :
 //
