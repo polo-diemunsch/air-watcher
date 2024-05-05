@@ -24,7 +24,7 @@ using namespace std;
 //----------------------------------------------------------------- PUBLIC
 
 //----------------------------------------------------- Méthodes publiques
-vector<Attribute> Analyzer::GetMeasurementsAttributes ( )
+vector<Attribute> Analyzer::GetMeasurementsAttributes ( ) const
 // Algorithme :
 //
 {
@@ -39,7 +39,7 @@ vector<Attribute> Analyzer::GetMeasurementsAttributes ( )
     return result;
 } //----- Fin de GetMeasurementsAttributes
 
-vector<Sensor> Analyzer::GetSensors ( )
+vector<Sensor> Analyzer::GetSensors ( ) const
 // Algorithme :
 //
 {
@@ -54,7 +54,7 @@ vector<Sensor> Analyzer::GetSensors ( )
     return result;
 } //----- Fin de GetSensors
 
-vector<PrivateIndividual> Analyzer::GetPrivateIndividuals ( )
+vector<PrivateIndividual> Analyzer::GetPrivateIndividuals ( ) const
 // Algorithme :
 //
 {
@@ -69,7 +69,7 @@ vector<PrivateIndividual> Analyzer::GetPrivateIndividuals ( )
     return result;
 } //----- Fin de GetPrivateIndividuals
 
-vector<Cleaner> Analyzer::GetCleaners ( )
+vector<Cleaner> Analyzer::GetCleaners ( ) const
 // Algorithme :
 //
 {
@@ -83,6 +83,21 @@ vector<Cleaner> Analyzer::GetCleaners ( )
 
     return result;
 } //----- Fin de GetCleaners
+
+vector<Provider> Analyzer::GetProviders ( ) const
+// Algorithme :
+//
+{
+    vector<Provider> result;
+    result.reserve(providers.size());
+
+    for (const auto& element : providers)
+    {
+        result.push_back(element.second);
+    }
+
+    return result;
+} //----- Fin de GetProviders
 
 
 //------------------------------------------------- Surcharge d'opérateurs
@@ -101,6 +116,7 @@ Analyzer::Analyzer ( const string sensorsPath, const string attributesPath, cons
     parseMeasurements(measurementsPath);
     parsePrivateIndividuals(privateIndividualsPath);
     parseCleaners(cleanersPath);
+    parseProviders(providersPath);
 } //----- Fin de Analyzer
 
 
@@ -244,7 +260,7 @@ void Analyzer::parseMeasurements ( const string measurementsPath )
     }
 } //----- Fin de parseMeasurements
 
-void Analyzer::parsePrivateIndividuals( const string privateIndividualsPath )
+void Analyzer::parsePrivateIndividuals ( const string privateIndividualsPath )
 // Algorithme :
 //
 {
@@ -344,3 +360,63 @@ void Analyzer::parseCleaners ( const string cleanersPath )
         }
     }
 } //----- Fin de parseCleaners
+
+void Analyzer::parseProviders ( const string providersPath )
+// Algorithme :
+//
+{
+    ifstream providersFile(providersPath);
+
+    string line;
+    smatch match;
+    const regex measurementPattern("^([^;]+);([^;]+);$");
+
+    string providerId, cleanerId;
+    Provider * providerPointer;
+
+    while (getline(providersFile, line))
+    {
+        if (line.back() == '\r')
+        {
+            line.pop_back();
+        }
+        if (regex_match(line, match, measurementPattern))
+        {
+            providerId = match[1];
+            cleanerId = match[2];
+
+            unordered_map<string, Provider>::iterator providerIterator = providers.find(providerId);
+            if (providerIterator == providers.end())
+            {
+                Provider provider(providerId);
+                providerIterator = providers.insert({providerId, provider}).first;
+            }
+            providerPointer = &(providerIterator->second);
+
+            unordered_map<string, Cleaner>::iterator cleanersIterator = cleaners.find(cleanerId);
+            if (cleanersIterator != cleaners.end())
+            {
+                if (cleanersIterator->second.GetProvider() == nullptr)
+                {
+                    cleanersIterator->second.SetProvider(providerPointer);
+                    providerPointer->AddCleaner(cleanersIterator->second);
+                }
+                else
+                {
+                    cerr << "Warning: cleaner " << cleanerId << " already has a provider ("
+                         << cleanersIterator->second.GetProvider()->GetId()
+                         << "), provider cleaner relation ignored: " << line << endl;
+                }
+            }
+            else
+            {
+                cerr << "Warning: unknown cleaner : " << cleanerId
+                     << ", provider cleaner relation ignored: " << line << endl;
+            }
+        }
+        else
+        {
+            cerr << "Warning: invalid provider cleaner relation ignored: " << line << endl;
+        }
+    }
+} //----- Fin de parseProviders

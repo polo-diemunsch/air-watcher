@@ -20,6 +20,7 @@
 #include "Measurement.h"
 #include "PrivateIndividual.h"
 #include "Cleaner.h"
+#include "Provider.h"
 
 //------------------------------------------------------------- Constantes
 
@@ -37,25 +38,31 @@ class Analyzer
 
 public:
 //----------------------------------------------------- Méthodes publiques
-    vector<Attribute> GetMeasurementsAttributes ( );
+    vector<Attribute> GetMeasurementsAttributes ( ) const;
     // Mode d'emploi :
     // 
     // Contrat :
     // 
 
-    vector<Sensor> GetSensors ( );
+    vector<Sensor> GetSensors ( ) const;
     // Mode d'emploi :
     // 
     // Contrat :
     // 
 
-    vector<PrivateIndividual> GetPrivateIndividuals ( );
+    vector<PrivateIndividual> GetPrivateIndividuals ( ) const;
     // Mode d'emploi :
     // 
     // Contrat :
     // 
 
-    vector<Cleaner> GetCleaners ( );
+    vector<Cleaner> GetCleaners ( ) const;
+    // Mode d'emploi :
+    // 
+    // Contrat :
+    // 
+
+    vector<Provider> GetProviders ( ) const;
     // Mode d'emploi :
     // 
     // Contrat :
@@ -111,11 +118,18 @@ protected:
     // Contrat :
     //
 
+    void parseProviders ( const string providersPath );
+    // Mode d'emploi :
+    //
+    // Contrat :
+    //
+
 //----------------------------------------------------- Attributs protégés
     unordered_map<string, Attribute> attributes;
     unordered_map<string, Sensor> sensors;
     unordered_map<string, PrivateIndividual> privateIndividuals;
     unordered_map<string, Cleaner> cleaners;
+    unordered_map<string, Provider> providers;
 };
 
 //-------------------------------- Autres définitions dépendantes de <Analyzer>
