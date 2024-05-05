@@ -19,7 +19,8 @@ using namespace std;
 
 //----------------------------------------------------------------- PUBLIC
 
-int main() {
+int main()
+{
     // TODO config file
     string sensorsPath = "dataset/sensors.csv";
     string attributesPath = "dataset/attributes.csv";
@@ -35,11 +36,19 @@ int main() {
     {
         cout << attribute << endl;
     }
+    cout << analyzer.GetMeasurementsAttributes().size() << " measurements attributes" << endl;
 
+    long measurementsCount = 0;
     for (const Sensor & sensor : analyzer.GetSensors())
     {
         cout << sensor << endl;
+        for (const auto& measurementsWithAttribute : sensor.GetMeasurements())
+        {
+            measurementsCount += measurementsWithAttribute.second.size();
+        }
     }
+    cout << analyzer.GetSensors().size() << " sensors\n"
+         << measurementsCount << " measurements" << endl;
 
     return EXIT_SUCCESS;
 } //----- fin de main
