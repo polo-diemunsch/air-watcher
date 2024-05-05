@@ -55,11 +55,11 @@ bool Sensor::GetIsFunctioning ( ) const
     return isFunctioning;
 } //----- Fin de GetIsFunctioning
 
-void Sensor::SetIsFunctioning ( bool isFuntioning_ )
+void Sensor::SetIsFunctioning ( bool isFunctioning_ )
 // Algorithme :
 //
 {
-    isFunctioning = isFuntioning_;
+    isFunctioning = isFunctioning_;
 } //----- Fin de SetIsFunctioning
 
 void Sensor::AddMeasurement ( Measurement & measurement )
