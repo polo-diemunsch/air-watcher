@@ -55,6 +55,12 @@ int main()
         cout << privateIndividual << endl;
     }
     cout << analyzer.GetPrivateIndividuals().size() << " private individuals" << endl;
+    
+    for (const Cleaner & cleaner : analyzer.GetCleaners())
+    {
+        cout << cleaner << endl;
+    }
+    cout << analyzer.GetCleaners().size() << " cleaners" << endl;
 
     return EXIT_SUCCESS;
 } //----- fin de main
