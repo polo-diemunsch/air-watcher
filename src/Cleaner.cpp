@@ -16,6 +16,7 @@ using namespace std;
 
 //------------------------------------------------------ Include personnel
 #include "Cleaner.h"
+# include "Provider.h"
 
 //------------------------------------------------------------- Constantes
 
@@ -86,7 +87,17 @@ ostream & operator << (ostream & out, const Cleaner & cleaner)
 {
     out << "Cleaner(id: " << cleaner.id<< ", latitude: " << cleaner.latitude << ", longitude: " << cleaner.longitude
         << ", startDate: " << cleaner.startDate << ", endDate: " << cleaner.endDate             // TODO format time_t (see measurement too)
-        << ")";
+        << ", provider: ";
+    if (cleaner.provider != nullptr)
+    {
+        out << *(cleaner.provider);
+    }
+    else
+    {
+        out << "None";
+    }
+    out << ")";
+
     return out;
 } //----- Fin de operator <<
 
