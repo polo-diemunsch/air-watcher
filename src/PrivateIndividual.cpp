@@ -80,7 +80,7 @@ void PrivateIndividual::AddPoints ( long pointsToAdd )
 
 
 //------------------------------------------------- Surcharge d'opérateurs
-ostream & operator << (ostream & out, const PrivateIndividual & privateIndividual)
+ostream & operator << ( ostream & out, const PrivateIndividual & privateIndividual )
 // Algorithme :
 //
 {

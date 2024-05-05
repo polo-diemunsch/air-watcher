@@ -51,7 +51,7 @@ public:
     //
 
 //------------------------------------------------- Surcharge d'opérateurs
-    friend ostream & operator << (ostream & out, const Measurement & measurement);
+    friend ostream & operator << ( ostream & out, const Measurement & measurement );
     // Mode d'emploi :
     //
     // Contrat :

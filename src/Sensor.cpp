@@ -136,7 +136,7 @@ vector<Measurement> Sensor::GetMeasurementsWithAttributeWithinDateRange ( const 
 
 
 //------------------------------------------------- Surcharge d'opérateurs
-ostream & operator << (ostream & out, const Sensor & sensor)
+ostream & operator << ( ostream & out, const Sensor & sensor )
 // Algorithme :
 //
 {

@@ -87,7 +87,7 @@ public:
     //
 
 //------------------------------------------------- Surcharge d'opérateurs
-    friend ostream & operator << (ostream & out, const Cleaner & cleaner);
+    friend ostream & operator << ( ostream & out, const Cleaner & cleaner );
     // Mode d'emploi :
     //
     // Contrat :

@@ -45,7 +45,7 @@ string Attribute::GetDescription ( ) const
 
 
 //------------------------------------------------- Surcharge d'opérateurs
-ostream & operator << (ostream & out, const Attribute & attribute)
+ostream & operator << ( ostream & out, const Attribute & attribute )
 // Algorithme :
 //
 {

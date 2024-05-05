@@ -45,7 +45,7 @@ double Measurement::GetValue ( ) const
 
 
 //------------------------------------------------- Surcharge d'opérateurs
-ostream & operator << (ostream & out, const Measurement & measurement)
+ostream & operator << ( ostream & out, const Measurement & measurement )
 // Algorithme :
 //
 {

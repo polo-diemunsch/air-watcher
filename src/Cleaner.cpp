@@ -81,7 +81,7 @@ void Cleaner::SetProvider ( const Provider * providerPointer )
 
 
 //------------------------------------------------- Surcharge d'opérateurs
-ostream & operator << (ostream & out, const Cleaner & cleaner)
+ostream & operator << ( ostream & out, const Cleaner & cleaner )
 // Algorithme :
 //
 {

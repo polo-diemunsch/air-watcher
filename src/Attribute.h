@@ -48,7 +48,7 @@ public:
     //
 
 //------------------------------------------------- Surcharge d'opérateurs
-    friend ostream & operator << (ostream & out, const Attribute & attribute);
+    friend ostream & operator << ( ostream & out, const Attribute & attribute );
     // Mode d'emploi :
     //
     // Contrat :

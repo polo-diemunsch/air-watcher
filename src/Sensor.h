@@ -109,7 +109,7 @@ public:
     //
 
 //------------------------------------------------- Surcharge d'opérateurs
-    friend ostream & operator << (ostream & out, const Sensor & sensor);
+    friend ostream & operator << ( ostream & out, const Sensor & sensor );
     // Mode d'emploi :
     //
     // Contrat :
