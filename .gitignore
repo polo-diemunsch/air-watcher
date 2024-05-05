@@ -1,4 +1,5 @@
 .vscode
 dataset
 air-watcher
+SClasse.*
 *.o
