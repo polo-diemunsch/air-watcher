@@ -67,6 +67,7 @@ Analyzer::Analyzer ( const string sensorsPath, const string attributesPath, cons
 #endif
     parseAttributes(attributesPath);
     parseSensors(sensorsPath);
+    parseMeasurements(measurementsPath);
 } //----- Fin de Analyzer
 
 
@@ -98,7 +99,8 @@ void Analyzer::parseAttributes ( const string attributesPath )
     getline(attributesFile, line);  // remove first line (column titles)
     while (getline(attributesFile, line))
     {
-        if (line.back() == '\r') {
+        if (line.back() == '\r')
+        {
             line.pop_back();
         }
         if (regex_match(line, match, attributePattern))
@@ -124,18 +126,18 @@ void Analyzer::parseSensors ( const string sensorsPath )
 
     string line;
     smatch match;
-    const regex attributePattern("^([^;]+);([-+]?[0-9]*\\.?[0-9]+);([-+]?[0-9]*\\.?[0-9]+);$");
+    const regex sensorPattern("^([^;]+);([-+]?[0-9]*\\.?[0-9]+);([-+]?[0-9]*\\.?[0-9]+);$");
 
     string id;
     double latitude, longitude;
 
-    getline(sensorsFile, line);  // remove first line (column titles)
     while (getline(sensorsFile, line))
     {
-        if (line.back() == '\r') {
+        if (line.back() == '\r')
+        {
             line.pop_back();
         }
-        if (regex_match(line, match, attributePattern))
+        if (regex_match(line, match, sensorPattern))
         {
             id = match[1];
             latitude = stod(match[2]);
@@ -149,3 +151,61 @@ void Analyzer::parseSensors ( const string sensorsPath )
         }
     }
 } //----- Fin de parseSensors
+
+void Analyzer::parseMeasurements ( const string measurementsPath )
+// Algorithme :
+//
+{
+    ifstream measurementsFile(measurementsPath);
+
+    string line;
+    smatch match;
+    const regex measurementPattern("^([^;]+);([^;]+);([^;]+);([0-9]*\\.?[0-9]+);$");
+
+    time_t timestamp;
+    string sensorId, attributeId;
+    double value;
+
+    while (getline(measurementsFile, line))
+    {
+        if (line.back() == '\r')
+        {
+            line.pop_back();
+        }
+        if (regex_match(line, match, measurementPattern))
+        {
+            struct tm tm;
+            strptime(match[1].str().c_str(), "%Y-%m-%d %H:%M:%S", &tm);
+            timestamp = mktime(&tm);
+            sensorId = match[2];
+            attributeId = match[3];
+            value = stod(match[4]);
+
+            unordered_map<string, Attribute>::iterator attributesIterator = attributes.find(attributeId);
+            if (attributesIterator != attributes.end())
+            {
+                Attribute attribute = attributesIterator->second;
+                unordered_map<string, Sensor>::iterator sensorsIterator = sensors.find(sensorId);
+                if (sensorsIterator != sensors.end())
+                {
+                    Measurement measurement(timestamp, &attribute, value);
+                    sensorsIterator->second.AddMeasurement(measurement);
+                }
+                else
+                {
+                    cerr << "Warning: unknown sensor : " << sensorId
+                         << ", measurement ignored: " << line << endl;
+                }
+            }
+            else
+            {
+                cerr << "Warning: unknown measurement attribute : " << attributeId
+                     << ", measurement ignored: " << line << endl;
+            }
+        }
+        else
+        {
+            cerr << "Warning: invalid measurement ignored: " << line << endl;
+        }
+    }
+} //----- Fin de parseMeasurements

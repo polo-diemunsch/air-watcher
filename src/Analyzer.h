@@ -80,6 +80,12 @@ protected:
     // Contrat :
     //
 
+    void parseMeasurements ( const string measurementsPath );
+    // Mode d'emploi :
+    //
+    // Contrat :
+    //
+
 //----------------------------------------------------- Attributs protégés
     unordered_map<string, Attribute> attributes;
     unordered_map<string, Sensor> sensors;
