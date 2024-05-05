@@ -20,6 +20,8 @@ using namespace std;
 
 #include "Measurement.h"
 
+class PrivateIndividual;
+
 //------------------------------------------------------------- Constantes
 
 //------------------------------------------------------------------ Types
@@ -36,14 +38,19 @@ class Sensor
 
 public:
 //----------------------------------------------------- Méthodes publiques
-    // TODO PrivateIndividual
-    const void * GetPrivateIndividual ( ) const;
+    string GetId ( ) const;
     // Mode d'emploi :
     //
     // Contrat :
     //
 
-    void SetPrivateIndividual ( const void * privateIndividual );
+    const PrivateIndividual * GetPrivateIndividual ( ) const;
+    // Mode d'emploi :
+    //
+    // Contrat :
+    //
+
+    void SetPrivateIndividual ( const PrivateIndividual * privateIndividual );
     // Mode d'emploi :
     //
     // Contrat :
@@ -126,7 +133,7 @@ protected:
     const string id;
     const double latitude;
     const double longitude;
-    const void * privateIndividual;   // TODO PrivateIndividual
+    const PrivateIndividual * privateIndividual;
     unordered_map<string, map<time_t, Measurement>> measurements;
     bool isFunctioning;
 };

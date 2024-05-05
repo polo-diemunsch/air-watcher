@@ -14,24 +14,32 @@
 
 //------------------------------------------------------ Include personnel
 #include "Sensor.h"
+#include "PrivateIndividual.h"
 
 //------------------------------------------------------------- Constantes
 
 //----------------------------------------------------------------- PUBLIC
 
 //----------------------------------------------------- Méthodes publiques
-const void * Sensor::GetPrivateIndividual ( ) const
+string Sensor::GetId ( ) const
+// Algorithme :
+//
+{
+    return id;
+} //----- Fin de GetId
+
+const PrivateIndividual * Sensor::GetPrivateIndividual ( ) const
 // Algorithme :
 //
 {
     return privateIndividual;
 } //----- Fin de GetPrivateIndividual
 
-void Sensor::SetPrivateIndividual ( const void * privateIndividual_ )
+void Sensor::SetPrivateIndividual ( const PrivateIndividual * privateIndividualPointer )
 // Algorithme :
 //
 {
-    privateIndividual = privateIndividual_;
+    privateIndividual = privateIndividualPointer;
 } //----- Fin de SetPrivateIndividual
 
 double Sensor::GetLatitude ( ) const
@@ -129,7 +137,18 @@ ostream & operator << (ostream & out, const Sensor & sensor)
         measurementsCount += measurementsWithAttribute.second.size();
     }
     out << "Sensor(id: " << sensor.id<< ", latitude: " << sensor.latitude << ", longitude: " << sensor.longitude
-        << ", isFunctioning: " << sensor.isFunctioning << ", measurements count: " << measurementsCount << ")";
+        << ", isFunctioning: " << sensor.isFunctioning << ", measurements count: " << measurementsCount
+        << ", privateIndividual: ";
+    if (sensor.privateIndividual != nullptr)
+    {
+        out << *(sensor.privateIndividual);
+    }
+    else
+    {
+        out << "None";
+    }
+    out << ")";
+
     return out;
 } //----- Fin de operator <<
 
@@ -144,6 +163,7 @@ id(id), latitude(latitude), longitude(longitude)
     cout << "Appel au constructeur de <Sensor>" << endl;
 #endif
     isFunctioning = true;
+    privateIndividual = nullptr;
 } //----- Fin de Sensor
 
 
