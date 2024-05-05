@@ -51,7 +51,22 @@ vector<Sensor> Analyzer::GetSensors ( )
     }
 
     return result;
-} //----- Fin de GetMeasurementsAttributes
+} //----- Fin de GetSensors
+
+vector<PrivateIndividual> Analyzer::GetPrivateIndividuals ( )
+// Algorithme :
+//
+{
+    vector<PrivateIndividual> result;
+    result.reserve(privateIndividuals.size());
+
+    for (const auto& element : privateIndividuals)
+    {
+        result.push_back(element.second);
+    }
+
+    return result;
+} //----- Fin de GetPrivateIndividuals
 
 
 //------------------------------------------------- Surcharge d'opérateurs
@@ -68,6 +83,7 @@ Analyzer::Analyzer ( const string sensorsPath, const string attributesPath, cons
     parseAttributes(attributesPath);
     parseSensors(sensorsPath);
     parseMeasurements(measurementsPath);
+    parsePrivateIndividuals(privateIndividualsPath);
 } //----- Fin de Analyzer
 
 
@@ -209,3 +225,63 @@ void Analyzer::parseMeasurements ( const string measurementsPath )
         }
     }
 } //----- Fin de parseMeasurements
+
+void Analyzer::parsePrivateIndividuals( const string privateIndividualsPath )
+// Algorithme :
+//
+{
+    ifstream privateIndividualsFile(privateIndividualsPath);
+
+    string line;
+    smatch match;
+    const regex measurementPattern("^([^;]+);([^;]+);$");
+
+    string privateIndividualId, sensorId;
+    PrivateIndividual * privateIndividualPointer;
+
+    while (getline(privateIndividualsFile, line))
+    {
+        if (line.back() == '\r')
+        {
+            line.pop_back();
+        }
+        if (regex_match(line, match, measurementPattern))
+        {
+            privateIndividualId = match[1];
+            sensorId = match[2];
+
+            unordered_map<string, PrivateIndividual>::iterator privateIndividualIterator = privateIndividuals.find(privateIndividualId);
+            if (privateIndividualIterator == privateIndividuals.end())
+            {
+                PrivateIndividual privateIndividual(privateIndividualId);
+                privateIndividualIterator = privateIndividuals.insert({privateIndividualId, privateIndividual}).first;
+            }
+            privateIndividualPointer = &(privateIndividualIterator->second);
+
+            unordered_map<string, Sensor>::iterator sensorsIterator = sensors.find(sensorId);
+            if (sensorsIterator != sensors.end())
+            {
+                if (sensorsIterator->second.GetPrivateIndividual() == nullptr)
+                {
+                    sensorsIterator->second.SetPrivateIndividual(privateIndividualPointer);
+                    privateIndividualPointer->AddSensor(sensorsIterator->second);
+                }
+                else
+                {
+                    cerr << "Warning: sensor " << sensorId << " already has a private individual ("
+                         << sensorsIterator->second.GetPrivateIndividual()->GetId()
+                         << "), private individual sensor relation ignored: " << line << endl;
+                }
+            }
+            else
+            {
+                cerr << "Warning: unknown sensor : " << sensorId
+                     << ", private individual sensor relation ignored: " << line << endl;
+            }
+        }
+        else
+        {
+            cerr << "Warning: invalid private individual sensor relation ignored: " << line << endl;
+        }
+    }
+} //----- Fin de parsePrivateIndividuals

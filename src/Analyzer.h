@@ -19,6 +19,7 @@ using namespace std;
 #include "Attribute.h"
 #include "Sensor.h"
 #include "Measurement.h"
+#include "PrivateIndividual.h"
 
 //------------------------------------------------------------- Constantes
 
@@ -43,6 +44,12 @@ public:
     // 
 
     vector<Sensor> GetSensors ( );
+    // Mode d'emploi :
+    // 
+    // Contrat :
+    // 
+
+    vector<PrivateIndividual> GetPrivateIndividuals ( );
     // Mode d'emploi :
     // 
     // Contrat :
@@ -86,10 +93,16 @@ protected:
     // Contrat :
     //
 
+    void parsePrivateIndividuals ( const string privateIndividualsPath );
+    // Mode d'emploi :
+    //
+    // Contrat :
+    //
+
 //----------------------------------------------------- Attributs protégés
     unordered_map<string, Attribute> attributes;
     unordered_map<string, Sensor> sensors;
-
+    unordered_map<string, PrivateIndividual> privateIndividuals;
 };
 
 //-------------------------------- Autres définitions dépendantes de <Analyzer>
