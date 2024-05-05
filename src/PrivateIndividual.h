@@ -11,6 +11,7 @@
 #define PRIVATE_INDIVIDUAL_H
 
 //--------------------------------------------------- Interfaces utilisées
+#include <string>
 #include <vector>
 
 #include "Sensor.h"
@@ -32,6 +33,12 @@ class PrivateIndividual
 public:
 //----------------------------------------------------- Méthodes publiques
     string GetId ( ) const;
+    // Mode d'emploi :
+    //
+    // Contrat :
+    //
+
+    vector<Sensor> GetSensors ( ) const;
     // Mode d'emploi :
     //
     // Contrat :
@@ -101,8 +108,8 @@ protected:
 //----------------------------------------------------- Attributs protégés
     const string id;
     vector<Sensor> sensors;
-    long points;
     bool isReliable;
+    long points;
 };
 
 //-------------------------------- Autres définitions dépendantes de <PrivateIndividual>

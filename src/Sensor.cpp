@@ -30,20 +30,6 @@ string Sensor::GetId ( ) const
     return id;
 } //----- Fin de GetId
 
-const PrivateIndividual * Sensor::GetPrivateIndividual ( ) const
-// Algorithme :
-//
-{
-    return privateIndividual;
-} //----- Fin de GetPrivateIndividual
-
-void Sensor::SetPrivateIndividual ( const PrivateIndividual * privateIndividualPointer )
-// Algorithme :
-//
-{
-    privateIndividual = privateIndividualPointer;
-} //----- Fin de SetPrivateIndividual
-
 double Sensor::GetLatitude ( ) const
 // Algorithme :
 //
@@ -57,6 +43,27 @@ double Sensor::GetLongitude ( ) const
 {
     return longitude;
 } //----- Fin de GetLongitude
+
+pair<double, double> Sensor::GetPosition ( ) const
+// Algorithme :
+//
+{
+    return make_pair(latitude, longitude);
+} //----- Fin de GetLongitude
+
+const PrivateIndividual * Sensor::GetPrivateIndividual ( ) const
+// Algorithme :
+//
+{
+    return privateIndividual;
+} //----- Fin de GetPrivateIndividual
+
+void Sensor::SetPrivateIndividual ( const PrivateIndividual * privateIndividualPointer )
+// Algorithme :
+//
+{
+    privateIndividual = privateIndividualPointer;
+} //----- Fin de SetPrivateIndividual
 
 bool Sensor::GetIsFunctioning ( ) const
 // Algorithme :

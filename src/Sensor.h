@@ -42,18 +42,6 @@ public:
     // Contrat :
     //
 
-    const PrivateIndividual * GetPrivateIndividual ( ) const;
-    // Mode d'emploi :
-    //
-    // Contrat :
-    //
-
-    void SetPrivateIndividual ( const PrivateIndividual * privateIndividual );
-    // Mode d'emploi :
-    //
-    // Contrat :
-    //
-
     double GetLatitude ( ) const;
     // Mode d'emploi :
     //
@@ -61,6 +49,24 @@ public:
     //
 
     double GetLongitude ( ) const;
+    // Mode d'emploi :
+    //
+    // Contrat :
+    //
+
+    pair<double, double> GetPosition ( ) const;
+    // Mode d'emploi :
+    //
+    // Contrat :
+    //
+
+    const PrivateIndividual * GetPrivateIndividual ( ) const;
+    // Mode d'emploi :
+    //
+    // Contrat :
+    //
+
+    void SetPrivateIndividual ( const PrivateIndividual * privateIndividual );
     // Mode d'emploi :
     //
     // Contrat :

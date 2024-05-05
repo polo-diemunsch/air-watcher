@@ -29,6 +29,13 @@ string PrivateIndividual::GetId ( ) const
     return id;
 } //----- Fin de GetId
 
+vector<Sensor> PrivateIndividual::GetSensors ( ) const
+// Algorithme :
+//
+{
+    return sensors;
+} //----- Fin de GetIsReliable
+
 void PrivateIndividual::AddSensor ( Sensor & sensor )
 // Algorithme :
 //
@@ -92,8 +99,8 @@ id(id)
 #ifdef MAP
     cout << "Appel au constructeur de <PrivateIndividual>" << endl;
 #endif
-    points = 0;
     isReliable = true;
+    points = 0;
 } //----- Fin de PrivateIndividual
 
 
