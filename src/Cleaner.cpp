@@ -13,6 +13,7 @@
 //-------------------------------------------------------- Include système
 using namespace std;
 #include <iostream>
+#include <iomanip>
 
 //------------------------------------------------------ Include personnel
 #include "Cleaner.h"
@@ -86,7 +87,8 @@ ostream & operator << ( ostream & out, const Cleaner & cleaner )
 //
 {
     out << "Cleaner(id: " << cleaner.id<< ", latitude: " << cleaner.latitude << ", longitude: " << cleaner.longitude
-        << ", startDate: " << cleaner.startDate << ", endDate: " << cleaner.endDate             // TODO format time_t (see measurement too)
+        << ", startDate: " << put_time(localtime(&(cleaner.startDate)), "%Y-%m-%d %H:%M:%S")
+        << ", endDate: " << put_time(localtime(&(cleaner.endDate)), "%Y-%m-%d %H:%M:%S")
         << ", provider: ";
     if (cleaner.provider != nullptr)
     {

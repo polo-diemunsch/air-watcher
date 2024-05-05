@@ -13,6 +13,7 @@
 //-------------------------------------------------------- Include système
 using namespace std;
 #include <iostream>
+#include <iomanip>
 
 //------------------------------------------------------ Include personnel
 #include "Measurement.h"
@@ -49,7 +50,9 @@ ostream & operator << ( ostream & out, const Measurement & measurement )
 // Algorithme :
 //
 {
-    out << "Measurement(timestamp: " << measurement.timestamp << ", attribute: " << measurement.attribute << ", value: " << measurement.value << ")";
+    out << "Measurement(timestamp: "
+        << put_time(localtime(&(measurement.timestamp)), "%Y-%m-%d %H:%M:%S")
+        << measurement.timestamp << ", attribute: " << measurement.attribute << ", value: " << measurement.value << ")";
     return out;
 } //----- Fin de operator <<
 
