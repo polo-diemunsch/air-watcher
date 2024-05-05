@@ -15,6 +15,7 @@ using namespace std;
 #include <string>
 #include <unordered_map>
 #include <map>
+#include <vector>
 
 #include "Measurement.h"
 
@@ -77,7 +78,19 @@ public:
     // Contrat :
     //
 
-    unordered_map<string, unordered_map<time_t, Measurement>> GetMeasurements ( ) const;
+    unordered_map<string, map<time_t, Measurement>> GetMeasurements ( ) const;
+    // Mode d'emploi :
+    //
+    // Contrat :
+    //
+
+    map<time_t, Measurement> GetMeasurementsWithAttribute ( const string & attributeId ) const;
+    // Mode d'emploi :
+    //
+    // Contrat :
+    //
+
+    vector<Measurement> GetMeasurementsWithAttributeWithinDateRange ( const string & attributeId, const time_t startDate, const time_t endDate ) const;
     // Mode d'emploi :
     //
     // Contrat :

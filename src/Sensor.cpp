@@ -64,18 +64,60 @@ void Sensor::SetIsFunctioning ( bool isFuntioning_ )
     isFunctioning = isFuntioning_;
 } //----- Fin de SetIsFunctioning
 
-
 void Sensor::AddMeasurement ( Measurement & measurement )
 // Algorithme :
 //
 {
     string attributeId = measurement.GetAttribute().GetId();
-    if (!measurements.count(attributeId)) {
+    if (!measurements.count(attributeId))
+    {
         map<time_t, Measurement> measurementsWithAttribute;
         measurements.insert({attributeId, measurementsWithAttribute});
     }
     measurements[attributeId].insert({measurement.GetTimestamp(), measurement});
 } //----- Fin de AddMeasurement
+
+unordered_map<string, map<time_t, Measurement>> Sensor::GetMeasurements ( ) const
+// Algorithme :
+//
+{
+    return measurements;
+} //----- Fin de GetMeasurements
+
+map<time_t, Measurement> Sensor::GetMeasurementsWithAttribute ( const string & attributeId ) const
+// Algorithme :
+//
+{
+    map<time_t, Measurement> result;
+
+    unordered_map<string, map<time_t, Measurement>>::const_iterator measurementsIterator = measurements.find(attributeId);
+    if (measurementsIterator != measurements.end())
+    {
+        result = measurementsIterator->second;
+    }
+
+    return result;
+} //----- Fin de GetMeasurementsWithAttribute
+
+vector<Measurement> Sensor::GetMeasurementsWithAttributeWithinDateRange ( const string & attributeId, const time_t startDate, const time_t endDate ) const
+// Algorithme :
+//
+{
+    map<time_t, Measurement> measurementsWithAttribute = GetMeasurementsWithAttribute(attributeId);
+
+    map<time_t, Measurement>::iterator startIterator = measurementsWithAttribute.lower_bound(startDate);
+    map<time_t, Measurement>::iterator endIterator = measurementsWithAttribute.upper_bound(endDate);
+
+    vector<Measurement> result;
+    result.reserve(distance(startIterator, endIterator));
+
+    for (map<time_t, Measurement>::iterator it = startIterator; it != endIterator; it++)
+    {
+        result.push_back(it->second);
+    }
+
+    return result;
+} //----- Fin de GetMeasurementsWithAttributeWithinDateRange
 
 
 //------------------------------------------------- Surcharge d'opérateurs
@@ -83,8 +125,13 @@ ostream & operator << (ostream & out, const Sensor & sensor)
 // Algorithme :
 //
 {
+    long measurementsCount = 0;
+    for (const auto& measurementsWithAttribute : sensor.measurements)
+    {
+        measurementsCount += measurementsWithAttribute.second.size();
+    }
     out << "Sensor(id: " << sensor.id<< ", latitude: " << sensor.latitude << ", longitude: " << sensor.longitude
-        << ", isFunctioning: " << sensor.isFunctioning << ", measurements count: " << sensor.measurements.size() << ")";
+        << ", isFunctioning: " << sensor.isFunctioning << ", measurements count: " << measurementsCount << ")";
     return out;
 } //----- Fin de operator <<
 
