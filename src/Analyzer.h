@@ -19,6 +19,7 @@
 #include "Sensor.h"
 #include "Measurement.h"
 #include "PrivateIndividual.h"
+#include "Cleaner.h"
 
 //------------------------------------------------------------- Constantes
 
@@ -49,6 +50,12 @@ public:
     // 
 
     vector<PrivateIndividual> GetPrivateIndividuals ( );
+    // Mode d'emploi :
+    // 
+    // Contrat :
+    // 
+
+    vector<Cleaner> GetCleaners ( );
     // Mode d'emploi :
     // 
     // Contrat :
@@ -98,10 +105,17 @@ protected:
     // Contrat :
     //
 
+    void parseCleaners ( const string cleanersPath );
+    // Mode d'emploi :
+    //
+    // Contrat :
+    //
+
 //----------------------------------------------------- Attributs protégés
     unordered_map<string, Attribute> attributes;
     unordered_map<string, Sensor> sensors;
     unordered_map<string, PrivateIndividual> privateIndividuals;
+    unordered_map<string, Cleaner> cleaners;
 };
 
 //-------------------------------- Autres définitions dépendantes de <Analyzer>

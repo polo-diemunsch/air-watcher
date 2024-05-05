@@ -69,6 +69,21 @@ vector<PrivateIndividual> Analyzer::GetPrivateIndividuals ( )
     return result;
 } //----- Fin de GetPrivateIndividuals
 
+vector<Cleaner> Analyzer::GetCleaners ( )
+// Algorithme :
+//
+{
+    vector<Cleaner> result;
+    result.reserve(cleaners.size());
+
+    for (const auto& element : cleaners)
+    {
+        result.push_back(element.second);
+    }
+
+    return result;
+} //----- Fin de GetCleaners
+
 
 //------------------------------------------------- Surcharge d'opérateurs
 
@@ -85,6 +100,7 @@ Analyzer::Analyzer ( const string sensorsPath, const string attributesPath, cons
     parseSensors(sensorsPath);
     parseMeasurements(measurementsPath);
     parsePrivateIndividuals(privateIndividualsPath);
+    parseCleaners(cleanersPath);
 } //----- Fin de Analyzer
 
 
@@ -183,6 +199,8 @@ void Analyzer::parseMeasurements ( const string measurementsPath )
     string sensorId, attributeId;
     double value;
 
+    struct tm tm;
+
     while (getline(measurementsFile, line))
     {
         if (line.back() == '\r')
@@ -191,7 +209,6 @@ void Analyzer::parseMeasurements ( const string measurementsPath )
         }
         if (regex_match(line, match, measurementPattern))
         {
-            struct tm tm;
             strptime(match[1].str().c_str(), "%Y-%m-%d %H:%M:%S", &tm);
             timestamp = mktime(&tm);
             sensorId = match[2];
@@ -286,3 +303,44 @@ void Analyzer::parsePrivateIndividuals( const string privateIndividualsPath )
         }
     }
 } //----- Fin de parsePrivateIndividuals
+
+void Analyzer::parseCleaners ( const string cleanersPath )
+// Algorithme :
+//
+{
+    ifstream cleanersFile(cleanersPath);
+
+    string line;
+    smatch match;
+    const regex sensorPattern("^([^;]+);([-+]?[0-9]*\\.?[0-9]+);([-+]?[0-9]*\\.?[0-9]+);([^;]+);([^;]+);$");
+
+    string id;
+    double latitude, longitude;
+    time_t startDate, endDate;
+
+    struct tm tm;
+
+    while (getline(cleanersFile, line))
+    {
+        if (line.back() == '\r')
+        {
+            line.pop_back();
+        }
+        if (regex_match(line, match, sensorPattern))
+        {
+            id = match[1];
+            latitude = stod(match[2]);
+            longitude = stod(match[3]);
+            strptime(match[4].str().c_str(), "%Y-%m-%d %H:%M:%S", &tm);
+            startDate = mktime(&tm);
+            strptime(match[5].str().c_str(), "%Y-%m-%d %H:%M:%S", &tm);
+            endDate = mktime(&tm);
+
+            cleaners.insert({id, Cleaner(id, latitude, longitude, startDate, endDate)});
+        }
+        else
+        {
+            cerr << "Warning: invalid cleaner ignored: " << line << endl;
+        }
+    }
+} //----- Fin de parseCleaners
