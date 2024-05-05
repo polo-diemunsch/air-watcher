@@ -49,6 +49,12 @@ int main()
     }
     cout << analyzer.GetSensors().size() << " sensors\n"
          << measurementsCount << " measurements" << endl;
+    
+    for (const PrivateIndividual & privateIndividual : analyzer.GetPrivateIndividuals())
+    {
+        cout << privateIndividual << endl;
+    }
+    cout << analyzer.GetPrivateIndividuals().size() << " private individuals" << endl;
 
     return EXIT_SUCCESS;
 } //----- fin de main
