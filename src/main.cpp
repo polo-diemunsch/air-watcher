@@ -61,6 +61,12 @@ int main()
         cout << cleaner << endl;
     }
     cout << analyzer.GetCleaners().size() << " cleaners" << endl;
+    
+    for (const Provider & provider : analyzer.GetProviders())
+    {
+        cout << provider << endl;
+    }
+    cout << analyzer.GetProviders().size() << " providers" << endl;
 
     return EXIT_SUCCESS;
 } //----- fin de main
