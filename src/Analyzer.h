@@ -11,7 +11,6 @@
 #define ANALYZER_H
 
 //--------------------------------------------------- Interfaces utilisées
-using namespace std;
 #include <string>
 #include <unordered_map>
 #include <vector>

@@ -11,8 +11,6 @@
 #define PRIVATE_INDIVIDUAL_H
 
 //--------------------------------------------------- Interfaces utilisées
-using namespace std;
-#include <iostream>
 #include <vector>
 
 #include "Sensor.h"

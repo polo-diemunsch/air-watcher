@@ -11,8 +11,6 @@
 #define ATTRIBUTE_H
 
 //--------------------------------------------------- Interfaces utilisées
-using namespace std;
-#include <iostream>
 #include <string>
 
 //------------------------------------------------------------- Constantes

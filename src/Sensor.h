@@ -11,8 +11,6 @@
 #define SENSOR_H
 
 //--------------------------------------------------- Interfaces utilisées
-using namespace std;
-#include <iostream>
 #include <string>
 #include <unordered_map>
 #include <map>

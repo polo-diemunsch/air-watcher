@@ -11,8 +11,6 @@
 #define MEASUREMENT_H
 
 //--------------------------------------------------- Interfaces utilisées
-using namespace std;
-#include <iostream>
 #include <string>
 #include <ctime>
 
