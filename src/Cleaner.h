@@ -12,7 +12,6 @@
 
 //--------------------------------------------------- Interfaces utilisées
 #include <string>
-#include <ctime>
 
 class Provider;
 

@@ -13,6 +13,7 @@
 //-------------------------------------------------------- Include système
 using namespace std;
 #include <iostream>
+#include <iomanip>
 #include <fstream>
 #include <regex>
 
@@ -209,13 +210,14 @@ void Analyzer::parseMeasurements ( const string measurementsPath )
 
     string line;
     smatch match;
-    const regex measurementPattern("^([^;]+);([^;]+);([^;]+);([0-9]*\\.?[0-9]+);$");
+    const regex measurementPattern("^(\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2});([^;]+);([^;]+);([0-9]*\\.?[0-9]+);$");
 
     time_t timestamp;
     string sensorId, attributeId;
     double value;
 
-    struct tm tm;
+    istringstream dateStringStream;
+    tm time;
 
     while (getline(measurementsFile, line))
     {
@@ -225,8 +227,13 @@ void Analyzer::parseMeasurements ( const string measurementsPath )
         }
         if (regex_match(line, match, measurementPattern))
         {
-            strptime(match[1].str().c_str(), "%Y-%m-%d %H:%M:%S", &tm);
-            timestamp = mktime(&tm);
+            // strptime(match[1].str().c_str(), "%Y-%m-%d %H:%M:%S", &tm);
+            // timestamp = mktime(&tm);
+
+            dateStringStream = istringstream(match[1]);
+            dateStringStream >> get_time(&time, "%Y-%m-%d %H:%M:%S");
+            timestamp = mktime(&time);
+
             sensorId = match[2];
             attributeId = match[3];
             value = stod(match[4]);
@@ -328,13 +335,14 @@ void Analyzer::parseCleaners ( const string cleanersPath )
 
     string line;
     smatch match;
-    const regex sensorPattern("^([^;]+);([-+]?[0-9]*\\.?[0-9]+);([-+]?[0-9]*\\.?[0-9]+);([^;]+);([^;]+);$");
+    const regex sensorPattern("^([^;]+);([-+]?[0-9]*\\.?[0-9]+);([-+]?[0-9]*\\.?[0-9]+);(\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2});(\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2});$");
 
     string id;
     double latitude, longitude;
     time_t startDate, endDate;
 
-    struct tm tm;
+    istringstream dateStringStream;
+    tm time = {};
 
     while (getline(cleanersFile, line))
     {
@@ -347,10 +355,13 @@ void Analyzer::parseCleaners ( const string cleanersPath )
             id = match[1];
             latitude = stod(match[2]);
             longitude = stod(match[3]);
-            strptime(match[4].str().c_str(), "%Y-%m-%d %H:%M:%S", &tm);
-            startDate = mktime(&tm);
-            strptime(match[5].str().c_str(), "%Y-%m-%d %H:%M:%S", &tm);
-            endDate = mktime(&tm);
+
+            dateStringStream = istringstream(match[4]);
+            dateStringStream >> get_time(&time, "%Y-%m-%d %H:%M:%S");
+            startDate = mktime(&time);
+            dateStringStream = istringstream(match[5]);
+            dateStringStream >> get_time(&time, "%Y-%m-%d %H:%M:%S");
+            endDate = mktime(&time);
 
             cleaners.insert({id, Cleaner(id, latitude, longitude, startDate, endDate)});
         }
