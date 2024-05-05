@@ -34,14 +34,14 @@ vector<Sensor> PrivateIndividual::GetSensors ( ) const
 //
 {
     return sensors;
-} //----- Fin de GetIsReliable
+} //----- Fin de GetSensors
 
 void PrivateIndividual::AddSensor ( Sensor & sensor )
 // Algorithme :
 //
 {
     sensors.push_back(sensor);
-} //----- Fin de AddPoints
+} //----- Fin de AddSensor
 
 bool PrivateIndividual::GetIsReliable ( ) const
 // Algorithme :
