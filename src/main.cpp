@@ -68,5 +68,10 @@ int main()
     }
     cout << parser.GetProviders().size() << " providers" << endl;
 
+    double SensorAnalyzer::ComputeMeanAirQualityInArea (const double latitude,const double longitude,const double radius,vector<Sensor> sensorsToExclude,
+const string & attributeId,const time_t & startDate,const time_t & endDate)
+
+    Sensor sensor1 = parser.GetSensors()[0];
+
     return EXIT_SUCCESS;
 } //----- fin de main
