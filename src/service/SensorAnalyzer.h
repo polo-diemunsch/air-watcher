@@ -57,19 +57,32 @@ public:
     // Contrat :
     //
 
-    bool CheckFunctioningOfSensor ( Sensor & sensor );
+    bool CheckFunctioningOfSensor (
+        Sensor & sensor,
+        const double radius,
+        const time_t timeRange,
+        const double relativeDifferenceAllowed
+    );
     // Mode d'emploi :
     //
     // Contrat :
     //
 
-    multimap<bool, Sensor> CheckFunctioningOfAllSensors ( );
+    multimap<bool, Sensor &> CheckFunctioningOfAllSensors (
+        const double radius,
+        const time_t timeRange,
+        const double relativeDifferenceAllowed
+    );
     // Mode d'emploi :
     //
     // Contrat :
     //
 
-    multimap<double, Sensor> RankSensorsBySimilarity ( const Sensor & sensorToCompareTo, const string & attributeId );
+    multimap<double, Sensor &> RankSensorsBySimilarity (
+        const Sensor & sensorToCompareTo,
+        const string & attributeId,
+        const time_t timeRange
+    );
     // Mode d'emploi :
     //
     // Contrat :
