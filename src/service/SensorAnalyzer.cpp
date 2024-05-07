@@ -16,6 +16,7 @@ using namespace std;
 
 //------------------------------------------------------ Include personnel
 #include "SensorAnalyzer.h"
+#include <cmath>
 
 //------------------------------------------------------------- Constantes
 
@@ -39,8 +40,8 @@ double SensorAnalyzer::ComputeMeanAirQualityForSensor( const Sensor & sensor, co
     return (measurementCount == 0) ? 0 : (sum / measurementCount);
 } //----- Fin de ComputeMeanAirQualityForSensor
 
-double SensorAnalyzer::ComputeMeanAirQualityInArea (const double latitude,const double longitude,const double radius,vector<Sensor> sensorsToExclude,
-const string & attributeId,const time_t & startDate,const time_t & endDate)
+double SensorAnalyzer::ComputeMeanAirQualityInArea (const double latitude, const double longitude, const double radius, vector<Sensor> sensorsToExclude,
+const string & attributeId, const time_t & startDate, const time_t & endDate)
 {
     double sum = 0; 
     double measurementCount = 0;
@@ -61,8 +62,8 @@ const string & attributeId,const time_t & startDate,const time_t & endDate)
         }
         int x2 = sensor.GetLatitude();
         int y2 = sensor.GetLongitude();
-        double sous_formule = sin(x2-x1/2)*sin(x2-x1/2)+cos(x1)*cos(x2)*sin(y2-y1/2)*sin(y2-y1/2);
-        if (2*6371*asin(sqrt(sous_formule))<radius) //formule Harversine pour distance sphérique
+        double sous_formule = sin(x2-x1/2) * sin(x2-x1/2) + cos(x1) * cos(x2) * sin(y2-y1/2) * sin(y2-y1/2);
+        if (2 * 6371 * asin(sqrt(sous_formule)) < radius) //formule Harversine pour distance sphérique
         {
             for (const Measurement & mesure : sensor.GetMeasurementsWithAttributeWithinDateRange(attributeId, startDate, endDate))
             {
