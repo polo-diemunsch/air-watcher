@@ -1,12 +1,12 @@
 /*************************************************************************
-                           Analyzer  -  description
+                           SensorAnalyzer  -  description
                              -------------------
     début                : $DATE$
     copyright            : (C) $YEAR$ par $AUTHOR$
     e-mail               : $EMAIL$
 *************************************************************************/
 
-//---------- Réalisation de la classe <Analyzer> (fichier Analyzer.cpp) ------------
+//---------- Réalisation de la classe <SensorAnalyzer> (fichier SensorAnalyzer.cpp) ------------
 
 //---------------------------------------------------------------- INCLUDE
 
@@ -15,14 +15,14 @@ using namespace std;
 #include <iostream>
 
 //------------------------------------------------------ Include personnel
-#include "Analyzer.h"
+#include "SensorAnalyzer.h"
 
 //------------------------------------------------------------- Constantes
 
 //----------------------------------------------------------------- PUBLIC
 
 //----------------------------------------------------- Méthodes publiques
-// type Analyzer::Méthode ( liste des paramètres )
+// type SensorAnalyzer::Méthode ( liste des paramètres )
 // Algorithme :
 //
 //{
@@ -32,24 +32,25 @@ using namespace std;
 //------------------------------------------------- Surcharge d'opérateurs
 
 //-------------------------------------------- Constructeurs - destructeur
-Analyzer::Analyzer ( )
+SensorAnalyzer::SensorAnalyzer ( vector<Sensor> & sensors ) :
+sensors(sensors)
 // Algorithme :
 //
 {
 #ifdef MAP
-    cout << "Appel au constructeur de <Analyzer>" << endl;
+    cout << "Appel au constructeur de <SensorAnalyzer>" << endl;
 #endif
-} //----- Fin de Analyzer
+} //----- Fin de SensorAnalyzer
 
 
-Analyzer::~Analyzer ( )
+SensorAnalyzer::~SensorAnalyzer ( )
 // Algorithme :
 //
 {
 #ifdef MAP
-    cout << "Appel au destructeur de <Analyzer>" << endl;
+    cout << "Appel au destructeur de <SensorAnalyzer>" << endl;
 #endif
-} //----- Fin de ~Analyzer
+} //----- Fin de ~SensorAnalyzer
 
 
 //------------------------------------------------------------------ PRIVE
