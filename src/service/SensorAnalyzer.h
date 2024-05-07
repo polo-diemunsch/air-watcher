@@ -54,7 +54,7 @@ public:
     );
     // Mode d'emploi :
     //
-    // Contrat :
+    // Contrat : rayon en km
     //
 
     bool CheckFunctioningOfSensor (
