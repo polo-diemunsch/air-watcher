@@ -108,6 +108,12 @@ public:
     // Contrat :
     //
 
+    vector<string> GetAttributeIds ( ) const;
+    // Mode d'emploi :
+    //
+    // Contrat :
+    //
+
 //------------------------------------------------- Surcharge d'opérateurs
     friend ostream & operator << ( ostream & out, const Sensor & sensor );
     // Mode d'emploi :

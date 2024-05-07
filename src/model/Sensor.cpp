@@ -134,6 +134,21 @@ vector<Measurement> Sensor::GetMeasurementsWithAttributeWithinDateRange ( const 
     return result;
 } //----- Fin de GetMeasurementsWithAttributeWithinDateRange
 
+vector<string> Sensor::GetAttributeIds ( ) const
+// Algorithme :
+//
+{
+    vector<string> result;
+    result.reserve(measurements.size());
+
+    for (const auto& element : measurements)
+    {
+        result.push_back(element.first);
+    }
+
+    return result;
+} //----- Fin de GetAttributeIds
+
 
 //------------------------------------------------- Surcharge d'opérateurs
 ostream & operator << ( ostream & out, const Sensor & sensor )
