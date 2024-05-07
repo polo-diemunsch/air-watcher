@@ -161,6 +161,11 @@ ostream & operator << ( ostream & out, const Sensor & sensor )
     return out;
 } //----- Fin de operator <<
 
+bool Sensor::operator==(const Sensor & aSensor) const
+ {
+    return this->id == aSensor.GetId();
+ }
+
 
 //-------------------------------------------- Constructeurs - destructeur
 Sensor::Sensor ( const string & id, const double latitude, const double longitude ) :
