@@ -115,13 +115,23 @@ public:
     //
 
 //------------------------------------------------- Surcharge d'opérateurs
-    friend ostream & operator << ( ostream & out, const Sensor & sensor );
+    bool operator == ( const Sensor & aSensor ) const;
     // Mode d'emploi :
     //
     // Contrat :
     //
 
-    bool operator== ( const Sensor & aSensor ) const;
+    bool operator != ( const Sensor & aSensor ) const;
+    // Mode d'emploi :
+    //
+    // Contrat :
+    //
+
+    friend ostream & operator << ( ostream & out, const Sensor & sensor );
+    // Mode d'emploi :
+    //
+    // Contrat :
+    //
 
 //-------------------------------------------- Constructeurs - destructeur
     Sensor ( const string & id, const double latitude, const double longitude );

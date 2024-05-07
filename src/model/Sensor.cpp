@@ -151,6 +151,20 @@ vector<string> Sensor::GetAttributeIds ( ) const
 
 
 //------------------------------------------------- Surcharge d'opérateurs
+bool Sensor::operator == ( const Sensor & aSensor ) const
+// Algorithme :
+//
+ {
+    return this->id == aSensor.GetId();
+ }
+
+bool Sensor::operator != ( const Sensor & aSensor ) const
+// Algorithme :
+//
+ {
+    return this->id != aSensor.GetId();
+} //----- Fin de operator <<
+
 ostream & operator << ( ostream & out, const Sensor & sensor )
 // Algorithme :
 //
@@ -175,11 +189,6 @@ ostream & operator << ( ostream & out, const Sensor & sensor )
 
     return out;
 } //----- Fin de operator <<
-
-bool Sensor::operator==(const Sensor & aSensor) const
- {
-    return this->id == aSensor.GetId();
- }
 
 
 //-------------------------------------------- Constructeurs - destructeur
