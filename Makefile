@@ -9,7 +9,7 @@ LDFLAGS=$(CCFLAGS)
 LIBS=
 SRC=src
 MAINFILE=$(SRC)/main
-INT=$(addprefix $(SRC)/data/, Parser.h) $(addprefix $(SRC)/model/, Attribute.h Measurement.h Sensor.h PrivateIndividual.h Cleaner.h Provider.h)
+INT=$(addprefix $(SRC)/data/, Parser.h) $(addprefix $(SRC)/model/, Attribute.h Measurement.h Sensor.h PrivateIndividual.h Cleaner.h Provider.h) $(addprefix $(SRC)/service/, SensorAnalyzer.h)
 REAL=$(INT:.h=.cpp)
 OBJ=$(INT:.h=.o)
 EFFACE=clean
