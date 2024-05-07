@@ -95,10 +95,19 @@ multimap<double, Sensor &> SensorAnalyzer::RankSensorsBySimilarity( const Sensor
 
     for(Sensor & sensor : sensors)
     {
-        if (sensor == sensorToCompareTo)    //  TODO private individual     && (sensor.GetPrivateIndividual() == NULL || sensor.GetPrivateIndividual()->GetIsReliable())
+        #ifdef DEB
+        cout << "Sensor: " << sensor.GetId() << endl;
+        #endif
+
+        if (!(sensor == sensorToCompareTo))    //  TODO private individual     && (sensor.GetPrivateIndividual() == NULL || sensor.GetPrivateIndividual()->GetIsReliable())
         {
-            meanDynamic = ComputeMeanAirQualityForSensor(sensor, attributeID, startDate, endDate);
+            meanDynamic = ComputeMeanAirQualityForSensor(sensor, attributeID, startDate, endDate);            
             ranking.insert({abs(meanRefrence - meanDynamic), sensor});
+
+            #ifdef DEB
+            cout << sensor.GetId() << ":" << meanDynamic << ":" << abs(meanRefrence - meanDynamic) << endl;
+            #endif
+
         }
     }
 
