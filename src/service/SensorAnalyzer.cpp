@@ -13,10 +13,10 @@
 //-------------------------------------------------------- Include système
 using namespace std;
 #include <iostream>
+#include <cmath>
 
 //------------------------------------------------------ Include personnel
 #include "SensorAnalyzer.h"
-#include <cmath>
 
 //------------------------------------------------------------- Constantes
 
@@ -31,6 +31,8 @@ double SensorAnalyzer::ComputeMeanAirQualityForSensor( const Sensor & sensor, co
     double sum = 0;
     double measurementCount = 0;
 
+    // TODO test du private individual à faire plus tard
+
     for (const Measurement & mesure : mesures)
     {
         sum += mesure.GetValue();
@@ -40,8 +42,10 @@ double SensorAnalyzer::ComputeMeanAirQualityForSensor( const Sensor & sensor, co
     return (measurementCount == 0) ? 0 : (sum / measurementCount);
 } //----- Fin de ComputeMeanAirQualityForSensor
 
-double SensorAnalyzer::ComputeMeanAirQualityInArea ( const double latitude, const double longitude, const double radius, vector<Sensor> sensorsToExclude,
-const string & attributeId, const time_t & startDate, const time_t & endDate )
+double SensorAnalyzer::ComputeMeanAirQualityInArea ( const double latitude, const double longitude, const double radius,
+    vector<Sensor> sensorsToExclude, const string & attributeId, const time_t & startDate, const time_t & endDate )
+// Algorithme :
+//
 {
     double sum = 0; 
     double measurementCount = 0;
@@ -49,7 +53,7 @@ const string & attributeId, const time_t & startDate, const time_t & endDate )
     int x1 = latitude;
     int y1 = longitude;
 
-    //test du private individual à faire plus tard
+    // TODO test du private individual à faire plus tard
 
     for (const Sensor & sensor : sensors)
     {
@@ -74,7 +78,7 @@ const string & attributeId, const time_t & startDate, const time_t & endDate )
     }
 
     return (measurementCount == 0) ? 0 : (sum / measurementCount);
-}
+} //----- Fin de ComputeMeanAirQualityInArea
 
 multimap<double, Sensor &> SensorAnalyzer::RankSensorsBySimilarity( const Sensor & sensorToCompareTo, const string & attributeID, const time_t timeRange )
 // Algorithme :
