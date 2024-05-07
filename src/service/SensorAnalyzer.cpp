@@ -40,8 +40,8 @@ double SensorAnalyzer::ComputeMeanAirQualityForSensor( const Sensor & sensor, co
     return (measurementCount == 0) ? 0 : (sum / measurementCount);
 } //----- Fin de ComputeMeanAirQualityForSensor
 
-double SensorAnalyzer::ComputeMeanAirQualityInArea (const double latitude, const double longitude, const double radius, vector<Sensor> sensorsToExclude,
-const string & attributeId, const time_t & startDate, const time_t & endDate)
+double SensorAnalyzer::ComputeMeanAirQualityInArea ( const double latitude, const double longitude, const double radius, vector<Sensor> sensorsToExclude,
+const string & attributeId, const time_t & startDate, const time_t & endDate )
 {
     double sum = 0; 
     double measurementCount = 0;
