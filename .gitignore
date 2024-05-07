@@ -3,3 +3,4 @@ dataset
 air-watcher
 SClasse.*
 *.o
+bin/test
