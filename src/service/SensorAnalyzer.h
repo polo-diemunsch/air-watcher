@@ -35,8 +35,8 @@ public:
     double ComputeMeanAirQualityForSensor (
         const Sensor & sensor,
         const string & attributeId,
-        const time_t & startDate,
-        const time_t & endDate
+        time_t startDate,
+        time_t endDate
     );
     // Mode d'emploi :
     //
@@ -74,6 +74,7 @@ public:
     //
     // Contrat :
     //
+
 
 //------------------------------------------------- Surcharge d'opérateurs
 
