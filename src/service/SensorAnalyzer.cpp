@@ -29,6 +29,21 @@ using namespace std;
 //} //----- Fin de Méthode
 
 
+double SensorAnalyzer::ComputeMeanAirQualityForSensor(const Sensor & sensor, const string & attributeId, time_t debut, time_t fin)
+{
+    vector <Measurement> mesures = sensor.GetMeasurementsWithAttributeWithinDateRange(attributeId, debut, fin);
+    double res = 0;
+    double nb = 0;
+
+    for (const Measurement & mesure : mesures)
+    {
+        res += mesure.GetValue();
+        nb++;
+    }
+
+    return (nb == 0) ? 0 : (res / nb);
+}
+
 //------------------------------------------------- Surcharge d'opérateurs
 
 //-------------------------------------------- Constructeurs - destructeur

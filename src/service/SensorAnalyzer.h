@@ -32,12 +32,11 @@ class SensorAnalyzer
 
 public:
 //----------------------------------------------------- Méthodes publiques
-    double ComputeMeanAirQualityForSensor (
-        const Sensor & sensor,
-        const string & attributeId,
-        const time_t & startDate,
-        const time_t & endDate
-    );
+    double ComputeMeanAirQualityForSensor(
+        const Sensor&, 
+        const string&, 
+        time_t debut, 
+        time_t fin);
     // Mode d'emploi :
     //
     // Contrat :
@@ -74,6 +73,7 @@ public:
     //
     // Contrat :
     //
+
 
 //------------------------------------------------- Surcharge d'opérateurs
 
