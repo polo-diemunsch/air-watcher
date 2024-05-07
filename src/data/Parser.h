@@ -1,38 +1,38 @@
 /*************************************************************************
-                           Analyzer  -  description
+                           Parser  -  description
                              -------------------
     début                : $DATE$
     copyright            : (C) $YEAR$ par $AUTHOR$
     e-mail               : $EMAIL$
 *************************************************************************/
 
-//---------- Interface de la classe <Analyzer> (fichier Analyzer.h) ----------------
-#if ! defined ( ANALYZER_H )
-#define ANALYZER_H
+//---------- Interface de la classe <Parser> (fichier Parser.h) ----------------
+#if ! defined ( PARSER_H )
+#define PARSER_H
 
 //--------------------------------------------------- Interfaces utilisées
 #include <string>
 #include <unordered_map>
 #include <vector>
 
-#include "Attribute.h"
-#include "Sensor.h"
-#include "Measurement.h"
-#include "PrivateIndividual.h"
-#include "Cleaner.h"
-#include "Provider.h"
+#include "../model/Attribute.h"
+#include "../model/Sensor.h"
+#include "../model/Measurement.h"
+#include "../model/PrivateIndividual.h"
+#include "../model/Cleaner.h"
+#include "../model/Provider.h"
 
 //------------------------------------------------------------- Constantes
 
 //------------------------------------------------------------------ Types
 
 //------------------------------------------------------------------------
-// Rôle de la classe <Analyzer>
+// Rôle de la classe <Parser>
 //
 //
 //------------------------------------------------------------------------
 
-class Analyzer
+class Parser
 {
 //----------------------------------------------------------------- PUBLIC
 
@@ -71,14 +71,14 @@ public:
 //------------------------------------------------- Surcharge d'opérateurs
 
 //-------------------------------------------- Constructeurs - destructeur
-    Analyzer ( const string sensorsPath, const string attributesPath, const string measurementsPath,
+    Parser ( const string sensorsPath, const string attributesPath, const string measurementsPath,
                const string privateIndividualsPath, const string cleanersPath, const string providersPath );
     // Mode d'emploi :
     //
     // Contrat :
     //
 
-    virtual ~Analyzer ( );
+    virtual ~Parser ( );
     // Mode d'emploi :
     //
     // Contrat :
@@ -132,6 +132,6 @@ protected:
     unordered_map<string, Provider> providers;
 };
 
-//-------------------------------- Autres définitions dépendantes de <Analyzer>
+//-------------------------------- Autres définitions dépendantes de <Parser>
 
-#endif // ANALYZER_H
+#endif // PARSER_H

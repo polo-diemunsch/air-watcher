@@ -1,12 +1,12 @@
 /*************************************************************************
-                           Analyzer  -  description
+                           Parser  -  description
                              -------------------
     début                : $DATE$
     copyright            : (C) $YEAR$ par $AUTHOR$
     e-mail               : $EMAIL$
 *************************************************************************/
 
-//---------- Réalisation de la classe <Analyzer> (fichier Analyzer.cpp) ------------
+//---------- Réalisation de la classe <Parser> (fichier Parser.cpp) ------------
 
 //---------------------------------------------------------------- INCLUDE
 
@@ -18,14 +18,14 @@ using namespace std;
 #include <regex>
 
 //------------------------------------------------------ Include personnel
-#include "Analyzer.h"
+#include "Parser.h"
 
 //------------------------------------------------------------- Constantes
 
 //----------------------------------------------------------------- PUBLIC
 
 //----------------------------------------------------- Méthodes publiques
-vector<Attribute> Analyzer::GetMeasurementsAttributes ( ) const
+vector<Attribute> Parser::GetMeasurementsAttributes ( ) const
 // Algorithme :
 //
 {
@@ -40,7 +40,7 @@ vector<Attribute> Analyzer::GetMeasurementsAttributes ( ) const
     return result;
 } //----- Fin de GetMeasurementsAttributes
 
-vector<Sensor> Analyzer::GetSensors ( ) const
+vector<Sensor> Parser::GetSensors ( ) const
 // Algorithme :
 //
 {
@@ -55,7 +55,7 @@ vector<Sensor> Analyzer::GetSensors ( ) const
     return result;
 } //----- Fin de GetSensors
 
-vector<PrivateIndividual> Analyzer::GetPrivateIndividuals ( ) const
+vector<PrivateIndividual> Parser::GetPrivateIndividuals ( ) const
 // Algorithme :
 //
 {
@@ -70,7 +70,7 @@ vector<PrivateIndividual> Analyzer::GetPrivateIndividuals ( ) const
     return result;
 } //----- Fin de GetPrivateIndividuals
 
-vector<Cleaner> Analyzer::GetCleaners ( ) const
+vector<Cleaner> Parser::GetCleaners ( ) const
 // Algorithme :
 //
 {
@@ -85,7 +85,7 @@ vector<Cleaner> Analyzer::GetCleaners ( ) const
     return result;
 } //----- Fin de GetCleaners
 
-vector<Provider> Analyzer::GetProviders ( ) const
+vector<Provider> Parser::GetProviders ( ) const
 // Algorithme :
 //
 {
@@ -104,13 +104,13 @@ vector<Provider> Analyzer::GetProviders ( ) const
 //------------------------------------------------- Surcharge d'opérateurs
 
 //-------------------------------------------- Constructeurs - destructeur
-Analyzer::Analyzer ( const string sensorsPath, const string attributesPath, const string measurementsPath,
+Parser::Parser ( const string sensorsPath, const string attributesPath, const string measurementsPath,
                      const string privateIndividualsPath, const string cleanersPath, const string providersPath )
 // Algorithme :
 //
 {
 #ifdef MAP
-    cout << "Appel au constructeur de <Analyzer>" << endl;
+    cout << "Appel au constructeur de <Parser>" << endl;
 #endif
     parseAttributes(attributesPath);
     parseSensors(sensorsPath);
@@ -118,23 +118,23 @@ Analyzer::Analyzer ( const string sensorsPath, const string attributesPath, cons
     parsePrivateIndividuals(privateIndividualsPath);
     parseCleaners(cleanersPath);
     parseProviders(providersPath);
-} //----- Fin de Analyzer
+} //----- Fin de Parser
 
 
-Analyzer::~Analyzer ( )
+Parser::~Parser ( )
 // Algorithme :
 //
 {
 #ifdef MAP
-    cout << "Appel au destructeur de <Analyzer>" << endl;
+    cout << "Appel au destructeur de <Parser>" << endl;
 #endif
-} //----- Fin de ~Analyzer
+} //----- Fin de ~Parser
 
 
 //------------------------------------------------------------------ PRIVE
 
 //----------------------------------------------------- Méthodes protégées
-void Analyzer::parseAttributes ( const string attributesPath )
+void Parser::parseAttributes ( const string attributesPath )
 // Algorithme :
 //
 {
@@ -168,7 +168,7 @@ void Analyzer::parseAttributes ( const string attributesPath )
     }
 } //----- Fin de parseAttributes
 
-void Analyzer::parseSensors ( const string sensorsPath )
+void Parser::parseSensors ( const string sensorsPath )
 // Algorithme :
 //
 {
@@ -202,7 +202,7 @@ void Analyzer::parseSensors ( const string sensorsPath )
     }
 } //----- Fin de parseSensors
 
-void Analyzer::parseMeasurements ( const string measurementsPath )
+void Parser::parseMeasurements ( const string measurementsPath )
 // Algorithme :
 //
 {
@@ -267,7 +267,7 @@ void Analyzer::parseMeasurements ( const string measurementsPath )
     }
 } //----- Fin de parseMeasurements
 
-void Analyzer::parsePrivateIndividuals ( const string privateIndividualsPath )
+void Parser::parsePrivateIndividuals ( const string privateIndividualsPath )
 // Algorithme :
 //
 {
@@ -327,7 +327,7 @@ void Analyzer::parsePrivateIndividuals ( const string privateIndividualsPath )
     }
 } //----- Fin de parsePrivateIndividuals
 
-void Analyzer::parseCleaners ( const string cleanersPath )
+void Parser::parseCleaners ( const string cleanersPath )
 // Algorithme :
 //
 {
@@ -372,7 +372,7 @@ void Analyzer::parseCleaners ( const string cleanersPath )
     }
 } //----- Fin de parseCleaners
 
-void Analyzer::parseProviders ( const string providersPath )
+void Parser::parseProviders ( const string providersPath )
 // Algorithme :
 //
 {

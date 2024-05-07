@@ -13,7 +13,7 @@ using namespace std;
 #include <iostream>
 
 //------------------------------------------------------ Include personnel
-#include "Analyzer.h"
+#include "data/Parser.h"
 
 //------------------------------------------------------------- Constantes
 
@@ -29,17 +29,17 @@ int main()
     string cleanersPath = "dataset/cleaners.csv";
     string providersPath = "dataset/providers.csv";
 
-    Analyzer analyzer(sensorsPath, attributesPath, measurementsPath,
+    Parser parser(sensorsPath, attributesPath, measurementsPath,
                       privateIndividualsPath, cleanersPath, providersPath);
     
-    for (const Attribute & attribute : analyzer.GetMeasurementsAttributes())
+    for (const Attribute & attribute : parser.GetMeasurementsAttributes())
     {
         cout << attribute << endl;
     }
-    cout << analyzer.GetMeasurementsAttributes().size() << " measurements attributes" << endl;
+    cout << parser.GetMeasurementsAttributes().size() << " measurements attributes" << endl;
 
     long measurementsCount = 0;
-    for (const Sensor & sensor : analyzer.GetSensors())
+    for (const Sensor & sensor : parser.GetSensors())
     {
         cout << sensor << endl;
         for (const auto& measurementsWithAttribute : sensor.GetMeasurements())
@@ -47,26 +47,26 @@ int main()
             measurementsCount += measurementsWithAttribute.second.size();
         }
     }
-    cout << analyzer.GetSensors().size() << " sensors\n"
+    cout << parser.GetSensors().size() << " sensors\n"
          << measurementsCount << " measurements" << endl;
     
-    for (const PrivateIndividual & privateIndividual : analyzer.GetPrivateIndividuals())
+    for (const PrivateIndividual & privateIndividual : parser.GetPrivateIndividuals())
     {
         cout << privateIndividual << endl;
     }
-    cout << analyzer.GetPrivateIndividuals().size() << " private individuals" << endl;
+    cout << parser.GetPrivateIndividuals().size() << " private individuals" << endl;
     
-    for (const Cleaner & cleaner : analyzer.GetCleaners())
+    for (const Cleaner & cleaner : parser.GetCleaners())
     {
         cout << cleaner << endl;
     }
-    cout << analyzer.GetCleaners().size() << " cleaners" << endl;
+    cout << parser.GetCleaners().size() << " cleaners" << endl;
     
-    for (const Provider & provider : analyzer.GetProviders())
+    for (const Provider & provider : parser.GetProviders())
     {
         cout << provider << endl;
     }
-    cout << analyzer.GetProviders().size() << " providers" << endl;
+    cout << parser.GetProviders().size() << " providers" << endl;
 
     return EXIT_SUCCESS;
 } //----- fin de main
