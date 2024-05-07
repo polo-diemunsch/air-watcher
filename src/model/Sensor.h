@@ -115,6 +115,8 @@ public:
     // Contrat :
     //
 
+    bool operator== ( const Sensor & aSensor ) const;
+
 //-------------------------------------------- Constructeurs - destructeur
     Sensor ( const string & id, const double latitude, const double longitude );
     // Mode d'emploi :

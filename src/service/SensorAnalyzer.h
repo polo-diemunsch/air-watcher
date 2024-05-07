@@ -69,7 +69,7 @@ public:
     // Contrat :
     //
 
-    multimap<double, Sensor> RankSensorsBySimilarity ( Sensor & sensorToCompareTo, const string & attributeId );
+    multimap<double, Sensor> RankSensorsBySimilarity ( const Sensor & sensorToCompareTo, const string & attributeId );
     // Mode d'emploi :
     //
     // Contrat :
