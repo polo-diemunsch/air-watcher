@@ -9,14 +9,15 @@ LDFLAGS=$(CCFLAGS)
 LIBS=-lm
 SRC=src
 MAINFILE=$(SRC)/main
-TESTFILE=$(SRC)/test
+TEST=test
+UNITTESTSFILE=$(TEST)/unit-tests/test
 INT=$(addprefix $(SRC)/data/, Parser.h) $(addprefix $(SRC)/model/, Attribute.h Measurement.h Sensor.h PrivateIndividual.h Cleaner.h Provider.h) $(addprefix $(SRC)/service/, SensorAnalyzer.h)
 REAL=$(INT:.h=.cpp)
 OBJ=$(INT:.h=.o)
 EFFACE=clean
 BIN=bin
 EXE=$(BIN)/air-watcher
-TESTEXE=$(BIN)/test
+UNITTESTSEXE=$(BIN)/unit-tests
 
 .PHONY:$(EFFACE)
 
@@ -25,10 +26,10 @@ $(EXE): $(OBJ) $(MAINFILE).o
 	$(MKDIR) -p $(BIN)
 	$(EDL) -o $(EXE) $(MAINFILE).o $(OBJ) $(LIBS) $(LDFLAGS)
 
-$(TESTEXE): $(OBJ) $(TESTFILE).o
-	$(ECHO) "Edition des liens de $(TESTEXE)"
+unit-tests: $(OBJ) $(UNITTESTSFILE).o
+	$(ECHO) "Edition des liens de $(UNITTESTSEXE)"
 	$(MKDIR) -p $(BIN)
-	$(EDL) -o $(TESTEXE) $(TESTFILE).o $(OBJ) $(LIBS) $(LDFLAGS)
+	$(EDL) -o $(UNITTESTSEXE) $(UNITTESTSFILE).o $(OBJ) $(LIBS) $(LDFLAGS)
 
 %.o: %.cpp
 	$(ECHO) "Compilation de <$<>"
