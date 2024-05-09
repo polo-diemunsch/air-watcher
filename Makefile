@@ -3,7 +3,7 @@ RM=rm
 MKDIR=mkdir
 EDL=g++
 COMP=g++
-CCFLAGS=-ansi -pedantic -Wall -std=c++17 -DDEB# -g -DMAP
+CCFLAGS=-ansi -pedantic -Wall -std=c++17 # -g -DMAP -DDEB
 RMFLAGS=-f
 LDFLAGS=$(CCFLAGS)
 LIBS=-lm
@@ -16,7 +16,7 @@ OBJ=$(INT:.h=.o)
 EFFACE=clean
 BIN=bin
 EXE=$(BIN)/air-watcher
-TEST_EXE=$(BIN)/test
+TESTEXE=$(BIN)/test
 
 .PHONY:$(EFFACE)
 
@@ -25,10 +25,10 @@ $(EXE): $(OBJ) $(MAINFILE).o
 	$(MKDIR) -p $(BIN)
 	$(EDL) -o $(EXE) $(MAINFILE).o $(OBJ) $(LIBS) $(LDFLAGS)
 
-$(TEST_EXE): $(OBJ) $(TESTFILE).o
-	$(ECHO) "Edition des liens de $(TEST_EXE)"
+$(TESTEXE): $(OBJ) $(TESTFILE).o
+	$(ECHO) "Edition des liens de $(TESTEXE)"
 	$(MKDIR) -p $(BIN)
-	$(EDL) -o $(TEST_EXE) $(TESTFILE).o $(OBJ) $(LIBS) $(LDFLAGS)
+	$(EDL) -o $(TESTEXE) $(TESTFILE).o $(OBJ) $(LIBS) $(LDFLAGS)
 
 %.o: %.cpp
 	$(ECHO) "Compilation de <$<>"
