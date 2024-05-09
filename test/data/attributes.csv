@@ -1,0 +1,5 @@
+AttributeID;Unit;Description;
+O3;µg/m3;ozone concentration;
+SO2;µg/m3;sulphur dioxide concentration;
+NO2;µg/m3;nitrogen dioxide concentration;
+PM10;µg/m3;particulate matter concentration;
