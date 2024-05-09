@@ -37,4 +37,4 @@ unit-tests: $(OBJ) $(UNITTESTSFILE).o
 
 $(EFFACE):
 	$(ECHO) "Nettoyage"
-	$(RM) $(RMFLAGS) $(OBJ) $(EXE) $(TESTFILE) $(TESTFILE).o $(MAINFILE).o core
+	$(RM) $(RMFLAGS) $(OBJ) $(EXE) $(MAINFILE).o $(UNITTESTSEXE) $(UNITTESTSFILE).o core
