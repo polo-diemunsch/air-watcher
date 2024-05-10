@@ -15,16 +15,19 @@ using namespace std;
 #include <iostream>
 #include <cmath>
 #include <ctime>
+#include <algorithm>
 
 //------------------------------------------------------ Include personnel
 #include "SensorAnalyzer.h"
+
+#include "../model/PrivateIndividual.h"
 
 //------------------------------------------------------------- Constantes
 
 //----------------------------------------------------------------- PUBLIC
 
 //----------------------------------------------------- Méthodes publiques
-double SensorAnalyzer::ComputeMeanAirQualityForSensor( const Sensor & sensor, const string & attributeId, time_t startDate, time_t endDate)
+double SensorAnalyzer::ComputeMeanAirQualityForSensor( const Sensor & sensor, const string & attributeId, time_t startDate, time_t endDate )
 // Algorithme :
 //
 {
@@ -61,29 +64,25 @@ double SensorAnalyzer::ComputeMeanAirQualityInArea ( const double latitude, cons
 
     int x1 = latitude;
     int y1 = longitude;
-
-
-    // TODO test du private individual à faire plus tard
     
     for (const Sensor & sensor : sensors)
-    {   
-        vector <Measurement> mesures = sensor.GetMeasurementsWithAttributeWithinDateRange(attributeId, startDate, endDate);
-        for (const Sensor & sensorToExclude : sensorsToExclude)
+    {
+        vector<Sensor>::iterator it = find(sensorsToExclude.begin(), sensorsToExclude.end(), sensor);
+        const PrivateIndividual * privateIndividual = sensor.GetPrivateIndividual();
+        if (it != sensorsToExclude.end() || !sensor.GetIsFunctioning() || (privateIndividual != nullptr && !privateIndividual->GetIsReliable()))
         {
-            if (sensor == sensorToExclude || (sensor.GetPrivateIndividual() != NULL && sensor.GetPrivateIndividual()->GetIsReliable()==false) || sensor.GetIsFunctioning()==false)
-            {
-                continue;
-            }
-        } 
+            continue;
+        }
 
         int x2 = sensor.GetLatitude();
         int y2 = sensor.GetLongitude();
         double sous_formule = sin(x2-x1/2) * sin(x2-x1/2) + cos(x1) * cos(x2) * sin(y2-y1/2) * sin(y2-y1/2);
         if (2 * 6371 * asin(sqrt(sous_formule)) < radius) //formule Harversine pour distance sphérique
         {
-           for (const Measurement & mesure : mesures)
+            vector <Measurement> measurements = sensor.GetMeasurementsWithAttributeWithinDateRange(attributeId, startDate, endDate);
+            for (const Measurement & measurement : measurements)
             {
-                sum += mesure.GetValue();
+                sum += measurement.GetValue();
                 measurementCount++;
             }
         }   
@@ -101,7 +100,7 @@ multimap<double, Sensor &> SensorAnalyzer::RankSensorsBySimilarity( const Sensor
     double meanDynamic;
     multimap<double, Sensor &> ranking;
 
-    const time_t endDate = time(0);
+    const time_t endDate = time(nullptr);
     const time_t startDate = endDate - timeRange;
 
     meanRefrence = ComputeMeanAirQualityForSensor(sensorToCompareTo, attributeID, startDate, endDate);
@@ -133,7 +132,7 @@ bool SensorAnalyzer::CheckFunctioningOfSensor ( Sensor & sensor, const double ra
 {
     bool result = true;
 
-    const time_t endDate = time_t(nullptr);
+    const time_t endDate = time(nullptr);
     const time_t startDate = endDate - timeRange;
     for (const string & attributeId : sensor.GetAttributeIds())
     {
@@ -176,18 +175,17 @@ multimap<bool, Sensor &> SensorAnalyzer::CheckFunctioningOfAllSensors ( const do
 //------------------------------------------------- Surcharge d'opérateurs
 
 //-------------------------------------------- Constructeurs - destructeur
-SensorAnalyzer::SensorAnalyzer ( vector<Sensor> & sensor )
+SensorAnalyzer::SensorAnalyzer ( vector<Sensor> & sensors_ )
 // Algorithme :
 //
 {
-for (Sensor & sens : sensor)
-    {
-        sensors.push_back(sens);
-    }
-
 #ifdef MAP
     cout << "Appel au constructeur de <SensorAnalyzer>" << endl;
 #endif
+    for (Sensor & sensor : sensors_)
+    {
+        sensors.push_back(sensor);
+    }
 } //----- Fin de SensorAnalyzer
 
 

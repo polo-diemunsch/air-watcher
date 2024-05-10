@@ -15,7 +15,6 @@
 #include <map>
 
 #include "../model/Sensor.h"
-#include "../model/PrivateIndividual.h"
 
 //------------------------------------------------------------- Constantes
 
@@ -43,8 +42,9 @@ public:
     );
     // Mode d'emploi :
     //
-    // Contrat : //endDates > startDate
-    //
+    // Contrat :
+    //  endDate > startDate
+
     double ComputeMeanAirQualityInArea (
         const double latitude,
         const double longitude,
@@ -56,8 +56,8 @@ public:
     );
     // Mode d'emploi :
     //
-    // Contrat : rayon en km, endDates > startDate
-    //
+    // Contrat :
+    //  rayon en km, endDate > startDate
 
     bool CheckFunctioningOfSensor (
         Sensor & sensor,
