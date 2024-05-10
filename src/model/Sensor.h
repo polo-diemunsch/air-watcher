@@ -84,7 +84,7 @@ public:
     // Contrat :
     //
 
-    void AddMeasurement ( Measurement & measurement );
+    void AddMeasurement ( const Measurement & measurement );
     // Mode d'emploi :
     //
     // Contrat :
