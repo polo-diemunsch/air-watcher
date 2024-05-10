@@ -15,6 +15,7 @@
 #include <map>
 
 #include "../model/Sensor.h"
+#include "../model/PrivateIndividual.h"
 
 //------------------------------------------------------------- Constantes
 
@@ -32,6 +33,8 @@ class SensorAnalyzer
 
 public:
 //----------------------------------------------------- Méthodes publiques
+
+    //current date à voir
     double ComputeMeanAirQualityForSensor (
         const Sensor & sensor,
         const string & attributeId,
@@ -40,9 +43,8 @@ public:
     );
     // Mode d'emploi :
     //
-    // Contrat :
+    // Contrat : //endDates > startDate
     //
-
     double ComputeMeanAirQualityInArea (
         const double latitude,
         const double longitude,
@@ -54,7 +56,7 @@ public:
     );
     // Mode d'emploi :
     //
-    // Contrat : rayon en km
+    // Contrat : rayon en km, endDates > startDate
     //
 
     bool CheckFunctioningOfSensor (
