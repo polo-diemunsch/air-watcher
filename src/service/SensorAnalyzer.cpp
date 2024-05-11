@@ -27,7 +27,7 @@ using namespace std;
 //----------------------------------------------------------------- PUBLIC
 
 //----------------------------------------------------- Méthodes publiques
-double SensorAnalyzer::ComputeMeanAirQualityForSensor( const Sensor & sensor, const string & attributeId, time_t startDate, time_t endDate )
+double SensorAnalyzer::ComputeMeanAirQualityForSensor( const Sensor * sensor, const string & attributeId, time_t startDate, time_t endDate )
 // Algorithme :
 //
 {
@@ -39,7 +39,7 @@ double SensorAnalyzer::ComputeMeanAirQualityForSensor( const Sensor & sensor, co
         }
     } si on ne prend pas en compte les privates individuals non fiables*/
 
-    vector <Measurement> mesures = sensor.GetMeasurementsWithAttributeWithinDateRange(attributeId, startDate, endDate);
+    vector <Measurement> mesures = sensor->GetMeasurementsWithAttributeWithinDateRange(attributeId, startDate, endDate);
     double sum = 0;
     double measurementCount = 0;
 
@@ -55,7 +55,7 @@ double SensorAnalyzer::ComputeMeanAirQualityForSensor( const Sensor & sensor, co
 } //----- Fin de ComputeMeanAirQualityForSensor
 
 double SensorAnalyzer::ComputeMeanAirQualityInArea ( const double latitude, const double longitude, const double radius,
-    vector<Sensor> sensorsToExclude, const string & attributeId, const time_t & startDate, const time_t & endDate )
+    vector<Sensor *> sensorsToExclude, const string & attributeId, const time_t & startDate, const time_t & endDate )
 // Algorithme :
 //
 {
@@ -65,17 +65,17 @@ double SensorAnalyzer::ComputeMeanAirQualityInArea ( const double latitude, cons
     double x1 = latitude * M_PI / 180; // en radians
     double y1 = longitude * M_PI / 180; // en radians
     
-    for (const Sensor & sensor : sensors)
+    for (const Sensor * sensor : sensors)
     {
-        vector<Sensor>::iterator it = find(sensorsToExclude.begin(), sensorsToExclude.end(), sensor);
-        const PrivateIndividual * privateIndividual = sensor.GetPrivateIndividual();
-        if (it != sensorsToExclude.end() || !sensor.GetIsFunctioning() || (privateIndividual != nullptr && !privateIndividual->GetIsReliable()))
+        vector<Sensor *>::iterator it = find(sensorsToExclude.begin(), sensorsToExclude.end(), sensor);
+        const PrivateIndividual * privateIndividual = sensor->GetPrivateIndividual();
+        if (it != sensorsToExclude.end() || !sensor->GetIsFunctioning() || (privateIndividual != nullptr && !privateIndividual->GetIsReliable()))
         {
             continue;
         }
 
-        double x2 = sensor.GetLatitude() * M_PI / 180; // en radians
-        double y2 = sensor.GetLongitude() * M_PI / 180; // en radians
+        double x2 = sensor->GetLatitude() * M_PI / 180; // en radians
+        double y2 = sensor->GetLongitude() * M_PI / 180; // en radians
         
         double deltaLatitude = x2 - x1;
         double deltaLongitude = y2 - y1;
@@ -86,7 +86,7 @@ double SensorAnalyzer::ComputeMeanAirQualityInArea ( const double latitude, cons
 
         if (distance <= radius)
         {
-            vector <Measurement> measurements = sensor.GetMeasurementsWithAttributeWithinDateRange(attributeId, startDate, endDate);
+            vector <Measurement> measurements = sensor->GetMeasurementsWithAttributeWithinDateRange(attributeId, startDate, endDate);
             for (const Measurement & measurement : measurements)
             {
                 sum += measurement.GetValue();
@@ -98,21 +98,21 @@ double SensorAnalyzer::ComputeMeanAirQualityInArea ( const double latitude, cons
     return (measurementCount == 0) ? 0 : (sum / measurementCount);
 } //----- Fin de ComputeMeanAirQualityInArea
 
-multimap<double, Sensor &> SensorAnalyzer::RankSensorsBySimilarity( const Sensor & sensorToCompareTo, const string & attributeID, const time_t timeRange )
+multimap<double, Sensor *> SensorAnalyzer::RankSensorsBySimilarity( const Sensor * sensorToCompareTo, const string & attributeID, const time_t timeRange )
 // Algorithme :
 //
 {
     double meanRefrence;
 
     double meanDynamic;
-    multimap<double, Sensor &> ranking;
+    multimap<double, Sensor *> ranking;
 
     const time_t endDate = time(nullptr);
     const time_t startDate = endDate - timeRange;
 
     meanRefrence = ComputeMeanAirQualityForSensor(sensorToCompareTo, attributeID, startDate, endDate);
 
-    for(Sensor & sensor : sensors)
+    for(Sensor * sensor : sensors)
     {
         #ifdef DEB
         cout << "Sensor: " << sensor.GetId() << endl;
@@ -133,7 +133,7 @@ multimap<double, Sensor &> SensorAnalyzer::RankSensorsBySimilarity( const Sensor
     return ranking;
 } //----- Fin de RankSensorsBySimilarity
 
-bool SensorAnalyzer::CheckFunctioningOfSensor ( Sensor & sensor, const double radius, const time_t timeRange, const double relativeDifferenceAllowed )
+bool SensorAnalyzer::CheckFunctioningOfSensor ( Sensor * sensor, const double radius, const time_t timeRange, const double relativeDifferenceAllowed )
 // Algorithme :
 //
 {
@@ -141,14 +141,14 @@ bool SensorAnalyzer::CheckFunctioningOfSensor ( Sensor & sensor, const double ra
 
     const time_t endDate = time(nullptr);
     const time_t startDate = endDate - timeRange;
-    for (const string & attributeId : sensor.GetAttributeIds())
+    for (const string & attributeId : sensor->GetAttributeIds())
     {
         double meanAirQualitySensor = ComputeMeanAirQualityForSensor(sensor, attributeId, startDate, endDate);
         double meanAirQualityWithoutSensor = ComputeMeanAirQualityInArea(
-            sensor.GetLatitude(),
-            sensor.GetLongitude(),
+            sensor->GetLatitude(),
+            sensor->GetLongitude(),
             radius,
-            vector<Sensor>({sensor}),
+            vector<Sensor *>({sensor}),
             attributeId,
             startDate,
             endDate
@@ -156,7 +156,7 @@ bool SensorAnalyzer::CheckFunctioningOfSensor ( Sensor & sensor, const double ra
         if (abs(meanAirQualitySensor - meanAirQualityWithoutSensor) / meanAirQualityWithoutSensor > relativeDifferenceAllowed)
         {
             result = false;
-            // sensor.SetIsFunctioning(false);
+            // sensor.SetIsFunctioning(false);  // TODO
             break;
         }
     }
@@ -164,13 +164,13 @@ bool SensorAnalyzer::CheckFunctioningOfSensor ( Sensor & sensor, const double ra
     return result;
 } //----- Fin de CheckFunctioningOfSensor
 
-multimap<bool, Sensor &> SensorAnalyzer::CheckFunctioningOfAllSensors ( const double radius, const time_t timeRange, const double relativeDifferenceAllowed )
+multimap<bool, Sensor *> SensorAnalyzer::CheckFunctioningOfAllSensors ( const double radius, const time_t timeRange, const double relativeDifferenceAllowed )
 // Algorithme :
 //
 {
-    multimap<bool, Sensor &> sensorFunctionement;
+    multimap<bool, Sensor *> sensorFunctionement;
 
-    for (Sensor & sensor : sensors)
+    for (Sensor * sensor : sensors)
     {
         sensorFunctionement.insert({CheckFunctioningOfSensor(sensor, radius, timeRange, relativeDifferenceAllowed), sensor});
     }
@@ -182,17 +182,14 @@ multimap<bool, Sensor &> SensorAnalyzer::CheckFunctioningOfAllSensors ( const do
 //------------------------------------------------- Surcharge d'opérateurs
 
 //-------------------------------------------- Constructeurs - destructeur
-SensorAnalyzer::SensorAnalyzer ( vector<Sensor> & sensors_ ) : sensors(sensors_)
+SensorAnalyzer::SensorAnalyzer ( vector<Sensor *> & sensors ) :
+sensors(sensors)
 // Algorithme :
 //
 {
 #ifdef MAP
     cout << "Appel au constructeur de <SensorAnalyzer>" << endl;
 #endif
-    /*for (Sensor & sensor : sensors_)
-    {
-        sensors.push_back(sensor);
-    }*/
 } //----- Fin de SensorAnalyzer
 
 

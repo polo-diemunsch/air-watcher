@@ -37,7 +37,7 @@ public:
 
     //current date à voir
     double ComputeMeanAirQualityForSensor (
-        const Sensor & sensor,
+        const Sensor * sensor,
         const string & attributeId,
         time_t startDate,
         time_t endDate
@@ -51,7 +51,7 @@ public:
         const double latitude,
         const double longitude,
         const double radius,
-        vector<Sensor> sensorsToExclude,
+        vector<Sensor *> sensorsToExclude,
         const string & attributeId,
         const time_t & startDate,
         const time_t & endDate
@@ -62,7 +62,7 @@ public:
     //  rayon en km, endDate > startDate
 
     bool CheckFunctioningOfSensor (
-        Sensor & sensor,
+        Sensor * sensor,
         const double radius,
         const time_t timeRange,
         const double relativeDifferenceAllowed
@@ -72,7 +72,7 @@ public:
     // Contrat :
     //
 
-    multimap<bool, Sensor &> CheckFunctioningOfAllSensors (
+    multimap<bool, Sensor *> CheckFunctioningOfAllSensors (
         const double radius,
         const time_t timeRange,
         const double relativeDifferenceAllowed
@@ -82,8 +82,8 @@ public:
     // Contrat :
     //
 
-    multimap<double, Sensor &> RankSensorsBySimilarity (
-        const Sensor & sensorToCompareTo,
+    multimap<double, Sensor *> RankSensorsBySimilarity (
+        const Sensor * sensorToCompareTo,
         const string & attributeId,
         const time_t timeRange
     );
@@ -95,7 +95,7 @@ public:
 //------------------------------------------------- Surcharge d'opérateurs
 
 //-------------------------------------------- Constructeurs - destructeur
-    SensorAnalyzer ( vector<Sensor> & sensors );
+    SensorAnalyzer ( vector<Sensor *> & sensors );
     // Mode d'emploi :
     //
     // Contrat :
@@ -113,7 +113,7 @@ protected:
 //----------------------------------------------------- Méthodes protégées
 
 //----------------------------------------------------- Attributs protégés
-    vector<Sensor> sensors;
+    vector<Sensor *> sensors;
 };
 
 //-------------------------------- Autres définitions dépendantes de <SensorAnalyzer>

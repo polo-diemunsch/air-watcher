@@ -32,13 +32,13 @@ const Sensor sensor1("Sensor1", 0, 0);
 const Sensor sensor2("Sensor2", 30, 25);
 
 // Measurements
-Measurement measurement0(1000, &O3, 42); //sensor0
-Measurement measurement1(1100, &SO2, 76); //sensor0 
-Measurement measurement2(500, &O3, 35); //sensor2
-Measurement measurement3(1400, &O3, 61); //sensor1
-Measurement measurement4(1200, &O3, 67); //sensor1
-Measurement measurement5(1000, &NO2, 47); //sensor0
-Measurement measurement6(1300, &SO2, 22); //sensor2
+const Measurement measurement0(1000, &O3, 42);
+const Measurement measurement1(1100, &SO2, 76);
+const Measurement measurement2(500, &O3, 35);
+const Measurement measurement3(1400, &O3, 61);
+const Measurement measurement4(1200, &O3, 67);
+const Measurement measurement5(1000, &NO2, 47);
+const Measurement measurement6(1300, &SO2, 22);
 
 //----------------------------------------------------------------- PUBLIC
 
@@ -168,14 +168,14 @@ pair<int, int> testMeanAirQualityForSensor()
     sensorMean2.AddMeasurement(measurement5);
     sensorMean2.AddMeasurement(measurement6);
 
-    vector<Sensor> sensors({sensorMean0, sensorMean1, sensorMean2});
+    vector<Sensor *> sensors({&sensorMean0, &sensorMean1, &sensorMean2});
     SensorAnalyzer sensorAnalyzer(sensors);
     
     cout << "\tMean Air Quality for Sensor tests ";
 
     // test classique O3 sur le capteur 1 avec toutes les mesures
     expected = 64;
-    got = sensorAnalyzer.ComputeMeanAirQualityForSensor(sensorMean1, "O3", 0, 2000);
+    got = sensorAnalyzer.ComputeMeanAirQualityForSensor(&sensorMean1, "O3", 0, 2000);
     if(got == expected)
     {
         successCount++;
@@ -191,7 +191,7 @@ pair<int, int> testMeanAirQualityForSensor()
 
     // test classique periode 0-1200
     expected = 48;
-    got = sensorAnalyzer.ComputeMeanAirQualityForSensor(sensorMean2, "O3", 0, 1200);
+    got = sensorAnalyzer.ComputeMeanAirQualityForSensor(&sensorMean2, "O3", 0, 1200);
     if(got == expected)
     {
         successCount++;
@@ -231,13 +231,13 @@ pair<int, int> testMeanAirQualityInArea()
     sensorMean0.AddMeasurement(measurement1);
     sensorMean0.AddMeasurement(measurement5);
 
-    sensorMean2.AddMeasurement(measurement6);
-    sensorMean2.AddMeasurement(measurement2);
-
-    sensorMean1.AddMeasurement(measurement4);
     sensorMean1.AddMeasurement(measurement3);
+    sensorMean1.AddMeasurement(measurement4);
 
-    vector<Sensor> sensors({sensorMean0, sensorMean1, sensorMean2});
+    sensorMean2.AddMeasurement(measurement2);
+    sensorMean2.AddMeasurement(measurement6);
+
+    vector<Sensor *> sensors({&sensorMean0, &sensorMean1, &sensorMean2});
     SensorAnalyzer sensorAnalyzer(sensors);
     
     cout << "\tMean Air Quality in Area tests ";
@@ -260,7 +260,7 @@ pair<int, int> testMeanAirQualityInArea()
 
     // test exclusion d'un capteur sensorMean0
     expected = 22;
-    got = sensorAnalyzer.ComputeMeanAirQualityInArea(20, 20, 4000, {sensorMean0}, "SO2", 0, 2000);
+    got = sensorAnalyzer.ComputeMeanAirQualityInArea(20, 20, 4000, {&sensorMean0}, "SO2", 0, 2000);
     if(got == expected)
     {
         successCount++;
@@ -274,7 +274,7 @@ pair<int, int> testMeanAirQualityInArea()
     }
     testCount++;
 
-    // test classique avec un capteur non pris en compte dû au rayon
+    // test classique avec un capteur non pris en compte par le rayon
     expected = 56;
     got = sensorAnalyzer.ComputeMeanAirQualityInArea(0, 0, 20, {}, "O3", 0, 2000);
     if(got == expected)
@@ -290,7 +290,7 @@ pair<int, int> testMeanAirQualityInArea()
     }
     testCount++;
 
-    //test periode 0-1200 avec un capteur non pris en compte du au rayon
+    // test periode 0-1200 avec un capteur non pris en compte par le rayon
     expected = 54;
     got = sensorAnalyzer.ComputeMeanAirQualityInArea(0, 0, 20, {}, "O3", 0, 1200);
     if(got == expected)
@@ -306,14 +306,11 @@ pair<int, int> testMeanAirQualityInArea()
     }
     testCount++;
 
-    //test classique avec un sensor non fonctionnel (sensorMean0)
+    // test classique avec un sensor non fonctionnel (sensorMean0)
     sensorMean0.SetIsFunctioning(false);
-    
-    vector<Sensor> sensors2({sensorMean0, sensorMean1, sensorMean2}); //obligatoire pour les changements de fonctionnement
-    SensorAnalyzer sensorAnalyzer2(sensors2);
 
     expected = 54;
-    got = sensorAnalyzer2.ComputeMeanAirQualityInArea(20, 20, 10000, {}, "O3", 0, 2000);
+    got = sensorAnalyzer.ComputeMeanAirQualityInArea(20, 20, 10000, {}, "O3", 0, 2000);
     if(got == expected)
     {
         successCount++;
