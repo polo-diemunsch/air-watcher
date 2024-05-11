@@ -32,13 +32,13 @@ const Sensor sensor1("Sensor1", 0, 0);
 const Sensor sensor2("Sensor2", 30, 25);
 
 // Measurements
-const Measurement measurement0(1000, &O3, 42);
-const Measurement measurement1(1100, &SO2, 76);
-const Measurement measurement2(500, &O3, 35);
-const Measurement measurement3(1400, &O3, 61);
-const Measurement measurement4(1200, &O3, 67);
-const Measurement measurement5(1000, &NO2, 47);
-const Measurement measurement6(1300, &SO2, 22);
+Measurement measurement0(1000, &O3, 42); //sensor0
+Measurement measurement1(1100, &SO2, 76); //sensor0 
+Measurement measurement2(500, &O3, 35); //sensor2
+Measurement measurement3(1400, &O3, 61); //sensor1
+Measurement measurement4(1200, &O3, 67); //sensor1
+Measurement measurement5(1000, &NO2, 47); //sensor0
+Measurement measurement6(1300, &SO2, 22); //sensor2
 
 //----------------------------------------------------------------- PUBLIC
 
@@ -151,7 +151,7 @@ pair<int, int> testMeanAirQualityForSensor()
 
     Sensor sensorMean0("SensorMean0", 0, 0);
     Sensor sensorMean1("SensorMean1", 0, 0);
-    Sensor sensorMean2("SensorMean2", 46, 69);
+    Sensor sensorMean2("SensorMean2", 40, 40);
 
     sensorMean0.AddMeasurement(measurement0);
     sensorMean0.AddMeasurement(measurement1);
@@ -212,6 +212,128 @@ pair<int, int> testMeanAirQualityForSensor()
     return make_pair(successCount, testCount);
 } //----- Fin de testMeanAirQualityForSensor
 
+
+pair<int, int> testMeanAirQualityInArea()
+// Algorithme :
+//
+{
+    int testCount = 0;
+    int successCount = 0;
+
+    int expected = 0;
+    int got = 0;
+
+    Sensor sensorMean0("SensorMean0", 0, 0);
+    Sensor sensorMean1("SensorMean1", 0, 0);
+    Sensor sensorMean2("SensorMean2", 40, 40);
+
+    sensorMean0.AddMeasurement(measurement0);
+    sensorMean0.AddMeasurement(measurement1);
+    sensorMean0.AddMeasurement(measurement5);
+
+    sensorMean2.AddMeasurement(measurement6);
+    sensorMean2.AddMeasurement(measurement2);
+
+    sensorMean1.AddMeasurement(measurement4);
+    sensorMean1.AddMeasurement(measurement3);
+
+    vector<Sensor> sensors({sensorMean0, sensorMean1, sensorMean2});
+    SensorAnalyzer sensorAnalyzer(sensors);
+    
+    cout << "\tMean Air Quality in Area tests ";
+    
+    // test zone non couverte
+    expected = 0;
+    got = sensorAnalyzer.ComputeMeanAirQualityInArea(100, 100, 20, {}, "O3", 0, 1200);
+    if(got == expected)
+    {
+        successCount++;
+    }
+    else
+    {
+        if (successCount == testCount)
+            cout << "\n";
+        cout << "\t\tMean Air Quality in Area Test " << testCount << " failed, "
+             << "expected " << expected << " but got " << got << endl;
+    }
+    testCount++;
+
+    // test exclusion d'un capteur sensorMean0
+    expected = 22;
+    got = sensorAnalyzer.ComputeMeanAirQualityInArea(20, 20, 4000, {sensorMean0}, "SO2", 0, 2000);
+    if(got == expected)
+    {
+        successCount++;
+    }
+    else
+    {
+        if (successCount == testCount)
+            cout << "\n";
+        cout << "\t\tMean Air Quality in Area Test " << testCount << " failed, "
+             << "expected " << expected << " but got " << got << endl;
+    }
+    testCount++;
+
+    // test classique avec un capteur non pris en compte dû au rayon
+    expected = 56;
+    got = sensorAnalyzer.ComputeMeanAirQualityInArea(0, 0, 20, {}, "O3", 0, 2000);
+    if(got == expected)
+    {
+        successCount++;
+    }
+    else
+    {
+        if (successCount == testCount)
+            cout << "\n";
+        cout << "\t\tMean Air Quality in Area Test " << testCount << " failed, "
+             << "expected " << expected << " but got " << got << endl;
+    }
+    testCount++;
+
+    //test periode 0-1200 avec un capteur non pris en compte du au rayon
+    expected = 54;
+    got = sensorAnalyzer.ComputeMeanAirQualityInArea(0, 0, 20, {}, "O3", 0, 1200);
+    if(got == expected)
+    {
+        successCount++;
+    }
+    else
+    {
+        if (successCount == testCount)
+            cout << "\n";
+        cout << "\t\tMean Air Quality in Area Test " << testCount << " failed, "
+             << "expected " << expected << " but got " << got << endl;
+    }
+    testCount++;
+
+    //test classique avec un sensor non fonctionnel (sensorMean0)
+    sensorMean0.SetIsFunctioning(false);
+    
+    vector<Sensor> sensors2({sensorMean0, sensorMean1, sensorMean2}); //obligatoire pour les changements de fonctionnement
+    SensorAnalyzer sensorAnalyzer2(sensors2);
+
+    expected = 54;
+    got = sensorAnalyzer2.ComputeMeanAirQualityInArea(20, 20, 10000, {}, "O3", 0, 2000);
+    if(got == expected)
+    {
+        successCount++;
+    }
+    else
+    {
+        if (successCount == testCount)
+            cout << "\n";
+        cout << "\t\tMean Air Quality in Area Test " << testCount << " failed, "
+             << "expected " << expected << " but got " << got << endl;
+    }
+    testCount++;
+
+    if (successCount != testCount)
+        cout << "\tSuccess ";
+    cout << "[" << successCount << "/" << testCount << "]" << endl;
+    
+    return make_pair(successCount, testCount);
+} //----- Fin de testMeanAirQualityInArea
+
 int main()
 {
     pair<int, int> results;
@@ -221,6 +343,9 @@ int main()
 
     cout << "Test Mean Air Quality for Sensor:" << endl;
     results = testMeanAirQualityForSensor();
+
+    cout << "Test Mean Air Quality in Area:" << endl;
+    results = testMeanAirQualityInArea();
 
     return EXIT_SUCCESS;
 } //----- Fin de main

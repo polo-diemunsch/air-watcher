@@ -79,7 +79,7 @@ void Sensor::SetIsFunctioning ( bool isFunctioning_ )
     isFunctioning = isFunctioning_;
 } //----- Fin de SetIsFunctioning
 
-void Sensor::AddMeasurement ( const Measurement & measurement )
+void Sensor::AddMeasurement ( Measurement & measurement ) //obligé d'enlever le const sinon pb de compilation
 // Algorithme :
 //
 {

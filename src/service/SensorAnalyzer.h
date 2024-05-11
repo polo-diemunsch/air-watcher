@@ -10,6 +10,8 @@
 #if ! defined ( SENSOR_ANALYZER_H )
 #define SENSOR_ANALYZER_H
 
+#define M_PI 3.14159265358979323846
+
 //--------------------------------------------------- Interfaces utilisées
 #include <string>
 #include <map>

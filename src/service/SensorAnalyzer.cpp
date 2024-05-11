@@ -62,8 +62,8 @@ double SensorAnalyzer::ComputeMeanAirQualityInArea ( const double latitude, cons
     double sum = 0; 
     double measurementCount = 0;
 
-    int x1 = latitude;
-    int y1 = longitude;
+    double x1 = latitude * M_PI / 180; // en radians
+    double y1 = longitude * M_PI / 180; // en radians
     
     for (const Sensor & sensor : sensors)
     {
@@ -74,10 +74,17 @@ double SensorAnalyzer::ComputeMeanAirQualityInArea ( const double latitude, cons
             continue;
         }
 
-        int x2 = sensor.GetLatitude();
-        int y2 = sensor.GetLongitude();
-        double sous_formule = sin(x2-x1/2) * sin(x2-x1/2) + cos(x1) * cos(x2) * sin(y2-y1/2) * sin(y2-y1/2);
-        if (2 * 6371 * asin(sqrt(sous_formule)) < radius) //formule Harversine pour distance sphérique
+        double x2 = sensor.GetLatitude() * M_PI / 180; // en radians
+        double y2 = sensor.GetLongitude() * M_PI / 180; // en radians
+        
+        double deltaLatitude = x2 - x1;
+        double deltaLongitude = y2 - y1;
+
+        double sous_formule = sin(deltaLatitude/2)*sin(deltaLatitude/2) + cos(x1) * cos(x2) * sin(deltaLongitude/2) * sin(deltaLongitude/2);
+        double c = 2 * asin(sqrt(sous_formule));
+        double distance = 6371 * c; // où R est le rayon de la Terre
+
+        if (distance <= radius)
         {
             vector <Measurement> measurements = sensor.GetMeasurementsWithAttributeWithinDateRange(attributeId, startDate, endDate);
             for (const Measurement & measurement : measurements)
@@ -175,17 +182,17 @@ multimap<bool, Sensor &> SensorAnalyzer::CheckFunctioningOfAllSensors ( const do
 //------------------------------------------------- Surcharge d'opérateurs
 
 //-------------------------------------------- Constructeurs - destructeur
-SensorAnalyzer::SensorAnalyzer ( vector<Sensor> & sensors_ )
+SensorAnalyzer::SensorAnalyzer ( vector<Sensor> & sensors_ ) : sensors(sensors_)
 // Algorithme :
 //
 {
 #ifdef MAP
     cout << "Appel au constructeur de <SensorAnalyzer>" << endl;
 #endif
-    for (Sensor & sensor : sensors_)
+    /*for (Sensor & sensor : sensors_)
     {
         sensors.push_back(sensor);
-    }
+    }*/
 } //----- Fin de SensorAnalyzer
 
 
