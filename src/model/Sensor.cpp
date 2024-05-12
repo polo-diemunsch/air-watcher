@@ -51,14 +51,14 @@ pair<double, double> Sensor::GetPosition ( ) const
     return make_pair(latitude, longitude);
 } //----- Fin de GetLongitude
 
-const PrivateIndividual * Sensor::GetPrivateIndividual ( ) const
+PrivateIndividual * Sensor::GetPrivateIndividual ( ) const
 // Algorithme :
 //
 {
     return privateIndividual;
 } //----- Fin de GetPrivateIndividual
 
-void Sensor::SetPrivateIndividual ( const PrivateIndividual * privateIndividualPointer )
+void Sensor::SetPrivateIndividual ( PrivateIndividual * privateIndividualPointer )
 // Algorithme :
 //
 {

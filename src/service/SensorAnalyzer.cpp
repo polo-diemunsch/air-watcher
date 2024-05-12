@@ -30,26 +30,34 @@ using namespace std;
 double SensorAnalyzer::ComputeMeanAirQualityForSensor( const Sensor * sensor, const string & attributeId, time_t startDate, time_t endDate )
 // Algorithme :
 //
-{
-    /*if (sensor.GetPrivateIndividual() != NULL)
+{   
+    // TODO test du private individual à faire plus tard
+    /*if (sensor->GetPrivateIndividual() != NULL)
     {
-        if (!sensor.GetPrivateIndividual()->GetIsReliable())
+        if (!sensor->GetPrivateIndividual()->GetIsReliable())
         {
+            cout << "Private individual not reliable" << endl;
             return 0;
         }
-    } si on ne prend pas en compte les privates individuals non fiables*/
+    } //si on ne prend pas en compte les privates individuals non fiables*/
 
     vector <Measurement> mesures = sensor->GetMeasurementsWithAttributeWithinDateRange(attributeId, startDate, endDate);
     double sum = 0;
     double measurementCount = 0;
 
-    // TODO test du private individual à faire plus tard
+    //long val = sensor->GetPrivateIndividual()->GetPoints();
 
     for (const Measurement & mesure : mesures)
     {
         sum += mesure.GetValue();
         measurementCount++;
+        /*if (sensor->GetPrivateIndividual() != nullptr)
+        {
+            val += 1;
+        } TODO */
     }
+
+    //sensor->GetPrivateIndividual()->SetPoints(val);
 
     return (measurementCount == 0) ? 0 : (sum / measurementCount);
 } //----- Fin de ComputeMeanAirQualityForSensor
@@ -84,6 +92,8 @@ double SensorAnalyzer::ComputeMeanAirQualityInArea ( const double latitude, cons
         double c = 2 * asin(sqrt(sous_formule));
         double distance = 6371 * c; // où R est le rayon de la Terre
 
+        //long val = sensor->GetPrivateIndividual()->GetPoints();
+
         if (distance <= radius)
         {
             vector <Measurement> measurements = sensor->GetMeasurementsWithAttributeWithinDateRange(attributeId, startDate, endDate);
@@ -91,8 +101,14 @@ double SensorAnalyzer::ComputeMeanAirQualityInArea ( const double latitude, cons
             {
                 sum += measurement.GetValue();
                 measurementCount++;
+                /*if (sensor->GetPrivateIndividual() != nullptr)
+                {
+                    val += 1;
+                } TODO */
             }
-        }   
+        }
+
+        //sensor->GetPrivateIndividual()->SetPoints(val);   
     }
 
     return (measurementCount == 0) ? 0 : (sum / measurementCount);

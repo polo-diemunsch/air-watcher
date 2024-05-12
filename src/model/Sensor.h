@@ -60,13 +60,13 @@ public:
     // Contrat :
     //
 
-    const PrivateIndividual * GetPrivateIndividual ( ) const;
+    PrivateIndividual * GetPrivateIndividual ( ) const;
     // Mode d'emploi :
     //
     // Contrat :
     //
 
-    void SetPrivateIndividual ( const PrivateIndividual * privateIndividual );
+    void SetPrivateIndividual ( PrivateIndividual * privateIndividual );
     // Mode d'emploi :
     //
     // Contrat :
@@ -155,7 +155,7 @@ protected:
     const string id;
     const double latitude;
     const double longitude;
-    const PrivateIndividual * privateIndividual;
+    PrivateIndividual * privateIndividual;
     unordered_map<string, map<time_t, Measurement>> measurements;
     bool isFunctioning;
 };
