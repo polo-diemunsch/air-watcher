@@ -1,5 +1,5 @@
-sensor0;0;0;
-sensor1;0;0;
-sensor2;123;048;
-sensor3;-45;-124;
-sensor4;12.4;-75.873;
+Sensor0;0;0;
+Sensor1;0;0;
+Sensor2;30;025;
+SensorNegativeCoordinates;-45;-124;
+SensorDecimalCoordinates;12.4;-75.873;
