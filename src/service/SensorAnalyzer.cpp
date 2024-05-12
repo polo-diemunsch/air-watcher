@@ -32,7 +32,8 @@ double SensorAnalyzer::ComputeMeanAirQualityForSensor( const Sensor * sensor, co
 //
 {   
     // TODO test du private individual à faire plus tard
-    /*if (sensor->GetPrivateIndividual() != NULL)
+    // PrivateIndividual * privateIndividual = sensor->GetPrivateIndividual();
+    /*if (privateIndividual != nullptr)
     {
         if (!sensor->GetPrivateIndividual()->GetIsReliable())
         {
@@ -45,19 +46,17 @@ double SensorAnalyzer::ComputeMeanAirQualityForSensor( const Sensor * sensor, co
     double sum = 0;
     double measurementCount = 0;
 
-    //long val = sensor->GetPrivateIndividual()->GetPoints();
-
     for (const Measurement & mesure : mesures)
     {
         sum += mesure.GetValue();
         measurementCount++;
-        /*if (sensor->GetPrivateIndividual() != nullptr)
-        {
-            val += 1;
-        } TODO */
     }
 
-    //sensor->GetPrivateIndividual()->SetPoints(val);
+    // TODO
+    /*if (privateIndividual != nullptr)
+    {
+        privateIndividual->AddPoints(measurementCount);
+    }*/
 
     return (measurementCount == 0) ? 0 : (sum / measurementCount);
 } //----- Fin de ComputeMeanAirQualityForSensor
@@ -92,7 +91,8 @@ double SensorAnalyzer::ComputeMeanAirQualityInArea ( const double latitude, cons
         double c = 2 * asin(sqrt(sous_formule));
         double distance = 6371 * c; // où R est le rayon de la Terre
 
-        //long val = sensor->GetPrivateIndividual()->GetPoints();
+        // PrivateIndividual * privateIndividual = sensor->GetPrivateIndividual();
+        // long sensorMeasurementCount = 0;
 
         if (distance <= radius)
         {
@@ -101,14 +101,15 @@ double SensorAnalyzer::ComputeMeanAirQualityInArea ( const double latitude, cons
             {
                 sum += measurement.GetValue();
                 measurementCount++;
-                /*if (sensor->GetPrivateIndividual() != nullptr)
-                {
-                    val += 1;
-                } TODO */
+                // sensorMeasurementCount++;
             }
         }
 
-        //sensor->GetPrivateIndividual()->SetPoints(val);   
+        // TODO
+        /*if (privateIndividual != nullptr)
+        {
+            privateIndividual->AddPoints(sensorMeasurementCount);
+        }*/  
     }
 
     return (measurementCount == 0) ? 0 : (sum / measurementCount);
