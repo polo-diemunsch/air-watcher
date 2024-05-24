@@ -107,6 +107,29 @@ bool cleanerEquality ( const Cleaner & cleanerA, const Cleaner & cleanerB )
         cleanerA.GetEndDate() == cleanerB.GetEndDate();
 } //----- Fin de cleanerEquality
 
+bool providerEquality ( const Provider & providerA, const Provider & providerB, bool testCleaners = true )
+// Algorithme :
+//
+{
+    bool sameCleaners = true;
+
+    if (testCleaners)
+    {
+        vector<Cleaner> cleanersA = providerA.GetCleaners();
+        vector<Cleaner> cleanersB = providerB.GetCleaners();
+        sameCleaners = cleanersA.size() == cleanersB.size();
+        size_t i = 0;
+        while (sameCleaners && i < cleanersA.size())
+        {
+            sameCleaners = cleanerEquality(cleanersA[i], cleanersB[i]);
+            i++;
+        }
+    }
+
+    return sameCleaners &&
+        providerA.GetId() == providerB.GetId();
+} //----- Fin de providerEquality
+
 pair<int, int> testParser()
 // Algorithme :
 //
@@ -267,10 +290,12 @@ pair<int, int> testParser()
         }
         localTestCount++;
     }
-    const vector<Sensor> privateIndividualSensors({sensorMeasurement2, sensorMeasurement1});
-    for (size_t i = 0; i < parserPrivateIndividuals.size(); i++)
+    const vector<Sensor> privateIndividualSensors({sensorDecimalCoordinates, sensorNegativeCoordinates, sensorMeasurement2, sensorMeasurement1, sensorMeasurement0});
+    for (size_t i = 0; i < parserSensors.size(); i++)
     {
-        if(privateIndividualEquality(*(privateIndividualSensors[i].GetPrivateIndividual()), parserPrivateIndividuals[i], false))
+        PrivateIndividual * parserSensorPrivateIndividual = parserSensors[i].GetPrivateIndividual();
+        PrivateIndividual * sensorPrivateIndividual = privateIndividualSensors[i].GetPrivateIndividual();
+        if(sensorPrivateIndividual == parserSensorPrivateIndividual || privateIndividualEquality(*sensorPrivateIndividual, *parserSensorPrivateIndividual, false))
         {
             localSuccessCount++;
         }
@@ -279,7 +304,7 @@ pair<int, int> testParser()
             if (localSuccessCount == localTestCount)
                 cout << "\n";
             cout << "\t\tPrivate Individual Sensor Test " << localTestCount << " failed for "
-                 << privateIndividualSensors[i] << ", expected private individual " << *(privateIndividualSensors[i].GetPrivateIndividual()) << endl;
+                 << parserSensors[i] << ", expected private individual " << *sensorPrivateIndividual << endl;
         }
         localTestCount++;
     }
@@ -288,7 +313,7 @@ pair<int, int> testParser()
     cout << "[" << localSuccessCount << "/" << localTestCount << "]" << endl;
     testCount += localTestCount;
     successCount += localSuccessCount;
-    
+
     cout << "\tParser Cleaners tests ";
     Cleaner cleaner0("Cleaner0", 42, -42, 1000, 1100);
     Cleaner cleaner1("Cleaner1", 69, 4.20, 1200, 1400);
@@ -316,7 +341,54 @@ pair<int, int> testParser()
     cout << "[" << localSuccessCount << "/" << localTestCount << "]" << endl;
     testCount += localTestCount;
     successCount += localSuccessCount;
-    
+
+    cout << "\tParser Providers tests ";
+    Provider provider0("Provider0");
+    cleaner1.SetProvider(&provider0);
+    provider0.AddCleaner(cleaner1);
+    const vector<Provider> providers({provider0});
+    localTestCount = 0;
+    localSuccessCount = 0;
+    vector<Provider> parserProviders = parser.GetProviders();
+    for (size_t i = 0; i < parserProviders.size(); i++)
+    {
+        if(providerEquality(providers[i], parserProviders[i]))
+        {
+            localSuccessCount++;
+        }
+        else
+        {
+            if (localSuccessCount == localTestCount)
+                cout << "\n";
+            cout << "\t\tProvider Test " << localTestCount << " failed for "
+                 << parserProviders[i] << ", expected " << providers[i] << endl;
+        }
+        localTestCount++;
+    }
+    const vector<Cleaner> providerCleaners({cleaner1, cleaner0});
+    for (size_t i = 0; i < parserCleaners.size(); i++)
+    {
+        const Provider * parserCleanerProvider = parserCleaners[i].GetProvider();
+        const Provider * cleanerProvider = providerCleaners[i].GetProvider();
+        if(cleanerProvider == parserCleanerProvider || providerEquality(*cleanerProvider, *parserCleanerProvider, false))
+        {
+            localSuccessCount++;
+        }
+        else
+        {
+            if (localSuccessCount == localTestCount)
+                cout << "\n";
+            cout << "\t\tProvider Cleaner Test " << localTestCount << " failed for "
+                 << parserCleaners[i] << ", expected provider " << *cleanerProvider << endl;
+        }
+        localTestCount++;
+    }
+    if (localSuccessCount != localTestCount)
+        cout << "\tSuccess ";
+    cout << "[" << localSuccessCount << "/" << localTestCount << "]" << endl;
+    testCount += localTestCount;
+    successCount += localSuccessCount;
+
     return make_pair(successCount, testCount);
 } //----- Fin de testParser
 
@@ -514,16 +586,32 @@ pair<int, int> testMeanAirQualityInArea()
 
 int main()
 {
+    int successCount = 0;
+    int testCount = 0;
     pair<int, int> results;
 
     cout << "Test Parser:" << endl;
     results = testParser();
+    successCount += results.first;
+    testCount += results.second;
+
+    cout << "\n";
 
     cout << "Test Mean Air Quality for Sensor:" << endl;
     results = testMeanAirQualityForSensor();
+    successCount += results.first;
+    testCount += results.second;
+
+    cout << "\n";
 
     cout << "Test Mean Air Quality in Area:" << endl;
     results = testMeanAirQualityInArea();
+    successCount += results.first;
+    testCount += results.second;
+
+    cout << "\n";
+
+    cout << "TOTAL [" << successCount << "/" << testCount << "]" << endl;
 
     return EXIT_SUCCESS;
 } //----- Fin de main
