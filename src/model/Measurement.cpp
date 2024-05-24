@@ -51,8 +51,8 @@ ostream & operator << ( ostream & out, const Measurement & measurement )
 //
 {
     out << "Measurement(timestamp: "
-        << put_time(localtime(&(measurement.timestamp)), "%Y-%m-%d %H:%M:%S")
-        << measurement.timestamp << ", attribute: " << measurement.attribute << ", value: " << measurement.value << ")";
+        << put_time(localtime(&(measurement.timestamp)), "%Y-%m-%d %H:%M:%S") << " (" << measurement.timestamp << ")"
+        << ", attribute: " << *(measurement.attribute) << ", value: " << measurement.value << ")";
     return out;
 } //----- Fin de operator <<
 

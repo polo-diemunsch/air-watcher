@@ -39,6 +39,7 @@ const Measurement measurement3(1400, &O3, 61);
 const Measurement measurement4(1200, &O3, 67);
 const Measurement measurement5(1000, &NO2, 47);
 const Measurement measurement6(1300, &SO2, 22);
+const Measurement measurement7(1300, &PM10, 48.75);
 
 //----------------------------------------------------------------- PUBLIC
 
@@ -58,10 +59,17 @@ bool sensorEquality ( const Sensor & sensorA, const Sensor & sensorB )
     return sensorA.GetId() == sensorB.GetId() &&
         sensorA.GetLatitude() == sensorB.GetLatitude() &&
         sensorA.GetLongitude() == sensorB.GetLongitude() &&
-        // sensorA.GetPrivateIndividual() == sensorB.GetPrivateIndividual() &&
         sensorA.GetIsFunctioning() == sensorB.GetIsFunctioning();
-        // TODO measurements
-} //----- Fin de attributeEquality
+} //----- Fin de sensorEquality
+
+bool measurementEquality ( const Measurement & measurementA, const Measurement & measurementB )
+// Algorithme :
+//
+{
+    return attributeEquality(measurementA.GetAttribute(), measurementB.GetAttribute()) &&
+        measurementA.GetTimestamp() == measurementB.GetTimestamp() &&
+        measurementA.GetValue() == measurementB.GetValue();
+} //----- Fin de measurementEquality
 
 pair<int, int> testParser()
 // Algorithme :
@@ -98,7 +106,7 @@ pair<int, int> testParser()
             if (localSuccessCount == localTestCount)
                 cout << "\n";
             cout << "\t\tAttribute Test " << localTestCount << " failed for "
-                 << parserAttributes[i] << endl;
+                 << parserAttributes[i] << ", expected " << globalAttributes[i] << endl;
         }
         localTestCount++;
     }
@@ -126,9 +134,70 @@ pair<int, int> testParser()
             if (localSuccessCount == localTestCount)
                 cout << "\n";
             cout << "\t\tSensor Test " << localTestCount << " failed for "
-                 << parserSensors[i] << endl;
+                 << parserSensors[i] << ", expected " << sensors[i] << endl;
         }
         localTestCount++;
+    }
+    if (localSuccessCount != localTestCount)
+        cout << "\tSuccess ";
+    cout << "[" << localSuccessCount << "/" << localTestCount << "]" << endl;
+    testCount += localTestCount;
+    successCount += localSuccessCount;
+
+    cout << "\tParser Measurements tests ";
+    Sensor sensorMeasurement0("Sensor0", 0, 0);
+    Sensor sensorMeasurement1("Sensor1", 0, 0);
+    Sensor sensorMeasurement2("Sensor2", 30, 25);
+    sensorMeasurement0.AddMeasurement(measurement0);
+    sensorMeasurement0.AddMeasurement(measurement1);
+    sensorMeasurement0.AddMeasurement(measurement2);
+    sensorMeasurement1.AddMeasurement(measurement3);
+    sensorMeasurement2.AddMeasurement(measurement4);
+    sensorMeasurement0.AddMeasurement(measurement5);
+    sensorMeasurement2.AddMeasurement(measurement6);
+    sensorMeasurement1.AddMeasurement(measurement7);
+    const vector<Sensor> measurementSensors({sensorDecimalCoordinates, sensorNegativeCoordinates, sensorMeasurement2, sensorMeasurement1, sensorMeasurement0});
+    localTestCount = 0;
+    localSuccessCount = 0;
+    for (size_t i = 0; i < parserSensors.size(); i++)
+    {
+        for (const Attribute& attribute : globalAttributes)
+        {
+            map<time_t, Measurement> parserMeasurements = parserSensors[i].GetMeasurementsWithAttribute(attribute.GetId());
+            map<time_t, Measurement> measurements = measurementSensors[i].GetMeasurementsWithAttribute(attribute.GetId());
+            map<time_t, Measurement>::iterator parserMeasurementsIterator = parserMeasurements.begin();
+            map<time_t, Measurement>::iterator measurementsIterator = measurements.begin();
+
+            while (parserMeasurementsIterator != parserMeasurements.end() && measurementsIterator != measurements.end())
+            {
+                if(measurementEquality(parserMeasurementsIterator->second, measurementsIterator->second))
+                {
+                    localSuccessCount++;
+                }
+                else
+                {
+                    if (localSuccessCount == localTestCount)
+                        cout << "\n";
+                    cout << "\t\tMeasurement Test " << localTestCount << " failed for "
+                        << parserMeasurementsIterator->second << ", expected " << measurementsIterator->second << endl;
+                }
+                localTestCount++;
+                parserMeasurementsIterator++;
+                measurementsIterator++;
+            }
+            if (parserMeasurementsIterator == parserMeasurements.end() && measurementsIterator == measurements.end())
+            {
+                localSuccessCount++;
+            }
+            else
+            {
+                if (localSuccessCount == localTestCount)
+                    cout << "\n";
+                cout << "\t\tMeasurement Test " << localTestCount << " failed, wrong number of measurements, "
+                     << "expected " << measurements.size() << " but got " << parserMeasurements.size() << endl;
+            }
+            localTestCount++;
+        }
     }
     if (localSuccessCount != localTestCount)
         cout << "\tSuccess ";

@@ -219,6 +219,11 @@ void Parser::parseMeasurements ( const string measurementsPath )
     istringstream dateStringStream;
     tm time;
 
+    // Init time zone ? (prevent first value to sometimes have -1 hour)
+    dateStringStream = istringstream("1970-01-01 01:00:00");
+    dateStringStream >> get_time(&time, "%Y-%m-%d %H:%M:%S");
+    timestamp = mktime(&time);
+
     while (getline(measurementsFile, line))
     {
         if (line.back() == '\r')
@@ -227,9 +232,6 @@ void Parser::parseMeasurements ( const string measurementsPath )
         }
         if (regex_match(line, match, measurementPattern))
         {
-            // strptime(match[1].str().c_str(), "%Y-%m-%d %H:%M:%S", &tm);
-            // timestamp = mktime(&tm);
-
             dateStringStream = istringstream(match[1]);
             dateStringStream >> get_time(&time, "%Y-%m-%d %H:%M:%S");
             timestamp = mktime(&time);
@@ -241,11 +243,10 @@ void Parser::parseMeasurements ( const string measurementsPath )
             unordered_map<string, Attribute>::iterator attributesIterator = attributes.find(attributeId);
             if (attributesIterator != attributes.end())
             {
-                Attribute attribute = attributesIterator->second;
                 unordered_map<string, Sensor>::iterator sensorsIterator = sensors.find(sensorId);
                 if (sensorsIterator != sensors.end())
                 {
-                    Measurement measurement(timestamp, &attribute, value);
+                    Measurement measurement(timestamp, &(attributesIterator->second), value);
                     sensorsIterator->second.AddMeasurement(measurement);
                 }
                 else
