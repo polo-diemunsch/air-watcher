@@ -96,6 +96,17 @@ bool privateIndividualEquality ( const PrivateIndividual & privateIndividualA, c
         privateIndividualA.GetPoints() == privateIndividualB.GetPoints();
 } //----- Fin de privateIndividualEquality
 
+bool cleanerEquality ( const Cleaner & cleanerA, const Cleaner & cleanerB )
+// Algorithme :
+//
+{
+    return cleanerA.GetId() == cleanerB.GetId() &&
+        cleanerA.GetLatitude() == cleanerB.GetLatitude() &&
+        cleanerA.GetLongitude() == cleanerB.GetLongitude() &&
+        cleanerA.GetStartDate() == cleanerB.GetStartDate() &&
+        cleanerA.GetEndDate() == cleanerB.GetEndDate();
+} //----- Fin de cleanerEquality
+
 pair<int, int> testParser()
 // Algorithme :
 //
@@ -269,6 +280,34 @@ pair<int, int> testParser()
                 cout << "\n";
             cout << "\t\tPrivate Individual Sensor Test " << localTestCount << " failed for "
                  << privateIndividualSensors[i] << ", expected private individual " << *(privateIndividualSensors[i].GetPrivateIndividual()) << endl;
+        }
+        localTestCount++;
+    }
+    if (localSuccessCount != localTestCount)
+        cout << "\tSuccess ";
+    cout << "[" << localSuccessCount << "/" << localTestCount << "]" << endl;
+    testCount += localTestCount;
+    successCount += localSuccessCount;
+    
+    cout << "\tParser Cleaners tests ";
+    Cleaner cleaner0("Cleaner0", 42, -42, 1000, 1100);
+    Cleaner cleaner1("Cleaner1", 69, 4.20, 1200, 1400);
+    const vector<Cleaner> cleaners({cleaner1, cleaner0});
+    localTestCount = 0;
+    localSuccessCount = 0;
+    vector<Cleaner> parserCleaners = parser.GetCleaners();
+    for (size_t i = 0; i < parserCleaners.size(); i++)
+    {
+        if(cleanerEquality(cleaners[i], parserCleaners[i]))
+        {
+            localSuccessCount++;
+        }
+        else
+        {
+            if (localSuccessCount == localTestCount)
+                cout << "\n";
+            cout << "\t\tCleaner Test " << localTestCount << " failed for "
+                 << parserCleaners[i] << ", expected " << cleaners[i] << endl;
         }
         localTestCount++;
     }

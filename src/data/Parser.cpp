@@ -343,7 +343,12 @@ void Parser::parseCleaners ( const string cleanersPath )
     time_t startDate, endDate;
 
     istringstream dateStringStream;
-    tm time = {};
+    tm time;
+
+    // Init time zone ? (prevent first value to sometimes have -1 hour)
+    dateStringStream = istringstream("1970-01-01 01:00:00");
+    dateStringStream >> get_time(&time, "%Y-%m-%d %H:%M:%S");
+    startDate = mktime(&time);
 
     while (getline(cleanersFile, line))
     {
