@@ -71,6 +71,31 @@ bool measurementEquality ( const Measurement & measurementA, const Measurement &
         measurementA.GetValue() == measurementB.GetValue();
 } //----- Fin de measurementEquality
 
+bool privateIndividualEquality ( const PrivateIndividual & privateIndividualA, const PrivateIndividual & privateIndividualB, bool testSensors = true )
+// Algorithme :
+//
+{
+    bool sameSensors = true;
+
+    if (testSensors)
+    {
+        vector<Sensor> sensorsA = privateIndividualA.GetSensors();
+        vector<Sensor> sensorsB = privateIndividualB.GetSensors();
+        sameSensors = sensorsA.size() == sensorsB.size();
+        size_t i = 0;
+        while (sameSensors && i < sensorsA.size())
+        {
+            sameSensors = sensorEquality(sensorsA[i], sensorsB[i]);
+            i++;
+        }
+    }
+
+    return sameSensors &&
+        privateIndividualA.GetId() == privateIndividualB.GetId() &&
+        privateIndividualA.GetIsReliable() == privateIndividualB.GetIsReliable() &&
+        privateIndividualA.GetPoints() == privateIndividualB.GetPoints();
+} //----- Fin de privateIndividualEquality
+
 pair<int, int> testParser()
 // Algorithme :
 //
@@ -170,7 +195,7 @@ pair<int, int> testParser()
 
             while (parserMeasurementsIterator != parserMeasurements.end() && measurementsIterator != measurements.end())
             {
-                if(measurementEquality(parserMeasurementsIterator->second, measurementsIterator->second))
+                if(measurementEquality(measurementsIterator->second, parserMeasurementsIterator->second))
                 {
                     localSuccessCount++;
                 }
@@ -198,6 +223,54 @@ pair<int, int> testParser()
             }
             localTestCount++;
         }
+    }
+    if (localSuccessCount != localTestCount)
+        cout << "\tSuccess ";
+    cout << "[" << localSuccessCount << "/" << localTestCount << "]" << endl;
+    testCount += localTestCount;
+    successCount += localSuccessCount;
+
+    cout << "\tParser Private Individuals tests ";
+    PrivateIndividual user0("User0");
+    PrivateIndividual user1("User1");
+    sensorMeasurement1.SetPrivateIndividual(&user0);
+    user0.AddSensor(sensorMeasurement1);
+    sensorMeasurement2.SetPrivateIndividual(&user1);
+    user1.AddSensor(sensorMeasurement2);
+    const vector<PrivateIndividual> privateIndividuals({user1, user0});
+    localTestCount = 0;
+    localSuccessCount = 0;
+    vector<PrivateIndividual> parserPrivateIndividuals = parser.GetPrivateIndividuals();
+    for (size_t i = 0; i < parserPrivateIndividuals.size(); i++)
+    {
+        if(privateIndividualEquality(privateIndividuals[i], parserPrivateIndividuals[i]))
+        {
+            localSuccessCount++;
+        }
+        else
+        {
+            if (localSuccessCount == localTestCount)
+                cout << "\n";
+            cout << "\t\tPrivate Individual Test " << localTestCount << " failed for "
+                 << parserPrivateIndividuals[i] << ", expected " << privateIndividuals[i] << endl;
+        }
+        localTestCount++;
+    }
+    const vector<Sensor> privateIndividualSensors({sensorMeasurement2, sensorMeasurement1});
+    for (size_t i = 0; i < parserPrivateIndividuals.size(); i++)
+    {
+        if(privateIndividualEquality(*(privateIndividualSensors[i].GetPrivateIndividual()), parserPrivateIndividuals[i], false))
+        {
+            localSuccessCount++;
+        }
+        else
+        {
+            if (localSuccessCount == localTestCount)
+                cout << "\n";
+            cout << "\t\tPrivate Individual Sensor Test " << localTestCount << " failed for "
+                 << privateIndividualSensors[i] << ", expected private individual " << *(privateIndividualSensors[i].GetPrivateIndividual()) << endl;
+        }
+        localTestCount++;
     }
     if (localSuccessCount != localTestCount)
         cout << "\tSuccess ";
