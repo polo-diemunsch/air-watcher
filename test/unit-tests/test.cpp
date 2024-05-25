@@ -12,6 +12,7 @@
 using namespace std;
 #include <iostream>
 #include <vector>
+#include <limits.h>
 
 //------------------------------------------------------ Include personnel
 #include "../../src/data/Parser.h"
@@ -156,7 +157,7 @@ pair<int, int> testParser()
     vector<Attribute> parserAttributes = parser.GetMeasurementsAttributes();
     for (size_t i = 0; i < parserAttributes.size(); i++)
     {
-        if(attributeEquality(globalAttributes[i], parserAttributes[i]))
+        if (attributeEquality(globalAttributes[i], parserAttributes[i]))
         {
             localSuccessCount++;
         }
@@ -184,7 +185,7 @@ pair<int, int> testParser()
     vector<Sensor> parserSensors = parser.GetSensors();
     for (size_t i = 0; i < parserSensors.size(); i++)
     {
-        if(sensorEquality(sensors[i], parserSensors[i]))
+        if (sensorEquality(sensors[i], parserSensors[i]))
         {
             localSuccessCount++;
         }
@@ -227,9 +228,26 @@ pair<int, int> testParser()
             map<time_t, Measurement>::iterator parserMeasurementsIterator = parserMeasurements.begin();
             map<time_t, Measurement>::iterator measurementsIterator = measurements.begin();
 
-            while (parserMeasurementsIterator != parserMeasurements.end() && measurementsIterator != measurements.end())
+            if (parserMeasurementsIterator != parserMeasurements.end() && measurementsIterator != measurements.end())
             {
-                if(measurementEquality(measurementsIterator->second, parserMeasurementsIterator->second))
+                while (parserMeasurementsIterator != parserMeasurements.end() && measurementsIterator != measurements.end())
+                {
+                    if (measurementEquality(measurementsIterator->second, parserMeasurementsIterator->second))
+                    {
+                        localSuccessCount++;
+                    }
+                    else
+                    {
+                        if (localSuccessCount == localTestCount)
+                            cout << "\n";
+                        cout << "\t\tMeasurement Test " << localTestCount << " failed for "
+                            << parserMeasurementsIterator->second << ", expected " << measurementsIterator->second << endl;
+                    }
+                    localTestCount++;
+                    parserMeasurementsIterator++;
+                    measurementsIterator++;
+                }
+                if (parserMeasurementsIterator == parserMeasurements.end() && measurementsIterator == measurements.end())
                 {
                     localSuccessCount++;
                 }
@@ -237,25 +255,11 @@ pair<int, int> testParser()
                 {
                     if (localSuccessCount == localTestCount)
                         cout << "\n";
-                    cout << "\t\tMeasurement Test " << localTestCount << " failed for "
-                        << parserMeasurementsIterator->second << ", expected " << measurementsIterator->second << endl;
+                    cout << "\t\tMeasurement Test " << localTestCount << " failed, wrong number of measurements, "
+                        << "expected " << measurements.size() << " but got " << parserMeasurements.size() << endl;
                 }
                 localTestCount++;
-                parserMeasurementsIterator++;
-                measurementsIterator++;
             }
-            if (parserMeasurementsIterator == parserMeasurements.end() && measurementsIterator == measurements.end())
-            {
-                localSuccessCount++;
-            }
-            else
-            {
-                if (localSuccessCount == localTestCount)
-                    cout << "\n";
-                cout << "\t\tMeasurement Test " << localTestCount << " failed, wrong number of measurements, "
-                     << "expected " << measurements.size() << " but got " << parserMeasurements.size() << endl;
-            }
-            localTestCount++;
         }
     }
     if (localSuccessCount != localTestCount)
@@ -277,7 +281,7 @@ pair<int, int> testParser()
     vector<PrivateIndividual> parserPrivateIndividuals = parser.GetPrivateIndividuals();
     for (size_t i = 0; i < parserPrivateIndividuals.size(); i++)
     {
-        if(privateIndividualEquality(privateIndividuals[i], parserPrivateIndividuals[i]))
+        if (privateIndividualEquality(privateIndividuals[i], parserPrivateIndividuals[i]))
         {
             localSuccessCount++;
         }
@@ -295,7 +299,7 @@ pair<int, int> testParser()
     {
         PrivateIndividual * parserSensorPrivateIndividual = parserSensors[i].GetPrivateIndividual();
         PrivateIndividual * sensorPrivateIndividual = privateIndividualSensors[i].GetPrivateIndividual();
-        if(sensorPrivateIndividual == parserSensorPrivateIndividual || privateIndividualEquality(*sensorPrivateIndividual, *parserSensorPrivateIndividual, false))
+        if (sensorPrivateIndividual == parserSensorPrivateIndividual || privateIndividualEquality(*sensorPrivateIndividual, *parserSensorPrivateIndividual, false))
         {
             localSuccessCount++;
         }
@@ -323,7 +327,7 @@ pair<int, int> testParser()
     vector<Cleaner> parserCleaners = parser.GetCleaners();
     for (size_t i = 0; i < parserCleaners.size(); i++)
     {
-        if(cleanerEquality(cleaners[i], parserCleaners[i]))
+        if (cleanerEquality(cleaners[i], parserCleaners[i]))
         {
             localSuccessCount++;
         }
@@ -352,7 +356,7 @@ pair<int, int> testParser()
     vector<Provider> parserProviders = parser.GetProviders();
     for (size_t i = 0; i < parserProviders.size(); i++)
     {
-        if(providerEquality(providers[i], parserProviders[i]))
+        if (providerEquality(providers[i], parserProviders[i]))
         {
             localSuccessCount++;
         }
@@ -370,7 +374,7 @@ pair<int, int> testParser()
     {
         const Provider * parserCleanerProvider = parserCleaners[i].GetProvider();
         const Provider * cleanerProvider = providerCleaners[i].GetProvider();
-        if(cleanerProvider == parserCleanerProvider || providerEquality(*cleanerProvider, *parserCleanerProvider, false))
+        if (cleanerProvider == parserCleanerProvider || providerEquality(*cleanerProvider, *parserCleanerProvider, false))
         {
             localSuccessCount++;
         }
@@ -399,8 +403,8 @@ pair<int, int> testMeanAirQualityForSensor()
     int testCount = 0;
     int successCount = 0;
 
-    int expected = 0;
-    int got = 0;
+    double expected;
+    double got;
 
     Sensor sensorMean0("SensorMean0", 0, 0);
     Sensor sensorMean1("SensorMean1", 0, 0);
@@ -429,7 +433,7 @@ pair<int, int> testMeanAirQualityForSensor()
     // test classique O3 sur le capteur 1 avec toutes les mesures
     expected = 64;
     got = sensorAnalyzer.ComputeMeanAirQualityForSensor(&sensorMean1, "O3", 0, 2000);
-    if(got == expected)
+    if (got == expected)
     {
         successCount++;
     }
@@ -445,7 +449,7 @@ pair<int, int> testMeanAirQualityForSensor()
     // test classique periode 0-1200
     expected = 48;
     got = sensorAnalyzer.ComputeMeanAirQualityForSensor(&sensorMean2, "O3", 0, 1200);
-    if(got == expected)
+    if (got == expected)
     {
         successCount++;
     }
@@ -473,8 +477,8 @@ pair<int, int> testMeanAirQualityInArea()
     int testCount = 0;
     int successCount = 0;
 
-    int expected = 0;
-    int got = 0;
+    double expected;
+    double got;
 
     Sensor sensorMean0("SensorMean0", 0, 0);
     Sensor sensorMean1("SensorMean1", 0, 0);
@@ -498,7 +502,7 @@ pair<int, int> testMeanAirQualityInArea()
     // test zone non couverte
     expected = 0;
     got = sensorAnalyzer.ComputeMeanAirQualityInArea(100, 100, 20, {}, "O3", 0, 1200);
-    if(got == expected)
+    if (got == expected)
     {
         successCount++;
     }
@@ -514,7 +518,7 @@ pair<int, int> testMeanAirQualityInArea()
     // test exclusion d'un capteur sensorMean0
     expected = 22;
     got = sensorAnalyzer.ComputeMeanAirQualityInArea(20, 20, 4000, {&sensorMean0}, "SO2", 0, 2000);
-    if(got == expected)
+    if (got == expected)
     {
         successCount++;
     }
@@ -528,9 +532,9 @@ pair<int, int> testMeanAirQualityInArea()
     testCount++;
 
     // test classique avec un capteur non pris en compte par le rayon
-    expected = 56;
+    expected = 56.0 + 2.0 / 3.0;
     got = sensorAnalyzer.ComputeMeanAirQualityInArea(0, 0, 20, {}, "O3", 0, 2000);
-    if(got == expected)
+    if (got == expected)
     {
         successCount++;
     }
@@ -544,9 +548,9 @@ pair<int, int> testMeanAirQualityInArea()
     testCount++;
 
     // test periode 0-1200 avec un capteur non pris en compte par le rayon
-    expected = 54;
+    expected = 54.5;
     got = sensorAnalyzer.ComputeMeanAirQualityInArea(0, 0, 20, {}, "O3", 0, 1200);
-    if(got == expected)
+    if (got == expected)
     {
         successCount++;
     }
@@ -562,9 +566,9 @@ pair<int, int> testMeanAirQualityInArea()
     // test classique avec un sensor non fonctionnel (sensorMean0)
     sensorMean0.SetIsFunctioning(false);
 
-    expected = 54;
+    expected = 54.0 + 1.0 / 3.0;
     got = sensorAnalyzer.ComputeMeanAirQualityInArea(20, 20, 10000, {}, "O3", 0, 2000);
-    if(got == expected)
+    if (got == expected)
     {
         successCount++;
     }
@@ -583,6 +587,140 @@ pair<int, int> testMeanAirQualityInArea()
     
     return make_pair(successCount, testCount);
 } //----- Fin de testMeanAirQualityInArea
+
+pair<int, int> testFunctioningOfSensor()
+// Algorithme :
+//
+{
+    int testCount = 0;
+    int successCount = 0;
+
+    vector<bool> expected;
+    bool got;
+
+    Sensor sensorFunctioning0("SensorFunctioning0", 0, 0);
+    Sensor sensorFunctioning1("SensorFunctioning1", 0, 0);
+    Sensor sensorFunctioning2("SensorFunctioning2", 0, 0);
+
+    sensorFunctioning0.AddMeasurement(measurement0);
+    sensorFunctioning0.AddMeasurement(measurement2);
+
+    sensorFunctioning1.AddMeasurement(measurement3);
+    sensorFunctioning1.AddMeasurement(measurement4);
+
+    vector<Sensor *> sensors({&sensorFunctioning0, &sensorFunctioning1, &sensorFunctioning2});
+    SensorAnalyzer sensorAnalyzer(sensors);
+    
+    cout << "\tFunctioning of Sensor tests ";
+    
+    expected = vector<bool>({false, false, true});
+    for (size_t i = 0; i < sensors.size(); i++)
+    {
+        got = sensorAnalyzer.CheckFunctioningOfSensor(sensors[i], 100, LONG_MAX, 0.25);
+        if (expected[i] == got)
+        {
+            successCount++;
+        }
+        else
+        {
+            if (successCount == testCount)
+                cout << "\n";
+            cout << "\t\tFunctioning of Sensor Test " << testCount << " failed, "
+                << "expected " << expected[i] << " but got " << got << endl;
+        }
+        testCount++;
+    }
+
+    sensorFunctioning2.AddMeasurement(measurement3);
+    sensorFunctioning2.AddMeasurement(measurement4);
+    
+    expected = vector<bool>({false, true, true});
+    for (size_t i = 0; i < sensors.size(); i++)
+    {
+        got = sensorAnalyzer.CheckFunctioningOfSensor(sensors[i], 100, LONG_MAX, 0.25);
+        if (expected[i] == got)
+        {
+            successCount++;
+        }
+        else
+        {
+            if (successCount == testCount)
+                cout << "\n";
+            cout << "\t\tFunctioning of Sensor Test " << testCount << " failed, "
+                << "expected " << expected[i] << " but got " << got << endl;
+        }
+        testCount++;
+    }
+
+    if (successCount != testCount)
+        cout << "\tSuccess ";
+    cout << "[" << successCount << "/" << testCount << "]" << endl;
+    
+    return make_pair(successCount, testCount);
+} //----- Fin de testFunctioningOfSensor
+
+pair<int, int> testFunctioningOfAllSensors()
+// Algorithme :
+//
+{
+    int testCount = 0;
+    int successCount = 0;
+
+    multimap<bool, Sensor *> expected;
+    multimap<bool, Sensor *> got;
+
+    Sensor sensorFunctioning0("SensorFunctioning0", 0, 0);
+    Sensor sensorFunctioning1("SensorFunctioning1", 0, 0);
+    Sensor sensorFunctioning2("SensorFunctioning2", 0, 0);
+
+    sensorFunctioning0.AddMeasurement(measurement0);
+    sensorFunctioning0.AddMeasurement(measurement2);
+
+    sensorFunctioning1.AddMeasurement(measurement3);
+    sensorFunctioning1.AddMeasurement(measurement4);
+
+    vector<Sensor *> sensors({&sensorFunctioning0, &sensorFunctioning1, &sensorFunctioning2});
+    SensorAnalyzer sensorAnalyzer(sensors);
+    
+    cout << "\tFunctioning of All Sensors tests ";
+    
+    expected = multimap<bool, Sensor *>({{false, &sensorFunctioning0}, {false, &sensorFunctioning1}, {true, &sensorFunctioning2}});
+    got = sensorAnalyzer.CheckFunctioningOfAllSensors(100, LONG_MAX, 0.25);
+    if (expected == got)
+    {
+        successCount++;
+    }
+    else
+    {
+        if (successCount == testCount)
+            cout << "\n";
+        cout << "\t\tFunctioning of All Sensors Test " << testCount << " failed" << endl;
+    }
+    testCount++;
+
+    sensorFunctioning2.AddMeasurement(measurement3);
+    sensorFunctioning2.AddMeasurement(measurement4);
+    
+    expected = multimap<bool, Sensor *>({{false, &sensorFunctioning0}, {true, &sensorFunctioning1}, {true, &sensorFunctioning2}});
+    got = sensorAnalyzer.CheckFunctioningOfAllSensors(100, LONG_MAX, 0.25);
+    if (expected == got)
+    {
+        successCount++;
+    }
+    else
+    {
+        if (successCount == testCount)
+            cout << "\n";
+        cout << "\t\tFunctioning of All Sensors Test " << testCount << " failed" << endl;
+    }
+    testCount++;
+
+    if (successCount != testCount)
+        cout << "\tSuccess ";
+    cout << "[" << successCount << "/" << testCount << "]" << endl;
+    
+    return make_pair(successCount, testCount);
+} //----- Fin de testFunctioningOfAllSensors
 
 int main()
 {
@@ -606,6 +744,20 @@ int main()
 
     cout << "Test Mean Air Quality in Area:" << endl;
     results = testMeanAirQualityInArea();
+    successCount += results.first;
+    testCount += results.second;
+
+    cout << "\n";
+
+    cout << "Test Functioning of Sensor:" << endl;
+    results = testFunctioningOfSensor();
+    successCount += results.first;
+    testCount += results.second;
+
+    cout << "\n";
+
+    cout << "Test Functioning of All Sensors:" << endl;
+    results = testFunctioningOfAllSensors();
     successCount += results.first;
     testCount += results.second;
 
