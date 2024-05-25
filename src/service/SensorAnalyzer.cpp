@@ -115,49 +115,12 @@ double SensorAnalyzer::ComputeMeanAirQualityInArea ( const double latitude, cons
     return (measurementCount == 0) ? 0 : (sum / measurementCount);
 } //----- Fin de ComputeMeanAirQualityInArea
 
-multimap<double, Sensor *> SensorAnalyzer::RankSensorsBySimilarity( const Sensor * sensorToCompareTo, const string & attributeID, const time_t timeRange )
-// Algorithme :
-//
-{
-    double meanRefrence;
-
-    double meanDynamic;
-    multimap<double, Sensor *> ranking;
-
-    const time_t endDate = time(nullptr);
-    const time_t startDate = endDate - timeRange;
-
-    meanRefrence = ComputeMeanAirQualityForSensor(sensorToCompareTo, attributeID, startDate, endDate);
-
-    for(Sensor * sensor : sensors)
-    {
-        #ifdef DEB
-        cout << "Sensor: " << sensor.GetId() << endl;
-        #endif
-
-        if (sensor != sensorToCompareTo)    //  TODO private individual     && (sensor.GetPrivateIndividual() == NULL || sensor.GetPrivateIndividual()->GetIsReliable())
-        {
-            meanDynamic = ComputeMeanAirQualityForSensor(sensor, attributeID, startDate, endDate);            
-            ranking.insert({abs(meanRefrence - meanDynamic), sensor});
-
-            #ifdef DEB
-            cout << sensor.GetId() << ":" << meanDynamic << ":" << abs(meanRefrence - meanDynamic) << endl;
-            #endif
-
-        }
-    }
-
-    return ranking;
-} //----- Fin de RankSensorsBySimilarity
-
-bool SensorAnalyzer::CheckFunctioningOfSensor ( Sensor * sensor, const double radius, const time_t timeRange, const double relativeDifferenceAllowed )
+bool SensorAnalyzer::CheckFunctioningOfSensor ( Sensor * sensor, const double radius, const time_t startDate, const time_t endDate, const double relativeDifferenceAllowed )
 // Algorithme :
 //
 {
     bool result = true;
 
-    const time_t endDate = time(nullptr);
-    const time_t startDate = endDate - timeRange;
     for (const string & attributeId : sensor->GetAttributeIds())
     {
         double meanAirQualitySensor = ComputeMeanAirQualityForSensor(sensor, attributeId, startDate, endDate);
@@ -181,7 +144,7 @@ bool SensorAnalyzer::CheckFunctioningOfSensor ( Sensor * sensor, const double ra
     return result;
 } //----- Fin de CheckFunctioningOfSensor
 
-multimap<bool, Sensor *> SensorAnalyzer::CheckFunctioningOfAllSensors ( const double radius, const time_t timeRange, const double relativeDifferenceAllowed )
+multimap<bool, Sensor *> SensorAnalyzer::CheckFunctioningOfAllSensors ( const double radius, const time_t startDate, const time_t endDate, const double relativeDifferenceAllowed )
 // Algorithme :
 //
 {
@@ -189,11 +152,43 @@ multimap<bool, Sensor *> SensorAnalyzer::CheckFunctioningOfAllSensors ( const do
 
     for (Sensor * sensor : sensors)
     {
-        sensorFunctionement.insert({CheckFunctioningOfSensor(sensor, radius, timeRange, relativeDifferenceAllowed), sensor});
+        sensorFunctionement.insert({CheckFunctioningOfSensor(sensor, radius, startDate, endDate, relativeDifferenceAllowed), sensor});
     }
 
     return sensorFunctionement;
 } //----- Fin de CheckFunctioningOfAllSensors
+
+multimap<double, Sensor *> SensorAnalyzer::RankSensorsBySimilarity( const Sensor * sensorToCompareTo, const string & attributeID, const time_t startDate, const time_t endDate )
+// Algorithme :
+//
+{
+    double meanRefrence;
+
+    double meanDynamic;
+    multimap<double, Sensor *> ranking;
+
+    meanRefrence = ComputeMeanAirQualityForSensor(sensorToCompareTo, attributeID, startDate, endDate);
+
+    for(Sensor * sensor : sensors)
+    {
+        #ifdef DEB
+        cout << "Sensor: " << sensor.GetId() << endl;
+        #endif
+
+        if (sensor != sensorToCompareTo)    //  TODO private individual     && (sensor.GetPrivateIndividual() == NULL || sensor.GetPrivateIndividual()->GetIsReliable())
+        {
+            meanDynamic = ComputeMeanAirQualityForSensor(sensor, attributeID, startDate, endDate);            
+            ranking.insert({abs(meanRefrence - meanDynamic), sensor});
+
+            #ifdef DEB
+            cout << sensor.GetId() << ":" << meanDynamic << ":" << abs(meanRefrence - meanDynamic) << endl;
+            #endif
+
+        }
+    }
+
+    return ranking;
+} //----- Fin de RankSensorsBySimilarity
 
 
 //------------------------------------------------- Surcharge d'opérateurs

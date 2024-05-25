@@ -64,7 +64,8 @@ public:
     bool CheckFunctioningOfSensor (
         Sensor * sensor,
         const double radius,
-        const time_t timeRange,
+        const time_t startDate,
+        const time_t endDate,
         const double relativeDifferenceAllowed
     );
     // Mode d'emploi :
@@ -74,7 +75,8 @@ public:
 
     multimap<bool, Sensor *> CheckFunctioningOfAllSensors (
         const double radius,
-        const time_t timeRange,
+        const time_t startDate,
+        const time_t endDate,
         const double relativeDifferenceAllowed
     );
     // Mode d'emploi :
@@ -85,7 +87,8 @@ public:
     multimap<double, Sensor *> RankSensorsBySimilarity (
         const Sensor * sensorToCompareTo,
         const string & attributeId,
-        const time_t timeRange
+        const time_t startDate,
+        const time_t endDate
     );
     // Mode d'emploi :
     //

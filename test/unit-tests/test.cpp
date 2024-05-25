@@ -12,7 +12,6 @@
 using namespace std;
 #include <iostream>
 #include <vector>
-#include <limits.h>
 
 //------------------------------------------------------ Include personnel
 #include "../../src/data/Parser.h"
@@ -616,7 +615,7 @@ pair<int, int> testFunctioningOfSensor()
     expected = vector<bool>({false, false, true});
     for (size_t i = 0; i < sensors.size(); i++)
     {
-        got = sensorAnalyzer.CheckFunctioningOfSensor(sensors[i], 100, LONG_MAX, 0.25);
+        got = sensorAnalyzer.CheckFunctioningOfSensor(sensors[i], 100, 0, 2000, 0.25);
         if (expected[i] == got)
         {
             successCount++;
@@ -637,7 +636,7 @@ pair<int, int> testFunctioningOfSensor()
     expected = vector<bool>({false, true, true});
     for (size_t i = 0; i < sensors.size(); i++)
     {
-        got = sensorAnalyzer.CheckFunctioningOfSensor(sensors[i], 100, LONG_MAX, 0.25);
+        got = sensorAnalyzer.CheckFunctioningOfSensor(sensors[i], 100, 0, 2000, 0.25);
         if (expected[i] == got)
         {
             successCount++;
@@ -685,7 +684,7 @@ pair<int, int> testFunctioningOfAllSensors()
     cout << "\tFunctioning of All Sensors tests ";
     
     expected = multimap<bool, Sensor *>({{false, &sensorFunctioning0}, {false, &sensorFunctioning1}, {true, &sensorFunctioning2}});
-    got = sensorAnalyzer.CheckFunctioningOfAllSensors(100, LONG_MAX, 0.25);
+    got = sensorAnalyzer.CheckFunctioningOfAllSensors(100, 0, 2000, 0.25);
     if (expected == got)
     {
         successCount++;
@@ -702,7 +701,7 @@ pair<int, int> testFunctioningOfAllSensors()
     sensorFunctioning2.AddMeasurement(measurement4);
     
     expected = multimap<bool, Sensor *>({{false, &sensorFunctioning0}, {true, &sensorFunctioning1}, {true, &sensorFunctioning2}});
-    got = sensorAnalyzer.CheckFunctioningOfAllSensors(100, LONG_MAX, 0.25);
+    got = sensorAnalyzer.CheckFunctioningOfAllSensors(100, 0, 2000, 0.25);
     if (expected == got)
     {
         successCount++;
