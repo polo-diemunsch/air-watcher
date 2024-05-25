@@ -104,6 +104,12 @@ public:
     // Contrat :
     //
 
+    SensorAnalyzer ( );
+    // Mode d'emploi :
+    //
+    // Contrat :
+    //
+
     virtual ~SensorAnalyzer ( );
     // Mode d'emploi :
     //

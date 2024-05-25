@@ -11,7 +11,7 @@ SRC=src
 MAINFILE=$(SRC)/main
 TEST=test
 UNITTESTSFILE=$(TEST)/unit-tests/test
-INT=$(addprefix $(SRC)/data/, Parser.h) $(addprefix $(SRC)/model/, Attribute.h Measurement.h Sensor.h PrivateIndividual.h Cleaner.h Provider.h) $(addprefix $(SRC)/service/, SensorAnalyzer.h)
+INT=$(addprefix $(SRC)/data/, Parser.h) $(addprefix $(SRC)/model/, Attribute.h Measurement.h Sensor.h PrivateIndividual.h Cleaner.h Provider.h) $(addprefix $(SRC)/service/, SensorAnalyzer.h) $(addprefix $(SRC)/vue/, UserInterface.h) 
 REAL=$(INT:.h=.cpp)
 OBJ=$(INT:.h=.o)
 EFFACE=clean

@@ -121,6 +121,16 @@ Parser::Parser ( const string sensorsPath, const string attributesPath, const st
 } //----- Fin de Parser
 
 
+Parser::Parser ( )
+// Algorithme :
+//
+{
+#ifdef MAP
+    cout << "Appel au constructeur de <Parser>" << endl;
+#endif
+} //----- Fin de Parser
+
+
 Parser::~Parser ( )
 // Algorithme :
 //

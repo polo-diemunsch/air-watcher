@@ -205,6 +205,16 @@ sensors(sensors)
 } //----- Fin de SensorAnalyzer
 
 
+SensorAnalyzer::SensorAnalyzer ( )
+// Algorithme :
+//
+{
+#ifdef MAP
+    cout << "Appel au constructeur de <SensorAnalyzer>" << endl;
+#endif
+} //----- Fin de SensorAnalyzer
+
+
 SensorAnalyzer::~SensorAnalyzer ( )
 // Algorithme :
 //

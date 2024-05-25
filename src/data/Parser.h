@@ -78,6 +78,12 @@ public:
     // Contrat :
     //
 
+    Parser ( );
+    // Mode d'emploi :
+    //
+    // Contrat :
+    //
+
     virtual ~Parser ( );
     // Mode d'emploi :
     //
