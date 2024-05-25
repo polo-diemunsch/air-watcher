@@ -1,6 +1,6 @@
 .vscode
-dataset
-air-watcher
 SClasse.*
 *.o
-bin
+/bin/air-watcher
+/bin/unit-tests
+/dataset

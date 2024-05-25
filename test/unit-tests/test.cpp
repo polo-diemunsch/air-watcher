@@ -12,6 +12,7 @@
 using namespace std;
 #include <iostream>
 #include <vector>
+#include <filesystem>
 
 //------------------------------------------------------ Include personnel
 #include "../../src/data/Parser.h"
@@ -130,7 +131,7 @@ bool providerEquality ( const Provider & providerA, const Provider & providerB, 
         providerA.GetId() == providerB.GetId();
 } //----- Fin de providerEquality
 
-pair<int, int> testParser()
+pair<int, int> testParser(const string datasetPath)
 // Algorithme :
 //
 {
@@ -140,12 +141,12 @@ pair<int, int> testParser()
     int localTestCount = 0;
     int localSuccessCount = 0;
 
-    string sensorsPath = "test/data/sensors.csv";
-    string attributesPath = "test/data/attributes.csv";
-    string measurementsPath = "test/data/measurements.csv";
-    string privateIndividualsPath = "test/data/users.csv";
-    string cleanersPath = "test/data/cleaners.csv";
-    string providersPath = "test/data/providers.csv";
+    string sensorsPath = datasetPath + "/sensors.csv";
+    string attributesPath = datasetPath + "/attributes.csv";
+    string measurementsPath = datasetPath + "/measurements.csv";
+    string privateIndividualsPath = datasetPath + "/users.csv";
+    string cleanersPath = datasetPath + "/cleaners.csv";
+    string providersPath = datasetPath + "/providers.csv";
 
     Parser parser(sensorsPath, attributesPath, measurementsPath,
         privateIndividualsPath, cleanersPath, providersPath);
@@ -721,14 +722,17 @@ pair<int, int> testFunctioningOfAllSensors()
     return make_pair(successCount, testCount);
 } //----- Fin de testFunctioningOfAllSensors
 
-int main()
+int main(int argc, char *argv[])
 {
+    const string relativePathToExe = argv[0];
+    const string datasetPath = filesystem::path(relativePathToExe).parent_path().string() + "/../test/dataset";
+
     int successCount = 0;
     int testCount = 0;
     pair<int, int> results;
 
     cout << "Test Parser:" << endl;
-    results = testParser();
+    results = testParser(datasetPath);
     successCount += results.first;
     testCount += results.second;
 
