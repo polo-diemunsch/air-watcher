@@ -857,6 +857,8 @@ int main(int argc, char *argv[])
     successCount += results.first;
     testCount += results.second;
 
+    cout << "\n";
+
     cout << "TOTAL [" << successCount << "/" << testCount << "]" << endl;
 
     return EXIT_SUCCESS;
