@@ -722,6 +722,92 @@ pair<int, int> testFunctioningOfAllSensors()
     return make_pair(successCount, testCount);
 } //----- Fin de testFunctioningOfAllSensors
 
+pair<int,int> testRankSensorBySimilarity()
+{
+    int testCount = 0;
+    int successCount = 0;
+
+    multimap<double, Sensor*> expected;
+    multimap<double, Sensor*> got;
+
+    cout << "\tRank Sensor By Similarity ";
+
+    //TEST1 : Sensors similaires et différents
+    time_t date = time(NULL) - 3;
+    Sensor sensor1 = Sensor("sensor1", 0.0, 0.0);
+    Sensor sensor2 = Sensor("sensor2", 0.0, 0.0);
+    Sensor sensor3 = Sensor("sensor3", 0.0, 0.0);
+
+    Attribute O3 = Attribute ( "O3", "unit", "description" );
+    Attribute SO2 = Attribute ( "SO2", "unit", "description" );
+
+    Measurement mesurement1 = Measurement ( date, &O3, 12 );
+    Measurement mesurement2 = Measurement ( date, &SO2, 20 );
+    Measurement mesurement3 = Measurement ( date, &O3, 11 );
+    Measurement mesurement4 = Measurement ( date, &SO2, 21 );
+    Measurement mesurement5 = Measurement ( date, &SO2, 10000 );
+
+    sensor1.AddMeasurement ( mesurement1 );
+    sensor1.AddMeasurement ( mesurement2 );
+    sensor1.AddMeasurement ( mesurement3 );
+    sensor2.AddMeasurement ( mesurement1 );
+    sensor2.AddMeasurement ( mesurement4 );
+    sensor3.AddMeasurement ( mesurement1 );
+    sensor3.AddMeasurement ( mesurement5 );
+
+    vector<Sensor *> sensors({&sensor1, &sensor2, &sensor3});
+
+    SensorAnalyzer analyzer = SensorAnalyzer ( sensors );
+
+    expected = multimap<double, Sensor*>({{1.0, &sensor2}, {9980.0, &sensor3}});
+    got = analyzer.RankSensorsBySimilarity(&sensor1, "SO2", date - 30*24*60*60, date);
+
+    /*multimap<double, Sensor *>::iterator it;
+
+    for(it = got.begin(); it != got.end(); it++)
+    {
+        cout << (*it).first << ":" << (*it).second->GetId() << endl;
+    }*/
+    
+    if (expected == got)
+    {
+        successCount++;
+    }
+    else
+    {
+        if (successCount == testCount)
+            cout << "\n";
+        cout << "\t\tRank Sensors by Similarity " << testCount << " failed" << endl;
+    }
+    testCount++;
+
+    //Test 2 Il n’y a pas de sensors pour comparer
+
+    sensors = vector<Sensor *>({&sensor1});
+    analyzer = SensorAnalyzer ( sensors );
+    expected = multimap<double, Sensor*>({});
+    got = analyzer.RankSensorsBySimilarity(&sensor1, "SO2", date - 30*24*60*60, date);
+    if (expected == got)
+    {
+        successCount++;
+    }
+    else
+    {
+        if (successCount == testCount)
+            cout << "\n";
+        cout << "\t\tRank Sensors by Similarity " << testCount << " failed" << endl;
+    }
+    testCount++;
+
+    if (successCount != testCount)
+            cout << "\tSuccess ";
+    cout << "[" << successCount << "/" << testCount << "]" << endl;
+
+    return make_pair(successCount, testCount);
+
+} //----- fin de testRanksensorBySimilarity
+
+
 int main(int argc, char *argv[])
 {
     const string relativePathToExe = argv[0];
@@ -765,6 +851,11 @@ int main(int argc, char *argv[])
     testCount += results.second;
 
     cout << "\n";
+
+    cout << "Test Rank Sensors By Similarity:" << endl;
+    results = testRankSensorBySimilarity();
+    successCount += results.first;
+    testCount += results.second;
 
     cout << "TOTAL [" << successCount << "/" << testCount << "]" << endl;
 
