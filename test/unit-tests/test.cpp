@@ -805,7 +805,7 @@ pair<int,int> testRankSensorBySimilarity()
 
     return make_pair(successCount, testCount);
 
-} //----- fin de testRanksensorBySimilarity
+} //----- fin de testRankSensorBySimilarity
 
 
 int main(int argc, char *argv[])
