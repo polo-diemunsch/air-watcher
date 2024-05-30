@@ -55,6 +55,21 @@ vector<Sensor> Parser::GetSensors ( ) const
     return result;
 } //----- Fin de GetSensors
 
+Sensor * Parser::GetSensorById ( const string & id )
+// Algorithme :
+//
+{
+    Sensor * result = nullptr;
+
+    unordered_map<string, Sensor>::iterator it = sensors.find(id);
+    if (it != sensors.end())
+    {
+        result = &(it->second);
+    }
+
+    return result;
+} //----- Fin de GetSensors
+
 vector<PrivateIndividual> Parser::GetPrivateIndividuals ( ) const
 // Algorithme :
 //

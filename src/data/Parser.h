@@ -50,6 +50,12 @@ public:
     // Contrat :
     // 
 
+    Sensor * GetSensorById ( const string & id );
+    // Mode d'emploi :
+    // 
+    // Contrat :
+    // 
+
     vector<PrivateIndividual> GetPrivateIndividuals ( ) const;
     // Mode d'emploi :
     // 
