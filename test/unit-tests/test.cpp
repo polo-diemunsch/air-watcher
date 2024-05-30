@@ -431,7 +431,7 @@ pair<int, int> testMeanAirQualityForSensor()
     cout << "\tMean Air Quality for Sensor tests ";
 
     // test classique O3 sur le capteur 1 avec toutes les mesures
-    expected = 64;
+    expected = 64.0;
     got = sensorAnalyzer.ComputeMeanAirQualityForSensor(&sensorMean1, "O3", 0, 2000);
     if (got == expected)
     {
@@ -447,7 +447,7 @@ pair<int, int> testMeanAirQualityForSensor()
     testCount++;
 
     // test classique periode 0-1200
-    expected = 48;
+    expected = 48.0;
     got = sensorAnalyzer.ComputeMeanAirQualityForSensor(&sensorMean2, "O3", 0, 1200);
     if (got == expected)
     {
@@ -500,7 +500,7 @@ pair<int, int> testMeanAirQualityInArea()
     cout << "\tMean Air Quality in Area tests ";
     
     // test zone non couverte
-    expected = 0;
+    expected = -1.0;
     got = sensorAnalyzer.ComputeMeanAirQualityInArea(100, 100, 20, {}, "O3", 0, 1200);
     if (got == expected)
     {
@@ -516,7 +516,7 @@ pair<int, int> testMeanAirQualityInArea()
     testCount++;
 
     // test exclusion d'un capteur sensorMean0
-    expected = 22;
+    expected = 22.0;
     got = sensorAnalyzer.ComputeMeanAirQualityInArea(20, 20, 4000, {&sensorMean0}, "SO2", 0, 2000);
     if (got == expected)
     {
@@ -613,10 +613,12 @@ pair<int, int> testFunctioningOfSensor()
     
     cout << "\tFunctioning of Sensor tests ";
     
+    // Test without setting isFunctioning
+
     expected = vector<bool>({false, false, true});
     for (size_t i = 0; i < sensors.size(); i++)
     {
-        got = sensorAnalyzer.CheckFunctioningOfSensor(sensors[i], 100, 0, 2000, 0.25);
+        got = sensorAnalyzer.CheckFunctioningOfSensor(sensors[i], 100, 0, 2000, 0.25, false);
         if (expected[i] == got)
         {
             successCount++;
@@ -631,14 +633,16 @@ pair<int, int> testFunctioningOfSensor()
         testCount++;
     }
 
+    // Test with setting isFunctioning
+
     sensorFunctioning2.AddMeasurement(measurement3);
     sensorFunctioning2.AddMeasurement(measurement4);
     
     expected = vector<bool>({false, true, true});
     for (size_t i = 0; i < sensors.size(); i++)
     {
-        got = sensorAnalyzer.CheckFunctioningOfSensor(sensors[i], 100, 0, 2000, 0.25);
-        if (expected[i] == got)
+        got = sensorAnalyzer.CheckFunctioningOfSensor(sensors[i], 100, 0, 2000, 0.25, true);
+        if (expected[i] == got && expected[i] == sensors[i]->GetIsFunctioning())
         {
             successCount++;
         }
@@ -684,8 +688,29 @@ pair<int, int> testFunctioningOfAllSensors()
     
     cout << "\tFunctioning of All Sensors tests ";
     
+    // Test without setting isFunctioning
+    
     expected = multimap<bool, Sensor *>({{false, &sensorFunctioning0}, {false, &sensorFunctioning1}, {true, &sensorFunctioning2}});
-    got = sensorAnalyzer.CheckFunctioningOfAllSensors(100, 0, 2000, 0.25);
+    got = sensorAnalyzer.CheckFunctioningOfAllSensors(100, 0, 2000, 0.25, false);
+    if (expected == got)
+    {
+        successCount++;
+    }
+    else
+    {
+        if (successCount == testCount)
+            cout << "\n";
+        cout << "\t\tFunctioning of All Sensors Test " << testCount << " failed" << endl;
+    }
+    testCount++;
+    
+    // Test with setting isFunctioning
+
+    sensorFunctioning2.AddMeasurement(measurement3);
+    sensorFunctioning2.AddMeasurement(measurement4);
+    
+    expected = multimap<bool, Sensor *>({{false, &sensorFunctioning0}, {true, &sensorFunctioning1}, {true, &sensorFunctioning2}});
+    got = sensorAnalyzer.CheckFunctioningOfAllSensors(100, 0, 2000, 0.25, true);
     if (expected == got)
     {
         successCount++;
@@ -698,22 +723,21 @@ pair<int, int> testFunctioningOfAllSensors()
     }
     testCount++;
 
-    sensorFunctioning2.AddMeasurement(measurement3);
-    sensorFunctioning2.AddMeasurement(measurement4);
-    
-    expected = multimap<bool, Sensor *>({{false, &sensorFunctioning0}, {true, &sensorFunctioning1}, {true, &sensorFunctioning2}});
-    got = sensorAnalyzer.CheckFunctioningOfAllSensors(100, 0, 2000, 0.25);
-    if (expected == got)
+    vector<bool> expectedIsFunctioning({false, true, true});
+    for (size_t i = 0; i < sensors.size(); i++)
     {
-        successCount++;
+       if (expectedIsFunctioning[i] == sensors[i]->GetIsFunctioning())
+        {
+            successCount++;
+        }
+        else
+        {
+            if (successCount == testCount)
+                cout << "\n";
+            cout << "\t\tFunctioning of All Sensors Test " << testCount << " failed" << endl;
+        }
+        testCount++;
     }
-    else
-    {
-        if (successCount == testCount)
-            cout << "\n";
-        cout << "\t\tFunctioning of All Sensors Test " << testCount << " failed" << endl;
-    }
-    testCount++;
 
     if (successCount != testCount)
         cout << "\tSuccess ";
