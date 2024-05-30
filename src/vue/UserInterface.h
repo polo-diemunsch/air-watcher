@@ -61,6 +61,7 @@ protected:
 //----------------------------------------------------- Attributs protégés
     Parser parser;
     SensorAnalyzer sensorAnalyzer;
+    double relativeDifferenceAllowed;
 };
 
 //-------------------------------- Autres définitions dépendantes de <UserInterface>
