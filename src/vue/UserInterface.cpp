@@ -186,136 +186,138 @@ void UserInterface::MainLoop ( )
 {
     // TODO menus and stuff
     int role;
-        puts("\nAirWatcher : it all starts with air\n");
-        
-        choix_role();
-        cin>>role;
-        
-        switch (role) {
-            case 1 :
-                menu_GA();
+    puts("\nAirWatcher : it all starts with air\n");
+    
+    choix_role();
+    cin>>role;
+    
+    switch (role)
+    {
+        case 1 :
+            menu_GA();
             break;
-            case 2 :
-                menu_Pr();
+        case 2 :
+            menu_Pr();
             break;
-            case 3 :
-                menu_PI();
+        case 3 :
+            menu_PI();
             break;
-        }
+    }
 
-        int option = 1;
-        while (option) 
+    int option = 1;
+    while (option) 
+    {
+        cin>>option;
+        switch (option)
         {
-            cin>>option;
-            switch (option)
+            case 1:
             {
-                case 1:
+                air_mean();
+                break;
+            }
+            case 2:
+            {
+                puts("\nYou have chosen Rank Sensors By Similarity \n");
+                string sensorId;
+                string attribute;
+                time_t startDate;
+                time_t endDate;
+                Sensor * sensor;
+                cout << "Sensor id (Sensorxx): "<< endl;
+                cin>>sensorId;
+                sensor = parser.GetSensorById(sensorId);
+
+                cout << "Attribute (PM10, NO2, SO2 or O3): "<< endl;
+                cin>>attribute;
+                
+                
+                cout << "Date de début (HH:MM:ss dd/mm/yyyy) : " << endl;
+                startDate = inputDate();
+                cout << "Date de fin (HH:MM:ss dd/mm/yyyy) : " <<endl;
+                endDate= inputDate(); 
+
+                multimap<double, Sensor *> ranking = sensorAnalyzer.RankSensorsBySimilarity(sensor, attribute, startDate, endDate);
+                multimap<double, Sensor *>::iterator it = ranking.begin();
+                it++;
+                while (it != ranking.end())
                 {
-                    air_mean();
-                    break;
+                    cout << it->first << " : sensor n° " << it->second->GetId() << endl;
+                    it++;
                 }
-                case 2:
+                break;
+            }
+            case 3:
+            {
+                air_quality();
+                break;
+            }
+            default :
+            {
+                if (role == 1 && option == 4) //Government Agency && Check Functioning Of All Sensors
                 {
-                    puts("\nYou have chosen Rank Sensors By Similarity \n");
-                    string sensorId;
-                    string attribute;
+                    puts("\nYou have chosen Check Functioning Of All Sensors sensors\n");
+                    double radius;
                     time_t startDate;
                     time_t endDate;
-                    Sensor * sensor;
-                    cout << "Sensor id (Sensorxx): "<< endl;
-                    cin>>sensorId;
-                    sensor = parser.GetSensorById(sensorId);
-
-                    cout << "Attribute (PM10, NO2, SO2 or O3): "<< endl;
-                    cin>>attribute;
-                    
-                    
+                    cout << "Rayon en km : "<< endl;
+                    cin>>radius;
+                
+                        
                     cout << "Date de début (HH:MM:ss dd/mm/yyyy) : " << endl;
                     startDate = inputDate();
                     cout << "Date de fin (HH:MM:ss dd/mm/yyyy) : " <<endl;
                     endDate= inputDate(); 
-
-                    multimap<double, Sensor *> ranking = sensorAnalyzer.RankSensorsBySimilarity(sensor, attribute, startDate, endDate);
-                    multimap<double, Sensor *>::iterator it = ranking.begin();
-                    it++;
-                    while (it != ranking.end())
-                    {
-                        cout << it->first << " : sensor n° " << it->second->GetId() << endl;
-                        it++;
-                    }
-                    break;
-                }
-                case 3:
-                {
-                    air_quality();
-                    break;
-                }
-                default :
-                {
-                    if (role == 1 && option == 4) //Government Agency && Check Functioning Of All Sensors
-                    {
-                        puts("\nYou have chosen Check Functioning Of All Sensors sensors\n");
-                        double radius;
-                        time_t startDate;
-                        time_t endDate;
-                        cout << "Rayon en km : "<< endl;
-                        cin>>radius;
+                    multimap<bool, Sensor *> sensorsFunctioning = sensorAnalyzer.CheckFunctioningOfAllSensors(radius, startDate, endDate, relativeDifferenceAllowed, true);
                     
-                            
-                        cout << "Date de début (HH:MM:ss dd/mm/yyyy) : " << endl;
-                        startDate = inputDate();
-                        cout << "Date de fin (HH:MM:ss dd/mm/yyyy) : " <<endl;
-                        endDate= inputDate(); 
-                        multimap<bool, Sensor *> sensorsFunctioning = sensorAnalyzer.CheckFunctioningOfAllSensors(radius, startDate, endDate, relativeDifferenceAllowed, true);
-                        
-                        multimap<bool, Sensor *>::iterator it = sensorsFunctioning.begin();
-                        string val;
+                    multimap<bool, Sensor *>::iterator it = sensorsFunctioning.begin();
+                    string val;
+                    it++;
+                    while (it != sensorsFunctioning.end())
+                    {
+                        if ((*it).first)
+                        {
+                            val = "functionnal";
+                        }
+
+                        else 
+                        {
+                            val = "not functionnal";
+                        }
+
+                        cout << "Sensor n° " << it->second->GetId() << " is " << (string) val << endl;
                         it++;
-                        while (it != sensorsFunctioning.end())
-                        {
-                            if ((*it).first)
-                            {
-                                val = "functionnal";
-                            }
-
-                            else 
-                            {
-                                val = "not functionnal";
-                            }
-
-                            cout << "Sensor n° " << it->second->GetId() << " is " << (string) val << endl;
-                            it++;
-                        }
-                        break;
                     }
-                    if (role == 3 && option == 4) //Private Individual && Consult Points
+                    break;
+                }
+                if (role == 3 && option == 4) //Private Individual && Consult Points
+                {
+                    puts("\nYou have chosen Consult points\n");
+                    
+                    for (const PrivateIndividual & privateIndividual : parser.GetPrivateIndividuals())
                     {
-                        puts("\nYou have chosen Consult points\n");
-                        
-                        for (const PrivateIndividual & privateIndividual : parser.GetPrivateIndividuals())
-                        {
-                            cout << privateIndividual.GetId() <<" has " << privateIndividual.GetPoints() << " points" << endl;
-                        }
-                        
-                        break;
+                        cout << privateIndividual.GetId() <<" has " << privateIndividual.GetPoints() << " points" << endl;
                     }
-            
-                    if (role == 2) //Provider
+                    
+                    break;
+                }
+        
+                if (role == 2) //Provider
+                {
+                    switch (option) 
                     {
-                        switch (option) 
-                        {
                         case 4:
                             radius_cleaned_zone();
                             break;
                         case 5:
                             air_improvement();
                             break;
-                        }
                     }
                 }
             }
+        }
 
-        switch (role) {
+        switch (role)
+        {
             case 1 :
                 menu_GA();
             break;
@@ -328,7 +330,7 @@ void UserInterface::MainLoop ( )
         }
     }
 
-    //Test des données
+    // Test des données TODO remove
     for (const Attribute & attribute : parser.GetMeasurementsAttributes())
     {
         cout << attribute << endl;
