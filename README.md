@@ -17,4 +17,5 @@ L'application AirWatcher est basée sur une interface console. Les différentes 
 - Agrégation des données pour produire des statistiques sur la qualité de l'air.
 - Comparaison des capteurs pour identifier les zones avec des similitudes en termes de qualité de l'air.
 - Production de la valeur de la qualité de l'air à une position géographique précise.
-- Analyse des données fournies par les capteurs des particuliers pour déterminer leur fiabilité.
+- Analyse des données fournies par les capteurs des particuliers pour déterminer leur fiabilité (fonctionalité non supporté).
+- Analyze de l'impact des nettoyeurs d'air sur une zone (fonctionalité non supporté).
