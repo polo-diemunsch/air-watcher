@@ -370,7 +370,8 @@ void UserInterface::MainLoop ( )
 //------------------------------------------------- Surcharge d'opérateurs
 
 //-------------------------------------------- Constructeurs - destructeur
-UserInterface::UserInterface ( const string & datasetPath, double relativeDifferenceAllowed )
+UserInterface::UserInterface ( const string & datasetPath, double relativeDifferenceAllowed, double defaultRadius ):
+relativeDifferenceAllowed(relativeDifferenceAllowed), defaultRadius(defaultRadius)
 // Algorithme :
 //
 {
@@ -398,7 +399,6 @@ UserInterface::UserInterface ( const string & datasetPath, double relativeDiffer
     }
 
     sensorAnalyzer = SensorAnalyzer(sensorsPointers);
-    relativeDifferenceAllowed = relativeDifferenceAllowed;
 } //----- Fin de UserInterface
 
 

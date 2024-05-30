@@ -94,6 +94,7 @@ int main(int argc, char *argv[])
     
     string datasetPath = "../dataset ";
     double relativeDifferenceAllowed = 0.1; // TODO default values
+    double defaultRadius = 10; // TODO default values
     string line;
 
     while (getline(configFile, line))
@@ -120,6 +121,17 @@ int main(int argc, char *argv[])
             sregex_iterator match(start, end, doubleRegex);
             relativeDifferenceAllowed = stod(match->str());
         }
+
+        // On récupère le rayon par défaut
+        else if (regex_search(line, regex("^default-radius *=")))
+        {
+            string::const_iterator start = line.begin() + line.find('=') + 1;
+            string::const_iterator end = start;
+            while (end != line.end() && *end != '#') end++;
+            regex doubleRegex("[0-9]*\\.?[0-9]+");
+            sregex_iterator match(start, end, doubleRegex);
+            defaultRadius = stod(match->str());
+        }
     }
 
     if (!datasetPath.empty() && datasetPath[0] != '/')
@@ -127,7 +139,7 @@ int main(int argc, char *argv[])
         datasetPath = relativePathToParentFolder + "/" + datasetPath;
     }
 
-    UserInterface userInterface(datasetPath, relativeDifferenceAllowed);
+    UserInterface userInterface(datasetPath, relativeDifferenceAllowed, defaultRadius);
 
     userInterface.MainLoop();
 

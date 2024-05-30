@@ -41,7 +41,7 @@ public:
 //------------------------------------------------- Surcharge d'opérateurs
 
 //-------------------------------------------- Constructeurs - destructeur
-    UserInterface ( const string & datasetPath, double relativeDifferenceAllowed );
+    UserInterface ( const string & datasetPath, double relativeDifferenceAllowed, double defaultRadius );
     // Mode d'emploi :
     //
     // Contrat :
@@ -62,6 +62,7 @@ protected:
     Parser parser;
     SensorAnalyzer sensorAnalyzer;
     double relativeDifferenceAllowed;
+    double defaultRadius;
 };
 
 //-------------------------------- Autres définitions dépendantes de <UserInterface>
