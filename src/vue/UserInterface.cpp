@@ -210,9 +210,12 @@ void UserInterface::MainLoop ( )
             switch (option)
             {
                 case 1:
+                {
                     air_mean();
                     break;
+                }
                 case 2:
+                {
                     puts("\nYou have chosen Rank Sensors By Similarity \n");
                     string sensorId;
                     string attribute;
@@ -232,19 +235,23 @@ void UserInterface::MainLoop ( )
                     cout << "Date de fin (HH:MM:ss dd/mm/yyyy) : " <<endl;
                     endDate= inputDate(); 
 
-                    multimap<double, Sensor *> ranking = sensorAnalyzer.RankSensorsBySimilarity (sensor, attribute, startDate, endDate);
+                    multimap<double, Sensor *> ranking = sensorAnalyzer.RankSensorsBySimilarity(sensor, attribute, startDate, endDate);
                     multimap<double, Sensor *>::iterator it = ranking.begin();
                     it++;
                     while (it != ranking.end())
                     {
-                        cout << (*it).first << " : sensor n° " << (string)(*it).second->GetId() << endl;
+                        cout << it->first << " : sensor n° " << it->second->GetId() << endl;
                         it++;
                     }
                     break;
+                }
                 case 3:
+                {
                     air_quality();
                     break;
+                }
                 default :
+                {
                     if (role == 1 && option == 4) //Government Agency && Check Functioning Of All Sensors
                     {
                         puts("\nYou have chosen Check Functioning Of All Sensors sensors\n");
@@ -259,7 +266,7 @@ void UserInterface::MainLoop ( )
                         startDate = inputDate();
                         cout << "Date de fin (HH:MM:ss dd/mm/yyyy) : " <<endl;
                         endDate= inputDate(); 
-                        multimap<bool, Sensor *> sensorsFunctioning = sensorAnalyzer.CheckFunctioningOfAllSensors (radius, startDate, endDate, relativeDifferenceAllowed);
+                        multimap<bool, Sensor *> sensorsFunctioning = sensorAnalyzer.CheckFunctioningOfAllSensors(radius, startDate, endDate, relativeDifferenceAllowed, true);
                         
                         multimap<bool, Sensor *>::iterator it = sensorsFunctioning.begin();
                         string val;
@@ -276,7 +283,7 @@ void UserInterface::MainLoop ( )
                                 val = "not functionnal";
                             }
 
-                            cout << "Sensor n° " << (string)(*it).second->GetId() << " is " << (string) val << endl;
+                            cout << "Sensor n° " << it->second->GetId() << " is " << (string) val << endl;
                             it++;
                         }
                         break;
@@ -305,7 +312,7 @@ void UserInterface::MainLoop ( )
                             break;
                         }
                     }
-            
+                }
             }
 
         switch (role) {
