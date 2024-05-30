@@ -3,7 +3,7 @@ RM=rm
 MKDIR=mkdir
 EDL=g++
 COMP=g++
-CCFLAGS=-ansi -pedantic -Wall -std=c++17 # -g -DMAP -DDEB
+CCFLAGS=-ansi -pedantic -Wall -std=c++17 # -g -DMAP
 RMFLAGS=-f
 LDFLAGS=$(CCFLAGS)
 LIBS=-lm

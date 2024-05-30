@@ -66,7 +66,8 @@ public:
         const double radius,
         const time_t startDate,
         const time_t endDate,
-        const double relativeDifferenceAllowed
+        const double relativeDifferenceAllowed,
+        const bool setIsFunctioning
     );
     // Mode d'emploi :
     //
@@ -77,7 +78,8 @@ public:
         const double radius,
         const time_t startDate,
         const time_t endDate,
-        const double relativeDifferenceAllowed
+        const double relativeDifferenceAllowed,
+        const bool setIsFunctioning
     );
     // Mode d'emploi :
     //
