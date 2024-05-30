@@ -28,4 +28,6 @@ Voici les principales fonctionnalités de l'application :
 
 - Calcul d'une mesure de qualité de l'air à une position géographique précise.
 
-- Analyse des données fournies par les capteurs des particuliers pour déterminer leur fiabilité.
+- Analyse des données fournies par les capteurs des particuliers pour déterminer leur fiabilité (fonctionalité non supportée).
+
+- Analyze de l'impact des nettoyeurs d'air sur une zone (fonctionalité non supportée).
