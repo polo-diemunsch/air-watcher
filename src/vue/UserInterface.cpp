@@ -135,19 +135,16 @@ time_t inputDate()
     return timestamp;
 }
 //----------------------------------------------------- Méthodes publiques
-void UserInterface::MainLoop ( )
-// Algorithme :
-//
-{
+void UserInterface::MainLoop() {
+    // Algorithme :
+    //
     // TODO menus and stuff
     int role;
     puts("\nAirWatcher : it all starts with air\n");
 
     string ProviderId;
-    Provider * provider ;
     string PrivateIndividualId;
-    PrivateIndividual * privateIndividual;
-    
+
     choix_role();
     cin>>role;
     
@@ -155,19 +152,19 @@ void UserInterface::MainLoop ( )
         case 1 :
             menu_GA();
             break;
-        case 2 :
-            cout << "Provider id : (Providerxx): "<< endl;
+        case 2:
+            cout << "Provider id : (Providerxx): " << endl;
             cin >> ProviderId;
             provider = parser.GetProviderById(ProviderId);
             menu_Pr();
             break;
-        case 3 :
-            cout << "Private Individual id : (Userxx): "<< endl;
+        case 3:
+            cout << "Private Individual id : (Userxx): " << endl;
             cin >> PrivateIndividualId;
             privateIndividual = parser.GetPrivateIndividualById(PrivateIndividualId);
             menu_PI();
             break;
-        case 4 :
+        case 4:
             cout << "Goodbye" << endl;
             return;
     }
@@ -367,6 +364,17 @@ void UserInterface::MainLoop ( )
                         {
                             cout << "\n" <<sensorId << " is not functionnal " << endl;
                         }
+
+                        PrivateIndividual * privateIndividual = it->second->GetPrivateIndividual();
+                        if (privateIndividual != nullptr)
+                        {
+                            cout << it->second->GetId() << " is " << (string) val << " and belongs to " << privateIndividual->GetId() << "( Reliability : " << privateIndividual->GetIsReliable()  << " )" << endl;
+                        }
+                        else
+                        {
+                            cout << it->second->GetId() << " is " << (string) val << endl;
+                        }
+                        it++;
                         break;
                     }
                     case 5: //Government Agency && Reliability

@@ -65,6 +65,8 @@ protected:
     double relativeDifferenceAllowed;
     double defaultRadius;
     vector<Sensor> sensors;
+    Provider * provider ;
+    PrivateIndividual * privateIndividual;
 };
 
 //-------------------------------- Autres définitions dépendantes de <UserInterface>
