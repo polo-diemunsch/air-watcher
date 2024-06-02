@@ -94,7 +94,6 @@ double SensorAnalyzer::ComputeMeanAirQualityInArea ( const double latitude, cons
 
             if (privateIndividual != nullptr)
             {
-                cout << privateIndividual<< endl;
                 privateIndividual->AddPoints(1);
                 cout << "Private individual " << privateIndividual->GetId() << " has " << privateIndividual->GetPoints() << " points" << endl;
             }

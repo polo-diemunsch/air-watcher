@@ -15,6 +15,7 @@ using namespace std;
 #include <iostream>
 #include <ctime>
 #include <iomanip>
+#include <chrono>
 
 //------------------------------------------------------ Include personnel
 #include "UserInterface.h"
@@ -263,7 +264,6 @@ void UserInterface::MainLoop() {
                 cout << "Sensor id : (Sensorxx): "<< endl;
                 cin>>sensorId;
                 sensor = parser.GetSensorById(sensorId);
-                cout << sensor->GetPrivateIndividual() << endl;
 
                 while (sensor == 0)
                 {
@@ -364,17 +364,6 @@ void UserInterface::MainLoop() {
                         {
                             cout << "\n" <<sensorId << " is not functionnal " << endl;
                         }
-
-                        PrivateIndividual * privateIndividual = it->second->GetPrivateIndividual();
-                        if (privateIndividual != nullptr)
-                        {
-                            cout << it->second->GetId() << " is " << (string) val << " and belongs to " << privateIndividual->GetId() << "( Reliability : " << privateIndividual->GetIsReliable()  << " )" << endl;
-                        }
-                        else
-                        {
-                            cout << it->second->GetId() << " is " << (string) val << endl;
-                        }
-                        it++;
                         break;
                     }
                     case 5: //Government Agency && Reliability

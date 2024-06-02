@@ -245,7 +245,6 @@ void Parser::parseSensors ( const string sensorsPath )
         if (regex_match(line, match, sensorPattern))
         {
             id = match[1];
-            cout << id << endl;
             latitude = stod(match[2]);
             longitude = stod(match[3]);
 
