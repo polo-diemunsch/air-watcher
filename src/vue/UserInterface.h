@@ -15,6 +15,7 @@
 
 #include "../data/Parser.h"
 #include "../service/SensorAnalyzer.h"
+#include <vector>
 
 //------------------------------------------------------------- Constantes
 
@@ -63,6 +64,7 @@ protected:
     SensorAnalyzer sensorAnalyzer;
     double relativeDifferenceAllowed;
     double defaultRadius;
+    vector<Sensor> sensors;
 };
 
 //-------------------------------- Autres définitions dépendantes de <UserInterface>

@@ -30,6 +30,7 @@ void choix_role()
 	puts("\t 1. Government Agency");
 	puts("\t 2. Provider ");
 	puts("\t 3. Private Individual");
+    puts("\t 4. Quit");
     
 	puts("\nOnce you choose a role, you will not be able to modify it !\n");
 }
@@ -140,8 +141,12 @@ void UserInterface::MainLoop ( )
 {
     // TODO menus and stuff
     int role;
-    int option = 1;
     puts("\nAirWatcher : it all starts with air\n");
+
+    string ProviderId;
+    Provider * provider ;
+    string PrivateIndividualId;
+    PrivateIndividual * privateIndividual;
     
     choix_role();
     cin>>role;
@@ -151,19 +156,27 @@ void UserInterface::MainLoop ( )
             menu_GA();
             break;
         case 2 :
+            cout << "Provider id : (Providerxx): "<< endl;
+            cin >> ProviderId;
+            provider = parser.GetProviderById(ProviderId);
             menu_Pr();
             break;
         case 3 :
+            cout << "Private Individual id : (Userxx): "<< endl;
+            cin >> PrivateIndividualId;
+            privateIndividual = parser.GetPrivateIndividualById(PrivateIndividualId);
             menu_PI();
             break;
-        default :
-            puts("Role invalide");
-            option = 0;
-            break;
+        case 4 :
+            cout << "Goodbye" << endl;
+            return;
     }
-    
-    while (option) 
-    {
+
+    int option;
+    bool val = true;
+
+    while (val) 
+    {   
         cin>>option;
         switch (option)
         {
@@ -250,10 +263,18 @@ void UserInterface::MainLoop ( )
                 time_t startDate;
                 time_t endDate;
                 Sensor * sensor;
-                cout << "Sensor id (Sensorxx): "<< endl;
+                cout << "Sensor id : (Sensorxx): "<< endl;
                 cin>>sensorId;
                 sensor = parser.GetSensorById(sensorId);
+                cout << sensor->GetPrivateIndividual() << endl;
 
+                while (sensor == 0)
+                {
+                    cout << "Sensor id : (Sensorxx): "<< endl;
+                    cin>>sensorId;
+                    sensor = parser.GetSensorById(sensorId);
+                }
+                
                 cout << "Attribute (PM10, NO2, SO2 or O3): "<< endl;
                 cin>>attribute;
                 
@@ -466,19 +487,21 @@ relativeDifferenceAllowed(relativeDifferenceAllowed), defaultRadius(defaultRadiu
     const string privateIndividualsPath = datasetPath + "/users.csv";
     const string cleanersPath = datasetPath + "/cleaners.csv";
     const string providersPath = datasetPath + "/providers.csv";
+
     parser = Parser(sensorsPath, attributesPath, measurementsPath,
                     privateIndividualsPath, cleanersPath, providersPath);
-    
-    vector<Sensor> sensors = parser.GetSensors();
+        
+    sensors = parser.GetSensors();
+
     vector<Sensor *> sensorsPointers;
     sensorsPointers.reserve(sensors.size());
 
-    vector<Sensor>::iterator it = sensors.begin();
-    while (it != sensors.end())
+    for (Sensor & sensor : sensors)
     {
-        sensorsPointers.push_back(&(*it));
-        it++;
+        sensorsPointers.push_back(&sensor);
     }
+
+    cout << endl;
 
     sensorAnalyzer = SensorAnalyzer(sensorsPointers);
 } //----- Fin de UserInterface

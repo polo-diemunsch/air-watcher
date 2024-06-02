@@ -70,6 +70,36 @@ Sensor * Parser::GetSensorById ( const string & id )
     return result;
 } //----- Fin de GetSensors
 
+PrivateIndividual * Parser::GetPrivateIndividualById ( const string & id )
+// Algorithme :
+//
+{
+    PrivateIndividual * result = nullptr;
+
+    unordered_map<string, PrivateIndividual>::iterator it = privateIndividuals.find(id);
+    if (it != privateIndividuals.end())
+    {
+        result = &(it->second);
+    }
+
+    return result;
+} //----- Fin de GetPrivateIndividualById
+
+Provider * Parser::GetProviderById ( const string & id )
+// Algorithme :
+//
+{
+    Provider * result = nullptr;
+
+    unordered_map<string, Provider>::iterator it = providers.find(id);
+    if (it != providers.end())
+    {
+        result = &(it->second);
+    }
+
+    return result;
+} //----- Fin de GetProviderById
+
 vector<PrivateIndividual> Parser::GetPrivateIndividuals ( ) const
 // Algorithme :
 //
@@ -215,6 +245,7 @@ void Parser::parseSensors ( const string sensorsPath )
         if (regex_match(line, match, sensorPattern))
         {
             id = match[1];
+            cout << id << endl;
             latitude = stod(match[2]);
             longitude = stod(match[3]);
 

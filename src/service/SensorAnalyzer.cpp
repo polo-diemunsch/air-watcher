@@ -56,6 +56,7 @@ double SensorAnalyzer::ComputeMeanAirQualityInArea ( const double latitude, cons
 // Algorithme :
 //
 {
+
     double sum = 0; 
     double measurementCount = 0;
 
@@ -82,7 +83,7 @@ double SensorAnalyzer::ComputeMeanAirQualityInArea ( const double latitude, cons
         double distance = 6371 * c; // où R est le rayon de la Terre
 
         if (distance <= radius)
-        {
+        {   
             vector <Measurement> measurements = sensor->GetMeasurementsWithAttributeWithinDateRange(attributeId, startDate, endDate);
             for (const Measurement & measurement : measurements)
             {
@@ -90,11 +91,12 @@ double SensorAnalyzer::ComputeMeanAirQualityInArea ( const double latitude, cons
                 measurementCount++;
                 // sensorMeasurementCount++;
             }
-        }
 
-        if (privateIndividual != nullptr)
-        {
-            privateIndividual->AddPoints(1);
+            if (privateIndividual != nullptr)
+            {
+                privateIndividual->AddPoints(1);
+                cout << "Private individual " << privateIndividual->GetId() << " has " << privateIndividual->GetPoints() << " points" << endl;
+            }
         }
     }
 
