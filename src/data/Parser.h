@@ -51,6 +51,12 @@ public:
     // Contrat :
     // 
 
+    Attribute * GetAttributeById ( const string & id );
+    // Mode d'emploi :
+    //
+    // Contrat :
+    //
+
     vector<Sensor> GetSensors ( ) const;
     // Mode d'emploi :
     // 
@@ -63,23 +69,17 @@ public:
     // Contrat :
     // 
 
-    PrivateIndividual * GetPrivateIndividualById ( const string & id );
-    // Mode d'emploi :
-    //
-    // Contrat :
-    //
-
-    Provider * GetProviderById ( const string & id );
-    // Mode d'emploi :
-    //
-    // Contrat :
-    //
-
     vector<PrivateIndividual> GetPrivateIndividuals ( ) const;
     // Mode d'emploi :
     // 
     // Contrat :
     // 
+
+    PrivateIndividual * GetPrivateIndividualById ( const string & id );
+    // Mode d'emploi :
+    //
+    // Contrat :
+    //
 
     vector<Cleaner> GetCleaners ( ) const;
     // Mode d'emploi :
@@ -92,6 +92,12 @@ public:
     // 
     // Contrat :
     // 
+
+    Provider * GetProviderById ( const string & id );
+    // Mode d'emploi :
+    //
+    // Contrat :
+    //
 
 //------------------------------------------------- Surcharge d'opérateurs
 

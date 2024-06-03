@@ -53,6 +53,21 @@ vector<Attribute> Parser::GetMeasurementsAttributes ( ) const
     return result;
 } //----- Fin de GetMeasurementsAttributes
 
+Attribute * Parser::GetAttributeById ( const string & id )
+// Algorithme :
+//
+{
+    Attribute * result = nullptr;
+
+    unordered_map<string, Attribute>::iterator it = attributes.find(id);
+    if (it != attributes.end())
+    {
+        result = &(it->second);
+    }
+
+    return result;
+} //----- Fin de GetAttributeById
+
 vector<Sensor> Parser::GetSensors ( ) const
 // Algorithme :
 //
@@ -81,37 +96,7 @@ Sensor * Parser::GetSensorById ( const string & id )
     }
 
     return result;
-} //----- Fin de GetSensors
-
-PrivateIndividual * Parser::GetPrivateIndividualById ( const string & id )
-// Algorithme :
-//
-{
-    PrivateIndividual * result = nullptr;
-
-    unordered_map<string, PrivateIndividual>::iterator it = privateIndividuals.find(id);
-    if (it != privateIndividuals.end())
-    {
-        result = &(it->second);
-    }
-
-    return result;
-} //----- Fin de GetPrivateIndividualById
-
-Provider * Parser::GetProviderById ( const string & id )
-// Algorithme :
-//
-{
-    Provider * result = nullptr;
-
-    unordered_map<string, Provider>::iterator it = providers.find(id);
-    if (it != providers.end())
-    {
-        result = &(it->second);
-    }
-
-    return result;
-} //----- Fin de GetProviderById
+} //----- Fin de GetSensorById
 
 vector<PrivateIndividual> Parser::GetPrivateIndividuals ( ) const
 // Algorithme :
@@ -127,6 +112,21 @@ vector<PrivateIndividual> Parser::GetPrivateIndividuals ( ) const
 
     return result;
 } //----- Fin de GetPrivateIndividuals
+
+PrivateIndividual * Parser::GetPrivateIndividualById ( const string & id )
+// Algorithme :
+//
+{
+    PrivateIndividual * result = nullptr;
+
+    unordered_map<string, PrivateIndividual>::iterator it = privateIndividuals.find(id);
+    if (it != privateIndividuals.end())
+    {
+        result = &(it->second);
+    }
+
+    return result;
+} //----- Fin de GetPrivateIndividualById
 
 vector<Cleaner> Parser::GetCleaners ( ) const
 // Algorithme :
@@ -157,6 +157,21 @@ vector<Provider> Parser::GetProviders ( ) const
 
     return result;
 } //----- Fin de GetProviders
+
+Provider * Parser::GetProviderById ( const string & id )
+// Algorithme :
+//
+{
+    Provider * result = nullptr;
+
+    unordered_map<string, Provider>::iterator it = providers.find(id);
+    if (it != providers.end())
+    {
+        result = &(it->second);
+    }
+
+    return result;
+} //----- Fin de GetProviderById
 
 
 //------------------------------------------------- Surcharge d'opérateurs

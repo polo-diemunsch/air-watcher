@@ -20,6 +20,11 @@
 //------------------------------------------------------------- Constantes
 
 //------------------------------------------------------------------ Types
+enum Role {
+    GOVERNMENT_AGENCY,
+    PROVIDER,
+    PRIVATE_INDIVIDUAL,
+};
 
 //------------------------------------------------------------------------
 // Rôle de la classe <UserInterface>
@@ -59,6 +64,24 @@ public:
 protected:
 //----------------------------------------------------- Méthodes protégées
     void chooseRole ( );
+    // Mode d'emploi :
+    //
+    // Contrat :
+    //
+
+    void menuGovernmentAgency ( bool firstTime=false );
+    // Mode d'emploi :
+    //
+    // Contrat :
+    //
+
+    void menuProvider ( bool firstTime=false );
+    // Mode d'emploi :
+    //
+    // Contrat :
+    //
+
+    void menuPrivateIndividual ( bool firstTime=false );
     // Mode d'emploi :
     //
     // Contrat :
@@ -123,6 +146,7 @@ protected:
     SensorAnalyzer sensorAnalyzer;
     double relativeDifferenceAllowed;
     double defaultRadius;
+    Role role;
     vector<Sensor> sensors;
     Provider * provider;
     PrivateIndividual * privateIndividual;
