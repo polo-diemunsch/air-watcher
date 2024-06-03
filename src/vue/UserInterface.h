@@ -12,10 +12,10 @@
 
 //--------------------------------------------------- Interfaces utilisées
 #include <string>
+#include <vector>
 
 #include "../data/Parser.h"
 #include "../service/SensorAnalyzer.h"
-#include <vector>
 
 //------------------------------------------------------------- Constantes
 

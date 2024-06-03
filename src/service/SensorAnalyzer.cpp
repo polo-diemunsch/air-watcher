@@ -56,7 +56,6 @@ double SensorAnalyzer::ComputeMeanAirQualityInArea ( const double latitude, cons
 // Algorithme :
 //
 {
-
     double sum = 0; 
     double measurementCount = 0;
 
