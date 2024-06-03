@@ -33,7 +33,8 @@ void menuGA()
 //
 {
     cout << "\n";
-    if (!role) {
+    if (!role)
+    {
         cout << "You have chosen Government Agency\n\n";
         cout << "You can now :\n";
     }
@@ -51,7 +52,8 @@ void menuPr()
 //
 {
     cout << "\n";
-    if (!role) {
+    if (!role)
+    {
         cout << "You have chosen Provider\n\n";
         cout << "You can now :\n";
     }
@@ -68,7 +70,8 @@ void menuPI()
 //
 {
     cout << "\n";
-    if (!role) {
+    if (!role)
+    {
         cout << "You have chosen Private Individual\n\n";
         cout << "You can now :\n";
     }
@@ -79,21 +82,42 @@ void menuPI()
     cout << "\t0. Exit" << endl;
 }
 
-time_t inputDate()
+time_t inputDate(bool isStartDate)
 // Algorithme :
 //
 {
-    // TODO
-    time_t timestamp;
-    tm time = {};
+    time_t timestamp = -1;
 
-    cin >> get_time(&time, "%T %d/%m/%Y");
-    /*
-    cout<<"year : "<<time.tm_year<<" month : "<<time.tm_mon<<" day : "<<time.tm_mday<<endl;
-    cout<<"hrs : "<<time.tm_hour<<" min : "<<time.tm_min<<" ss : "<<time.tm_sec<<endl;
-    */
-    // Convert to time_t
-    timestamp = mktime(&time);
+    cin.ignore();
+    if (cin.peek() != '\n')
+    {
+        string date;
+        istringstream dateStringStream;
+        tm tm;
+
+        getline(cin, date);
+
+        const vector<string> formats{"%d/%m/%Y", "%H:%M:%S%t%d/%m/%Y"};
+
+        size_t i = 0;
+        while (timestamp == -1 && i < formats.size())
+        {
+            dateStringStream = istringstream(date);
+            dateStringStream >> get_time(&tm, formats[i].c_str());
+
+            if (dateStringStream)
+            {
+                timestamp = mktime(&tm);
+            }
+
+            i++;
+        }
+    }
+
+    if (timestamp == -1)
+    {
+        timestamp = isStartDate ? 0 : time(nullptr);
+    }
 
     return timestamp;
 }
@@ -219,13 +243,13 @@ relativeDifferenceAllowed(relativeDifferenceAllowed), defaultRadius(defaultRadiu
 
     parser = Parser();
 
-    cout << "Loading..." << endl;
+    cout << "Loading...\n" << endl;
 
     chrono::time_point start = chrono::steady_clock::now();
     parser.Parse(sensorsPath, attributesPath, measurementsPath, privateIndividualsPath, cleanersPath, providersPath);
     chrono::nanoseconds elapsed = std::chrono::steady_clock::now() - start;
 
-    cout << "Done Loading" << "\nTime elapsed: " << nanosecondsToDisplayableTime(elapsed) << endl;
+    cout << "Done Loading" << "\n\nTime elapsed: " << nanosecondsToDisplayableTime(elapsed) << endl;
 
     sensors = parser.GetSensors();
 
@@ -278,13 +302,13 @@ void UserInterface::chooseRole()
             break;
         case 2:
         {
-            cout << "Provider id (Providerxx) :" << endl;
+            cout << "Provider id (ProviderXX) :" << endl;
             cin >> providerId;
             provider = parser.GetProviderById(providerId);
 
             while (provider == nullptr)
             {
-                cout << providerId << " not found\n" << "Provider id (Providerxx) :" << endl;
+                cout << providerId << " not found\n" << "Provider id (ProviderXX) :" << endl;
                 cin >> providerId;
                 provider = parser.GetProviderById(providerId);
             }
@@ -294,13 +318,13 @@ void UserInterface::chooseRole()
         }
         case 3:
         {
-            cout << "Private Individual id (Userxx) :" << endl;
+            cout << "Private Individual id (UserXX) :" << endl;
             cin >> privateIndividualId;
             privateIndividual = parser.GetPrivateIndividualById(privateIndividualId);
 
             while (privateIndividual == nullptr)
             {
-                cout << privateIndividualId << " not found\n" << "Private Individual id (Userxx) :" << endl;
+                cout << privateIndividualId << " not found\n" << "Private Individual id (UserXX) :" << endl;
                 cin >> privateIndividualId;
                 privateIndividual = parser.GetPrivateIndividualById(privateIndividualId);
             }
@@ -335,13 +359,13 @@ void UserInterface::meanAirQuality()
             time_t endDate;
             Sensor * sensor;
 
-            cout << "Sensor id (Sensorxx) :" << endl;
+            cout << "Sensor id (SensorXX) :" << endl;
             cin >> sensorId;
             sensor = parser.GetSensorById(sensorId);
 
             while (sensor == nullptr)
             {
-                cout << sensorId << " not found\n" << "Sensor id (Sensorxx) :" << endl;
+                cout << sensorId << " not found\n" << "Sensor id (SensorXX) :" << endl;
                 cin >> sensorId;
                 sensor = parser.GetSensorById(sensorId);
             }
@@ -349,19 +373,20 @@ void UserInterface::meanAirQuality()
             cout << "Attribute (PM10, NO2, SO2 or O3) :" << endl;
             cin >> attribute;
 
-            cout << "Date de début (HH:MM:ss dd/mm/yyyy) :" << endl;
-            startDate = inputDate();
+            cout << "Start date (dd/mm/yyyy, HH:MM:SS dd/mm/yyyy or anything else) :" << endl;
+            startDate = inputDate(true);
 
-            cout << "Date de fin (HH:MM:ss dd/mm/yyyy) :" << endl;
-            endDate= inputDate(); 
+            cout << "End Date (dd/mm/yyyy, HH:MM:SS dd/mm/yyyy or anything else) :" << endl;
+            endDate= inputDate(false); 
 
             chrono::time_point start = chrono::steady_clock::now();
             double sensorMean = sensorAnalyzer.ComputeMeanAirQualityForSensor(sensor, attribute, startDate, endDate);
             chrono::nanoseconds elapsed = std::chrono::steady_clock::now() - start;
 
             cout << "\nAverage air quality of "<< attribute << " for " << sensorId << " between "
-                 << ctime(&startDate) << " and " << ctime(&endDate) << " is " << sensorMean
-                 << "\nTime elapsed: " << nanosecondsToDisplayableTime(elapsed) << endl;
+                 << put_time(localtime(&startDate), "%H:%M:%S %Y-%m-%d") << " and "
+                 << put_time(localtime(&endDate), "%H:%M:%S %Y-%m-%d") << " is " << sensorMean
+                 << "\n\nTime elapsed: " << nanosecondsToDisplayableTime(elapsed) << endl;
 
             break;
         } 
@@ -387,18 +412,21 @@ void UserInterface::meanAirQuality()
             cout << "Attribute (PM10, NO2, SO2 or O3) :"<< endl;
             cin >> attribute;
 
-            cout << "Start date (HH:MM:ss dd/mm/yyyy) :" << endl;
-            startDate = inputDate();
-            cout << "End date (HH:MM:ss dd/mm/yyyy) :" <<endl;
-            endDate= inputDate(); 
+            cout << "Start date (dd/mm/yyyy, HH:MM:SS dd/mm/yyyy or anything else) :" << endl;
+            startDate = inputDate(true);
+
+            cout << "End date (dd/mm/yyyy, HH:MM:SS dd/mm/yyyy or anything else) :" <<endl;
+            endDate= inputDate(false); 
 
             chrono::time_point start = chrono::steady_clock::now();
             double areaMean = sensorAnalyzer.ComputeMeanAirQualityInArea(latitude, longitude, radius, sensorsToExclude, attribute, startDate, endDate);
             chrono::nanoseconds elapsed = std::chrono::steady_clock::now() - start;
 
-            cout << "\nAverage air quality of " << attribute << " for (" << latitude << ", " << longitude
-                 << ") between " << ctime(&startDate) << " and " << ctime(&endDate) << " is " << areaMean
-                 << "\nTime elapsed: " << nanosecondsToDisplayableTime(elapsed) << endl;
+            cout << "\nAverage air quality of " << attribute << " for coorinates ("
+                 << latitude << ", " << longitude << ") and radius " << radius << " between "
+                 << put_time(localtime(&startDate), "%H:%M:%S %Y-%m-%d") << " and "
+                 << put_time(localtime(&endDate), "%H:%M:%S %Y-%m-%d") << " is " << areaMean
+                 << "\n\nTime elapsed: " << nanosecondsToDisplayableTime(elapsed) << endl;
 
             break;
         }
@@ -417,13 +445,13 @@ void UserInterface::rankSensors()
     time_t endDate;
     Sensor * sensor;
 
-    cout << "Sensor id (Sensorxx) :" << endl;
+    cout << "Sensor id (SensorXX) :" << endl;
     cin >> sensorId;
     sensor = parser.GetSensorById(sensorId);
 
     while (sensor == nullptr)
     {
-        cout << sensorId << " not found\n" << "Sensor id (Sensorxx) :" << endl;
+        cout << sensorId << " not found\n" << "Sensor id (SensorXX) :" << endl;
         cin >> sensorId;
         sensor = parser.GetSensorById(sensorId);
     }
@@ -431,10 +459,11 @@ void UserInterface::rankSensors()
     cout << "Attribute (PM10, NO2, SO2 or O3) :" << endl;
     cin >> attribute;
 
-    cout << "Start date (HH:MM:ss dd/mm/yyyy) :" << endl;
-    startDate = inputDate();
-    cout << "End date (HH:MM:ss dd/mm/yyyy) :" <<endl;
-    endDate= inputDate(); 
+    cout << "Start date (dd/mm/yyyy, HH:MM:SS dd/mm/yyyy or anything else) :" << endl;
+    startDate = inputDate(true);
+
+    cout << "End date (dd/mm/yyyy, HH:MM:SS dd/mm/yyyy or anything else) :" <<endl;
+    endDate= inputDate(false); 
 
     chrono::time_point start = chrono::steady_clock::now();
     multimap<double, Sensor *> ranking = sensorAnalyzer.RankSensorsBySimilarity(sensor, attribute, startDate, endDate);
@@ -446,7 +475,7 @@ void UserInterface::rankSensors()
         cout << it->first << " : " << it->second->GetId() << endl;
         it++;
     }
-    cout << "\nTime elapsed: " << nanosecondsToDisplayableTime(elapsed) << endl;
+    cout << "\n\nTime elapsed: " << nanosecondsToDisplayableTime(elapsed) << endl;
 }
 
 void UserInterface::checkFunctioningOfAllSensors()
@@ -462,10 +491,11 @@ void UserInterface::checkFunctioningOfAllSensors()
     cout << "Radius (km) :" << endl;
     cin >> radius;
 
-    cout << "Start date (HH:MM:ss dd/mm/yyyy) :" << endl;
-    startDate = inputDate();
-    cout << "End date (HH:MM:ss dd/mm/yyyy) :" << endl;
-    endDate= inputDate();
+    cout << "Start date (dd/mm/yyyy, HH:MM:SS dd/mm/yyyy or anything else) :" << endl;
+    startDate = inputDate(true);
+
+    cout << "End date (dd/mm/yyyy, HH:MM:SS dd/mm/yyyy or anything else) :" << endl;
+    endDate= inputDate(false);
 
     chrono::time_point start = chrono::steady_clock::now();
     multimap<bool, Sensor *> sensorsFunctioning = sensorAnalyzer.CheckFunctioningOfAllSensors(radius, startDate, endDate, relativeDifferenceAllowed, true);
@@ -477,7 +507,7 @@ void UserInterface::checkFunctioningOfAllSensors()
         cout << left << setw(8) << it->second->GetId() << " is " << (it->first ? "" : "not ") << "functional" << endl;
         it++;
     }
-    cout << "\nTime elapsed: " << nanosecondsToDisplayableTime(elapsed) << endl;
+    cout << "\n\nTime elapsed: " << nanosecondsToDisplayableTime(elapsed) << endl;
 }
 
 void UserInterface::checkFunctioningOfASensor()
@@ -492,13 +522,13 @@ void UserInterface::checkFunctioningOfASensor()
     time_t startDate;
     time_t endDate;
 
-    cout << "Sensor id (Sensorxx) :" << endl;
+    cout << "Sensor id (SensorXX) :" << endl;
     cin >> sensorId;
     sensor = parser.GetSensorById(sensorId);
 
     while (sensor == nullptr)
     {
-        cout << sensorId << " not found\n" << "Sensor id (Sensorxx) :" << endl;
+        cout << sensorId << " not found\n" << "Sensor id (SensorXX) :" << endl;
         cin >> sensorId;
         sensor = parser.GetSensorById(sensorId);
     }
@@ -506,17 +536,18 @@ void UserInterface::checkFunctioningOfASensor()
     cout << "Radius (km) :" << endl;
     cin >> radius;
 
-    cout << "Start date (HH:MM:ss dd/mm/yyyy) :" << endl;
-    startDate = inputDate();
-    cout << "End date (HH:MM:ss dd/mm/yyyy) :" << endl;
-    endDate= inputDate();
+    cout << "Start date (dd/mm/yyyy, HH:MM:SS dd/mm/yyyy or anything else) :" << endl;
+    startDate = inputDate(true);
+
+    cout << "End date (dd/mm/yyyy, HH:MM:SS dd/mm/yyyy or anything else) :" << endl;
+    endDate= inputDate(false);
 
     chrono::time_point start = chrono::steady_clock::now();
     bool functioning = sensorAnalyzer.CheckFunctioningOfSensor(sensor, radius, startDate, endDate, relativeDifferenceAllowed, true);
     chrono::nanoseconds elapsed = std::chrono::steady_clock::now() - start;
 
     cout << "\n" << sensorId << " is" << (functioning ? "" : "not ") << "functionnal"
-         << "\nTime elapsed: " << nanosecondsToDisplayableTime(elapsed) << endl;
+         << "\n\nTime elapsed: " << nanosecondsToDisplayableTime(elapsed) << endl;
 }
 
 void UserInterface::checkReliabilityOfPrivateIndividual()
@@ -538,7 +569,7 @@ void UserInterface::consultPointsOfPrivateIndividual()
     cout << "You have " << privateIndividual->GetPoints() << " points" << endl;
     chrono::nanoseconds elapsed = std::chrono::steady_clock::now() - start;
 
-    cout << "\nTime elapsed: " << nanosecondsToDisplayableTime(elapsed) << endl;
+    cout << "\n\nTime elapsed: " << nanosecondsToDisplayableTime(elapsed) << endl;
 }
 
 void UserInterface::radiusCleanedZone()
@@ -605,5 +636,5 @@ void UserInterface::consultDataset()
 
     chrono::nanoseconds elapsed = std::chrono::steady_clock::now() - start;
 
-    cout << "\nTime elapsed: " << nanosecondsToDisplayableTime(elapsed) << endl;
+    cout << "\n\nTime elapsed: " << nanosecondsToDisplayableTime(elapsed) << endl;
 }
