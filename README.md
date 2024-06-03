@@ -12,7 +12,7 @@ AirWatcher est une application développée pour une agence gouvernementale char
 
 La compilation du projet se fait à l'aide de la commande `make` et il suffira de lancer l'executable obtenu pour tester l'application (`./bin/air-watcher`).
 
-N.B : Utilisez `make unit-tests` pour compiler les tests unitaires.
+N.B : Utilisez `make unit-tests` pour compiler les tests unitaires et `./bin/unit-tests` pour les lancer.
 
 ### Utilisation
 
