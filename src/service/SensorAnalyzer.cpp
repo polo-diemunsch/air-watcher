@@ -83,19 +83,18 @@ double SensorAnalyzer::ComputeMeanAirQualityInArea ( const double latitude, cons
         double distance = 6371 * c; // où R est le rayon de la Terre
 
         if (distance <= radius)
-        {   
+        {
             vector <Measurement> measurements = sensor->GetMeasurementsWithAttributeWithinDateRange(attributeId, startDate, endDate);
             for (const Measurement & measurement : measurements)
             {
                 sum += measurement.GetValue();
                 measurementCount++;
-                // sensorMeasurementCount++;
             }
 
             if (privateIndividual != nullptr)
             {
                 privateIndividual->AddPoints(1);
-                cout << "Private individual " << privateIndividual->GetId() << " has " << privateIndividual->GetPoints() << " points" << endl;
+                // cout << "Private individual " << privateIndividual->GetId() << " has " << privateIndividual->GetPoints() << " points" << endl;
             }
         }
     }
