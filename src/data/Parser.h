@@ -38,6 +38,13 @@ class Parser
 
 public:
 //----------------------------------------------------- Méthodes publiques
+    void Parse ( const string sensorsPath, const string attributesPath, const string measurementsPath,
+                 const string privateIndividualsPath, const string cleanersPath, const string providersPath );
+    // Mode d'emploi :
+    // 
+    // Contrat :
+    // 
+
     vector<Attribute> GetMeasurementsAttributes ( ) const;
     // Mode d'emploi :
     // 
@@ -89,13 +96,6 @@ public:
 //------------------------------------------------- Surcharge d'opérateurs
 
 //-------------------------------------------- Constructeurs - destructeur
-    Parser ( const string sensorsPath, const string attributesPath, const string measurementsPath,
-               const string privateIndividualsPath, const string cleanersPath, const string providersPath );
-    // Mode d'emploi :
-    //
-    // Contrat :
-    //
-
     Parser ( );
     // Mode d'emploi :
     //

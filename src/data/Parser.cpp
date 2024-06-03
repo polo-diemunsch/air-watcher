@@ -25,6 +25,19 @@ using namespace std;
 //----------------------------------------------------------------- PUBLIC
 
 //----------------------------------------------------- Méthodes publiques
+void Parser::Parse ( const string sensorsPath, const string attributesPath, const string measurementsPath,
+                     const string privateIndividualsPath, const string cleanersPath, const string providersPath )
+// Algorithme :
+//
+{
+    parseAttributes(attributesPath);
+    parseSensors(sensorsPath);
+    parseMeasurements(measurementsPath);
+    parsePrivateIndividuals(privateIndividualsPath);
+    parseCleaners(cleanersPath);
+    parseProviders(providersPath);
+} //----- Fin de Parse
+
 vector<Attribute> Parser::GetMeasurementsAttributes ( ) const
 // Algorithme :
 //
@@ -149,23 +162,6 @@ vector<Provider> Parser::GetProviders ( ) const
 //------------------------------------------------- Surcharge d'opérateurs
 
 //-------------------------------------------- Constructeurs - destructeur
-Parser::Parser ( const string sensorsPath, const string attributesPath, const string measurementsPath,
-                     const string privateIndividualsPath, const string cleanersPath, const string providersPath )
-// Algorithme :
-//
-{
-#ifdef MAP
-    cout << "Appel au constructeur de <Parser>" << endl;
-#endif
-    parseAttributes(attributesPath);
-    parseSensors(sensorsPath);
-    parseMeasurements(measurementsPath);
-    parsePrivateIndividuals(privateIndividualsPath);
-    parseCleaners(cleanersPath);
-    parseProviders(providersPath);
-} //----- Fin de Parser
-
-
 Parser::Parser ( )
 // Algorithme :
 //
@@ -336,6 +332,28 @@ void Parser::parsePrivateIndividuals ( const string privateIndividualsPath )
     string privateIndividualId, sensorId;
     PrivateIndividual * privateIndividualPointer;
 
+    // Create PrivateIndividuals
+    while (getline(privateIndividualsFile, line))
+    {
+        if (line.back() == '\r')
+        {
+            line.pop_back();
+        }
+        if (regex_match(line, match, measurementPattern))
+        {
+            privateIndividualId = match[1];
+
+            if (!privateIndividuals.count(privateIndividualId))
+            {
+                PrivateIndividual privateIndividual(privateIndividualId);
+                privateIndividuals.insert({privateIndividualId, privateIndividual});
+            }
+        }
+    }
+
+    privateIndividualsFile.clear();
+    privateIndividualsFile.seekg(0);
+
     while (getline(privateIndividualsFile, line))
     {
         if (line.back() == '\r')
@@ -348,11 +366,6 @@ void Parser::parsePrivateIndividuals ( const string privateIndividualsPath )
             sensorId = match[2];
 
             unordered_map<string, PrivateIndividual>::iterator privateIndividualIterator = privateIndividuals.find(privateIndividualId);
-            if (privateIndividualIterator == privateIndividuals.end())
-            {
-                PrivateIndividual privateIndividual(privateIndividualId);
-                privateIndividualIterator = privateIndividuals.insert({privateIndividualId, privateIndividual}).first;
-            }
             privateIndividualPointer = &(privateIndividualIterator->second);
 
             unordered_map<string, Sensor>::iterator sensorsIterator = sensors.find(sensorId);
@@ -446,6 +459,28 @@ void Parser::parseProviders ( const string providersPath )
     string providerId, cleanerId;
     Provider * providerPointer;
 
+    // Create Providers
+    while (getline(providersFile, line))
+    {
+        if (line.back() == '\r')
+        {
+            line.pop_back();
+        }
+        if (regex_match(line, match, measurementPattern))
+        {
+            providerId = match[1];
+
+            if (!providers.count(providerId))
+            {
+                Provider provider(providerId);
+                providers.insert({providerId, provider});
+            }
+        }
+    }
+
+    providersFile.clear();
+    providersFile.seekg(0);
+
     while (getline(providersFile, line))
     {
         if (line.back() == '\r')
@@ -458,11 +493,6 @@ void Parser::parseProviders ( const string providersPath )
             cleanerId = match[2];
 
             unordered_map<string, Provider>::iterator providerIterator = providers.find(providerId);
-            if (providerIterator == providers.end())
-            {
-                Provider provider(providerId);
-                providerIterator = providers.insert({providerId, provider}).first;
-            }
             providerPointer = &(providerIterator->second);
 
             unordered_map<string, Cleaner>::iterator cleanersIterator = cleaners.find(cleanerId);

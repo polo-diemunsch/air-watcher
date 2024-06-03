@@ -186,9 +186,9 @@ relativeDifferenceAllowed(relativeDifferenceAllowed), defaultRadius(defaultRadiu
     const string cleanersPath = datasetPath + "/cleaners.csv";
     const string providersPath = datasetPath + "/providers.csv";
 
-    parser = Parser(sensorsPath, attributesPath, measurementsPath,
-                    privateIndividualsPath, cleanersPath, providersPath);
-        
+    parser = Parser();
+    parser.Parse(sensorsPath, attributesPath, measurementsPath, privateIndividualsPath, cleanersPath, providersPath);
+
     sensors = parser.GetSensors();
 
     vector<Sensor *> sensorsPointers;
@@ -239,6 +239,7 @@ void UserInterface::chooseRole()
             menuGA();
             break;
         case 2:
+        {
             cout << "Provider id (Providerxx) :" << endl;
             cin >> providerId;
             provider = parser.GetProviderById(providerId);
@@ -252,12 +253,14 @@ void UserInterface::chooseRole()
 
             menuPr();
             break;
+        }
         case 3:
+        {
             cout << "Private Individual id (Userxx) :" << endl;
             cin >> privateIndividualId;
             privateIndividual = parser.GetPrivateIndividualById(privateIndividualId);
 
-            while (provider == nullptr)
+            while (privateIndividual == nullptr)
             {
                 cout << privateIndividualId << " not found\n" << "Private Individual id (Userxx) :" << endl;
                 cin >> privateIndividualId;
@@ -266,6 +269,7 @@ void UserInterface::chooseRole()
 
             menuPI();
             break;
+        }
         default:
             cout << "Goodbye" << endl;
             exit(0);
