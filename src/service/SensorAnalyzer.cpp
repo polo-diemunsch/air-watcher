@@ -166,12 +166,11 @@ multimap<double, Sensor *> SensorAnalyzer::RankSensorsBySimilarity( const Sensor
 // Algorithme :
 //
 {
-    double meanRefrence;
-
+    double meanReference;
     double meanDynamic;
     multimap<double, Sensor *> ranking;
 
-    meanRefrence = ComputeMeanAirQualityForSensor(sensorToCompareTo, attributeID, startDate, endDate);
+    meanReference = ComputeMeanAirQualityForSensor(sensorToCompareTo, attributeID, startDate, endDate);
 
     for(Sensor * sensor : sensors)
     {
@@ -179,7 +178,7 @@ multimap<double, Sensor *> SensorAnalyzer::RankSensorsBySimilarity( const Sensor
         if (*sensor != *sensorToCompareTo && (privateIndividual == nullptr || privateIndividual->GetIsReliable()))
         {
             meanDynamic = ComputeMeanAirQualityForSensor(sensor, attributeID, startDate, endDate);            
-            ranking.insert({abs(meanRefrence - meanDynamic), sensor});
+            ranking.insert({abs(meanReference - meanDynamic) / meanReference, sensor});
         }
     }
 

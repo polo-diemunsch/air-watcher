@@ -534,7 +534,7 @@ void UserInterface::rankSensors( )
     multimap<double, Sensor *>::iterator it = ranking.begin();
     while (it != ranking.end())
     {
-        cout << "- " << left << setw(8) << it->second->GetId() << " : " << it->first << endl;
+        cout << "- " << left << setw(8) << it->second->GetId() << " : " << left << setw(7) << (1 - it->first) * 100 << " % similarity" << endl;
         it++;
     }
     cout << "\nTime elapsed: " << nanosecondsToDisplayableTime(elapsed) << endl;
