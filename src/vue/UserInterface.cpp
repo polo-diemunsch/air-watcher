@@ -29,48 +29,47 @@ int role = 0;
 //----------------------------------------------------------------- Fonctions utilisées pour l'affichage
 void menuGA()
 {
-    puts("");
+    cout << "\n";
     if (!role) {
-        puts("You have chosen Government Agency\n");
-        puts("You can now :");
+        cout << "You have chosen Government Agency\n\n";
+        cout << "You can now :\n";
     }
 
-	puts("\t 1. Consult Mean Air Quality");
-	puts("\t 2. Rank Sensors By Similarity");
-	puts("\t 3. Check Functioning Of All Sensors");
-    puts("\t 4. Check Functioning Of A Specific Sensors");
-    puts("\t 5. Check Reliability of Private Induviduals");
-    puts("\t 0. Exit");
+	cout << "\t1. Consult Mean Air Quality\n";
+	cout << "\t2. Rank Sensors By Similarity\n";
+	cout << "\t3. Check Functioning Of All Sensors\n";
+    cout << "\t4. Check Functioning Of A Specific Sensors\n";
+    cout << "\t5. Check Reliability of Private Induviduals\n";
+    cout << "\t0. Exit" << endl;
 }
 
 void menuPr()
 {
-    puts("");
+    cout << "\n";
     if (!role) {
-        puts("You have chosen Provider\n");
-        puts("You can now :");
+        cout << "You have chosen Provider\n\n";
+        cout << "You can now :\n";
     }
 
-	puts("\t 1. Consult Mean Air Quality");
-	puts("\t 2. Rank Sensors By Similarity");
-	puts("\t 3. Consult radius of cleaned zone");
-	puts("\t 4. Consult air quality improvement level");
-    puts("\t 0. Exit");
+	cout << "\t1. Consult Mean Air Quality\n";
+	cout << "\t2. Rank Sensors By Similarity\n";
+	cout << "\t3. Consult radius of cleaned zone\n";
+	cout << "\t4. Consult air quality improvement level\n";
+    cout << "\t0. Exit" << endl;
 }
 
 void menuPI()
 {
-    puts("");
+    cout << "\n";
     if (!role) {
-        puts("You have chosen Private Individual\n");
-        puts("You can now :");
+        cout << "You have chosen Private Individual\n\n";
+        cout << "You can now :\n";
     }
-    
-	//a tout les appels
-	puts("\t 1. Consult Mean Air Quality");
-	puts("\t 2. Rank Sensors By Similarity");
-	puts("\t 3. Consult your points");
-    puts("\t 0. Exit");
+
+	cout << "\t1. Consult Mean Air Quality\n";
+	cout << "\t2. Rank Sensors By Similarity\n";
+	cout << "\t3. Consult Your Points\n";
+    cout << "\t0. Exit" << endl;
 }
 
 time_t inputDate()
@@ -95,7 +94,7 @@ void UserInterface::MainLoop()
 // Algorithme :
 //
 {
-    puts("\nAirWatcher : it all starts with air\n");
+    cout << "\nAirWatcher : it all starts with air\n\n";
 
     chooseRole();
 
@@ -200,8 +199,6 @@ relativeDifferenceAllowed(relativeDifferenceAllowed), defaultRadius(defaultRadiu
         sensorsPointers.push_back(&sensor);
     }
 
-    cout << endl;
-
     sensorAnalyzer = SensorAnalyzer(sensorsPointers);
 } //----- Fin de UserInterface
 
@@ -227,15 +224,15 @@ void UserInterface::chooseRole()
     string ProviderId;
     string PrivateIndividualId;
 
-	puts("Choose your role :");
-	puts("\t 1. Government Agency");
-	puts("\t 2. Provider ");
-	puts("\t 3. Private Individual");
-    puts("\t 0. Exit");
-    
-	puts("\nOnce you choose a role, you will not be able to modify it !\n");
+	cout << "Choose your role :\n";
+	cout << "\t1. Government Agency\n";
+	cout << "\t2. Provider\n";
+	cout << "\t3. Private Individual\n";
+    cout << "\t0. Exit\n";
+
+	cout << "\nOnce you choose a role, you will not be able to modify it !\n" << endl;
     cin >> role;
-    
+
     switch (role)
     {
         case 1 :
@@ -264,10 +261,10 @@ void UserInterface::meanAirQuality()
 //
 {
     int mean;
-    puts("\nYou have chosen Consult Mean Air Quality\n");
-    puts("You can either :");
-    puts("\t 1. Consult Mean Air Quality For Sensor");
-    puts("\t 2. Consult Mean Air Quality In Area");
+    cout << "\nYou have chosen Consult Mean Air Quality\n\n";
+    cout << "You can either :\n";
+    cout << "\t 1. Consult Mean Air Quality For Sensor\n";
+    cout << "\t 2. Consult Mean Air Quality In Area" << endl;
     cin >> mean;
 
     switch (mean)
@@ -280,17 +277,17 @@ void UserInterface::meanAirQuality()
             time_t endDate;
             Sensor * sensor;
             
-            cout << "Sensor id (Sensorxx): " << endl;
+            cout << "Sensor id (Sensorxx) :" << endl;
             cin >> sensorId;
             sensor = parser.GetSensorById(sensorId);
 
-            cout << "Attribute (PM10, NO2, SO2 or O3): " << endl;
+            cout << "Attribute (PM10, NO2, SO2 or O3) :" << endl;
             cin >> attribute;
                                         
-            cout << "Date de début (HH:MM:ss dd/mm/yyyy) : " << endl;
+            cout << "Date de début (HH:MM:ss dd/mm/yyyy) :" << endl;
             startDate = inputDate();
             
-            cout << "Date de fin (HH:MM:ss dd/mm/yyyy) : " << endl;
+            cout << "Date de fin (HH:MM:ss dd/mm/yyyy) :" << endl;
             endDate= inputDate(); 
             
             double sensorMean = sensorAnalyzer.ComputeMeanAirQualityForSensor(sensor, attribute, startDate, endDate);
@@ -299,7 +296,7 @@ void UserInterface::meanAirQuality()
 
             break;
         } 
-        case 2 : //In Area
+        case 2 : // In Area
         {
             double latitude;
             double longitude;
@@ -309,25 +306,25 @@ void UserInterface::meanAirQuality()
             time_t startDate;
             time_t endDate;
             
-            cout << "Latitude : " << endl;
+            cout << "Latitude :" << endl;
             cin >> latitude;
 
-            cout << "Longitude :  " << endl;
+            cout << "Longitude :" << endl;
             cin >> longitude;
 
-            cout << "Radius (km):  " << endl;
+            cout << "Radius (km) :" << endl;
             cin >> radius;
 
-            cout << "Attribute (PM10, NO2, SO2 or O3): "<< endl;
+            cout << "Attribute (PM10, NO2, SO2 or O3) :"<< endl;
             cin >> attribute;
             
-            cout << "Start date (HH:MM:ss dd/mm/yyyy) : " << endl;
+            cout << "Start date (HH:MM:ss dd/mm/yyyy) :" << endl;
             startDate = inputDate();
             
-            cout << "End date (HH:MM:ss dd/mm/yyyy) : " <<endl;
+            cout << "End date (HH:MM:ss dd/mm/yyyy) :" <<endl;
             endDate= inputDate(); 
 
-            double areaMean = sensorAnalyzer.ComputeMeanAirQualityInArea (latitude, longitude, radius, sensorsToExclude, attribute, startDate, endDate );
+            double areaMean = sensorAnalyzer.ComputeMeanAirQualityInArea(latitude, longitude, radius, sensorsToExclude, attribute, startDate, endDate);
             
             cout << "\nAverage air quality of " << attribute << " for " << latitude << "," << longitude << " between " << ctime(&startDate) << " and " << ctime(&endDate) << " is " << areaMean << endl;
 
@@ -340,36 +337,36 @@ void UserInterface::rankSensors()
 // Algorithme :
 //
 {
-    puts("\nYou have chosen Rank Sensors By Similarity\n");
+    cout << "\nYou have chosen Rank Sensors By Similarity\n\n";
+
     string sensorId;
     string attribute;
     time_t startDate;
     time_t endDate;
     Sensor * sensor;
+
     cout << "Sensor id (Sensorxx) :" << endl;
     cin >> sensorId;
     sensor = parser.GetSensorById(sensorId);
 
     while (sensor == nullptr)
     {
-        cout << "Sensor id : (Sensorxx): " << endl;
+        cout << sensorId << " not found\n" << "Sensor id (Sensorxx) :" << endl;
         cin >> sensorId;
         sensor = parser.GetSensorById(sensorId);
     }
 
-    cout << "Attribute (PM10, NO2, SO2 or O3): " << endl;
+    cout << "Attribute (PM10, NO2, SO2 or O3) :" << endl;
     cin >> attribute;
 
-    cout << "Start date (HH:MM:ss dd/mm/yyyy) : " << endl;
+    cout << "Start date (HH:MM:ss dd/mm/yyyy) :" << endl;
     startDate = inputDate();
-    cout << "End date (HH:MM:ss dd/mm/yyyy) : " <<endl;
+    cout << "End date (HH:MM:ss dd/mm/yyyy) :" <<endl;
     endDate= inputDate(); 
 
-    puts("début ranking");
-    multimap<double, Sensor *> ranking = sensorAnalyzer.RankSensorsBySimilarity (sensor, attribute, startDate, endDate);
-    puts("fin ranking");
+    multimap<double, Sensor *> ranking = sensorAnalyzer.RankSensorsBySimilarity(sensor, attribute, startDate, endDate);
+
     multimap<double, Sensor *>::iterator it = ranking.begin();
-    it++;
     while (it != ranking.end())
     {
         cout << it->first << " : " << it->second->GetId() << endl;
@@ -381,35 +378,28 @@ void UserInterface::checkFunctioningOfAllSensors()
 // Algorithme :
 //
 {
-    puts("\nYou have chosen Check Functioning Of All Sensors\n");
+    cout << "\nYou have chosen Check Functioning Of All Sensors\n\n";
+
     double radius;
     time_t startDate;
     time_t endDate;
-    cout << "Radius (km) : " << endl;
+
+    cout << "Radius (km) :" << endl;
     cin >> radius;
 
     cout << "Start date (HH:MM:ss dd/mm/yyyy) : " << endl;
     startDate = inputDate();
     cout << "End date (HH:MM:ss dd/mm/yyyy) : " << endl;
-    endDate= inputDate(); 
+    endDate= inputDate();
+
     multimap<bool, Sensor *> sensorsFunctioning = sensorAnalyzer.CheckFunctioningOfAllSensors(radius, startDate, endDate, relativeDifferenceAllowed, true); // TODO true à modifier
 
     multimap<bool, Sensor *>::iterator it = sensorsFunctioning.begin();
     string val;
-    puts("");
-    it++;
+
     while (it != sensorsFunctioning.end())
     {
-        if (it->first)
-        {
-            val = "functionnal";
-        }
-        else 
-        {
-            val = "not functionnal";
-        }
-
-        cout << left << setw(8) << it->second->GetId() << " is " << val << endl;
+        cout << left << setw(8) << it->second->GetId() << " is " << (it->first ? "" : "not ") << "functional" << endl;
         it++;
     }
 }
@@ -418,89 +408,80 @@ void UserInterface::checkFunctioningOfASensor()
 // Algorithme :
 //
 {
-    puts("\nYou have chosen Check Functioning Of A Specific Sensors\n");
+    cout << "\nYou have chosen Check Functioning Of A Specific Sensors\n\n";
+
     string sensorId;
     Sensor * sensor;
     double radius;
     time_t startDate;
     time_t endDate;
 
-    cout << "Sensor id (Sensorxx): " << endl;
+
+    cout << "Sensor id (Sensorxx) :" << endl;
     cin >> sensorId;
     sensor = parser.GetSensorById(sensorId);
+
+    while (sensor == nullptr)
+    {
+        cout << sensorId << " not found\n" << "Sensor id (Sensorxx) :" << endl;
+        cin >> sensorId;
+        sensor = parser.GetSensorById(sensorId);
+    }
+
     cout << "Radius (km) : " << endl;
     cin >> radius;
+
     cout << "Start date (HH:MM:ss dd/mm/yyyy) : " << endl;
     startDate = inputDate();
     cout << "End date (HH:MM:ss dd/mm/yyyy) : " << endl;
-    endDate= inputDate(); 
-    bool value = sensorAnalyzer.CheckFunctioningOfSensor(sensor, radius, startDate, endDate, relativeDifferenceAllowed, true);
-    if (value)
-    {
-        cout << "\n" << sensorId << " is functionnal " << endl;
-    }
-    else 
-    {
-        cout << "\n" << sensorId << " is not functionnal " << endl;
-    }
+    endDate= inputDate();
+
+    bool functioning = sensorAnalyzer.CheckFunctioningOfSensor(sensor, radius, startDate, endDate, relativeDifferenceAllowed, true);
+    cout << "\n" << sensorId << " is" << (functioning ? "" : "not ") << "functionnal" << endl;
 }
 
 void UserInterface::checkReliabilityOfPrivateIndividual()
 // Algorithme :
 //
 {
-    puts("\nYou have chosen Check Reliability of Private Induviduals\n");
-                        
-    for (const PrivateIndividual & privateIndividual : parser.GetPrivateIndividuals())
-    {
-        if (privateIndividual.GetIsReliable())
-        {
-            cout << privateIndividual.GetId() << " is reliable" << endl;
-        }
-        else 
-        {
-            cout << privateIndividual.GetId() << " is not reliable" << endl;
-        }
-    }
+    cout << "\nYou have chosen Check Reliability of Private Individuals\n\n";
+
+    cout << "Functionality not implemented :'/" << endl;
 }
 
 void UserInterface::consultPointsOfPrivateIndividual()
 // Algorithme :
 //
 {
-    puts("\nYou have chosen Consult points\n");
+    cout << "\nYou have chosen Consult Your Points\n\n";
 
-    for (const PrivateIndividual & privateIndividual : parser.GetPrivateIndividuals())
-    {
-        cout << privateIndividual.GetId() << " has " << privateIndividual.GetPoints() << " points" << endl;
-    }
+    cout << "You have" << privateIndividual->GetPoints() << " points";
 }
 
 void UserInterface::radiusCleanedZone()
 // Algorithme :
 //
 {
-	puts("\nYou have chosen Consult radius of cleaned zone\n");
-    
-	puts("Air cleaner 1 cleaned a radius of xx km.");
-	puts("Air cleaner 2 cleaned a radius of yy km.");
+	cout << "\nYou have chosen Consult radius of cleaned zone\n\n";
+
+    cout << "Functionality not implemented :'/" << endl;
 }
 
 void UserInterface::airImprovement()
 // Algorithme :
 //
 {
-	puts("\nYou have chosen Consult air quality improvement level\n");
-    
-	puts("Air cleaner 1 improved air quality by xx%");
-	puts("Air cleaner 2 improved air quality by yy%");
+	cout << "\nYou have chosen Consult air quality improvement level\n\n";
+
+    cout << "Functionality not implemented :'/" << endl;
 }
 
 void UserInterface::consultDataset()
 // Algorithme :
 //
 {
-    puts("\nYou have chosen the secret option : Consult Dataset\n");
+    cout << "\nYou have chosen the secret option : Consult Dataset\n\n";
+
     for (const Attribute & attribute : parser.GetMeasurementsAttributes())
     {
         cout << attribute << endl;
