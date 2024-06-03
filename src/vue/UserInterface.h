@@ -58,6 +58,65 @@ public:
 
 protected:
 //----------------------------------------------------- Méthodes protégées
+    void chooseRole ( );
+    // Mode d'emploi :
+    //
+    // Contrat :
+    //
+
+    void meanAirQuality ( );
+    // Mode d'emploi :
+    //
+    // Contrat :
+    //
+
+    void rankSensors ( );
+    // Mode d'emploi :
+    //
+    // Contrat :
+    //
+
+    void checkFunctioningOfAllSensors ( );
+    // Mode d'emploi :
+    //
+    // Contrat :
+    //
+
+    void checkFunctioningOfASensor ( );
+    // Mode d'emploi :
+    //
+    // Contrat :
+    //
+
+    void checkReliabilityOfPrivateIndividual ( );
+    // Mode d'emploi :
+    //
+    // Contrat :
+    //
+
+    void consultPointsOfPrivateIndividual ( );
+    // Mode d'emploi :
+    //
+    // Contrat :
+    //
+
+    void radiusCleanedZone ( );
+    // Mode d'emploi :
+    //
+    // Contrat :
+    //
+
+    void airImprovement ( );
+    // Mode d'emploi :
+    //
+    // Contrat :
+    //
+
+    void consultDataset ( );
+    // Mode d'emploi :
+    //
+    // Contrat :
+    //
 
 //----------------------------------------------------- Attributs protégés
     Parser parser;
@@ -65,7 +124,7 @@ protected:
     double relativeDifferenceAllowed;
     double defaultRadius;
     vector<Sensor> sensors;
-    Provider * provider ;
+    Provider * provider;
     PrivateIndividual * privateIndividual;
 };
 
