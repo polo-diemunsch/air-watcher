@@ -15,6 +15,7 @@ using namespace std;
 #include <iostream>
 #include <ctime>
 #include <iomanip>
+#include <chrono>
 
 //------------------------------------------------------ Include personnel
 #include "UserInterface.h"
@@ -198,10 +199,13 @@ void UserInterface::MainLoop ( )
                         
                         cout << "Date de fin (HH:MM:ss dd/mm/yyyy) : " <<endl;
                         endDate= inputDate(); 
-                        
-                        double sensorMean = sensorAnalyzer.ComputeMeanAirQualityForSensor(sensor, attribute, startDate, endDate);
 
-                        cout << "\nAverage air quality of "<<attribute<<" for "<< sensorId << " between " << ctime(&startDate) << " and " << ctime(&endDate) << " is " << sensorMean << endl;
+                        auto start = chrono::steady_clock::now();
+                        double sensorMean = sensorAnalyzer.ComputeMeanAirQualityForSensor(sensor, attribute, startDate, endDate);
+                        auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - start);
+
+                        cout << "\nAverage air quality of " << attribute << " for "<< sensorId << " between " << ctime(&startDate) << " and " << ctime(&endDate) << " is " << sensorMean << endl;
+                        cout << "Time elapsed: " << elapsed.count() / 1000000.0 << " seconds" << endl;
 
                         break;
                     } 
@@ -231,11 +235,14 @@ void UserInterface::MainLoop ( )
                         startDate = inputDate();
                         
                         cout << "End date (HH:MM:ss dd/mm/yyyy) : " <<endl;
-                        endDate= inputDate(); 
+                        endDate= inputDate();
 
-                        double areaMean = sensorAnalyzer.ComputeMeanAirQualityInArea (latitude, longitude, radius, sensorsToExclude, attribute, startDate, endDate );
-                        
+                        auto start = chrono::steady_clock::now();
+                        double areaMean = sensorAnalyzer.ComputeMeanAirQualityInArea (latitude, longitude, radius, sensorsToExclude, attribute, startDate, endDate);
+                        auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - start);
+
                         cout << "\nAverage air quality of " << attribute << " for "<< latitude << "," << longitude << " between " << ctime(&startDate) << " and " << ctime(&endDate) << " is " << areaMean << endl;
+                        cout << "Time elapsed: " << elapsed.count() / 1000000.0 << " seconds" << endl;
 
                         break;
                     }
@@ -256,15 +263,16 @@ void UserInterface::MainLoop ( )
 
                 cout << "Attribute (PM10, NO2, SO2 or O3): "<< endl;
                 cin>>attribute;
-                
-                
+
                 cout << "Start date (HH:MM:ss dd/mm/yyyy) : " << endl;
                 startDate = inputDate();
                 cout << "End date (HH:MM:ss dd/mm/yyyy) : " <<endl;
                 endDate= inputDate(); 
 
                 puts("début ranking");
+                auto start = chrono::steady_clock::now();
                 multimap<double, Sensor *> ranking = sensorAnalyzer.RankSensorsBySimilarity (sensor, attribute, startDate, endDate);
+                auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - start);
                 puts("fin ranking");
                 multimap<double, Sensor *>::iterator it = ranking.begin();
                 it++;
@@ -273,6 +281,7 @@ void UserInterface::MainLoop ( )
                     cout << (*it).first << " : " << (string)(*it).second->GetId() << endl;
                     it++;
                 }
+                cout << "Time elapsed: " << elapsed.count() / 1000000.0 << " seconds" << endl;
                 break;
             } 
 
@@ -289,14 +298,16 @@ void UserInterface::MainLoop ( )
                         time_t endDate;
                         cout << "Radius (km) : "<< endl;
                         cin>>radius;
-                    
-                            
+
                         cout << "Start date (HH:MM:ss dd/mm/yyyy) : " << endl;
                         startDate = inputDate();
                         cout << "End date (HH:MM:ss dd/mm/yyyy) : " <<endl;
                         endDate= inputDate(); 
+
+                        auto start = chrono::steady_clock::now();
                         multimap<bool, Sensor *> sensorsFunctioning = sensorAnalyzer.CheckFunctioningOfAllSensors (radius, startDate, endDate, relativeDifferenceAllowed, true); //true à modifier
-                        
+                        auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - start);
+
                         multimap<bool, Sensor *>::iterator it = sensorsFunctioning.begin();
                         string val;
                         puts("");
@@ -316,6 +327,7 @@ void UserInterface::MainLoop ( )
                             cout << left << setw (8)<< (string)(*it).second->GetId() << " is " << (string) val << endl;
                             it++;
                         }
+                        cout << "Time elapsed: " << elapsed.count() / 1000000.0 << " seconds" << endl;
                         break;
                     }
                     case 4 : //Government Agency && Check Functioning Of A Specific Sensors
@@ -337,7 +349,11 @@ void UserInterface::MainLoop ( )
                         startDate = inputDate();
                         cout << "End date (HH:MM:ss dd/mm/yyyy) : " <<endl;
                         endDate= inputDate(); 
+
+                        auto start = chrono::steady_clock::now();
                         bool value = sensorAnalyzer.CheckFunctioningOfSensor (sensor, radius, startDate, endDate, relativeDifferenceAllowed, true );
+                        auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - start);
+
                         if (value)
                         {
                             cout << "\n" <<sensorId << " is functionnal " << endl;
@@ -346,12 +362,14 @@ void UserInterface::MainLoop ( )
                         {
                             cout << "\n" <<sensorId << " is not functionnal " << endl;
                         }
+                        cout << "Time elapsed: " << elapsed.count() / 1000000.0 << " seconds" << endl;
                         break;
                     }
                     case 5: //Government Agency && Reliability
                     {
                         puts("\nYou have chosen Check Reliability of Private Induviduals\n");
-                        
+
+                        auto start = chrono::steady_clock::now();
                         for (const PrivateIndividual & privateIndividual : parser.GetPrivateIndividuals())
                         {
                             if (privateIndividual.GetIsReliable())
@@ -363,6 +381,8 @@ void UserInterface::MainLoop ( )
                                 cout << privateIndividual.GetId() <<" is not reliable" << endl;
                             }
                         }
+                        auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - start);
+                        cout << "Time elapsed: " << elapsed.count() / 1000000.0 << " seconds" << endl;
                         break;
                     }
                 }
@@ -370,12 +390,14 @@ void UserInterface::MainLoop ( )
                 if (role == 3 && option == 3) //Private Individual && Consult Points
                 {
                     puts("\nYou have chosen Consult points\n");
-                    
+
+                    auto start = chrono::steady_clock::now();
                     for (const PrivateIndividual & privateIndividual : parser.GetPrivateIndividuals())
                     {
                         cout << privateIndividual.GetId() <<" has " << privateIndividual.GetPoints() << " points" << endl;
                     }
-                    
+                    auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - start);
+                    cout << "Time elapsed: " << elapsed.count() / 1000000.0 << " seconds" << endl;
                     break;
                 }
         
@@ -383,12 +405,22 @@ void UserInterface::MainLoop ( )
                 {
                     switch (option) 
                     {
-                    case 3:
-                        radius_cleaned_zone();
-                        break;
-                    case 4:
-                        air_improvement();
-                        break;
+                        case 3:
+                        {
+                            auto start = chrono::steady_clock::now();
+                            radius_cleaned_zone();
+                            auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - start);
+                            cout << "Time elapsed: " << elapsed.count() / 1000000.0 << " seconds" << endl;
+                            break;
+                        }
+                        case 4:
+                        {
+                            auto start = chrono::steady_clock::now();
+                            air_improvement();
+                            auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - start);
+                            cout << "Time elapsed: " << elapsed.count() / 1000000.0 << " seconds" << endl;
+                            break;
+                        }
                     }
                 }
             }
@@ -466,8 +498,15 @@ relativeDifferenceAllowed(relativeDifferenceAllowed), defaultRadius(defaultRadiu
     const string privateIndividualsPath = datasetPath + "/users.csv";
     const string cleanersPath = datasetPath + "/cleaners.csv";
     const string providersPath = datasetPath + "/providers.csv";
+
+    cout << "Loading..." << endl;
+    auto start = chrono::steady_clock::now();
     parser = Parser(sensorsPath, attributesPath, measurementsPath,
                     privateIndividualsPath, cleanersPath, providersPath);
+    auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - start);
+    
+    cout << "Done Loading" << endl;
+    cout << "Time elapsed: " << elapsed.count() / 1000000.0 << " seconds" << endl;
     
     vector<Sensor> sensors = parser.GetSensors();
     vector<Sensor *> sensorsPointers;
