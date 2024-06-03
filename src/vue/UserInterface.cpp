@@ -221,8 +221,8 @@ void UserInterface::chooseRole()
 // Algorithme :
 //
 {
-    string ProviderId;
-    string PrivateIndividualId;
+    string providerId;
+    string privateIndividualId;
 
 	cout << "Choose your role :\n";
 	cout << "\t1. Government Agency\n";
@@ -240,14 +240,30 @@ void UserInterface::chooseRole()
             break;
         case 2:
             cout << "Provider id (Providerxx) :" << endl;
-            cin >> ProviderId;
-            provider = parser.GetProviderById(ProviderId);
+            cin >> providerId;
+            provider = parser.GetProviderById(providerId);
+
+            while (provider == nullptr)
+            {
+                cout << providerId << " not found\n" << "Provider id (Providerxx) :" << endl;
+                cin >> providerId;
+                provider = parser.GetProviderById(providerId);
+            }
+
             menuPr();
             break;
         case 3:
             cout << "Private Individual id (Userxx) :" << endl;
-            cin >> PrivateIndividualId;
-            privateIndividual = parser.GetPrivateIndividualById(PrivateIndividualId);
+            cin >> privateIndividualId;
+            privateIndividual = parser.GetPrivateIndividualById(privateIndividualId);
+
+            while (provider == nullptr)
+            {
+                cout << privateIndividualId << " not found\n" << "Private Individual id (Userxx) :" << endl;
+                cin >> privateIndividualId;
+                privateIndividual = parser.GetPrivateIndividualById(privateIndividualId);
+            }
+
             menuPI();
             break;
         default:
@@ -263,8 +279,8 @@ void UserInterface::meanAirQuality()
     int mean;
     cout << "\nYou have chosen Consult Mean Air Quality\n\n";
     cout << "You can either :\n";
-    cout << "\t 1. Consult Mean Air Quality For Sensor\n";
-    cout << "\t 2. Consult Mean Air Quality In Area" << endl;
+    cout << "\t1. Consult Mean Air Quality For Sensor\n";
+    cout << "\t2. Consult Mean Air Quality In Area" << endl;
     cin >> mean;
 
     switch (mean)
@@ -276,10 +292,17 @@ void UserInterface::meanAirQuality()
             time_t startDate;
             time_t endDate;
             Sensor * sensor;
-            
+
             cout << "Sensor id (Sensorxx) :" << endl;
             cin >> sensorId;
             sensor = parser.GetSensorById(sensorId);
+
+            while (sensor == nullptr)
+            {
+                cout << sensorId << " not found\n" << "Sensor id (Sensorxx) :" << endl;
+                cin >> sensorId;
+                sensor = parser.GetSensorById(sensorId);
+            }
 
             cout << "Attribute (PM10, NO2, SO2 or O3) :" << endl;
             cin >> attribute;
@@ -392,10 +415,9 @@ void UserInterface::checkFunctioningOfAllSensors()
     cout << "End date (HH:MM:ss dd/mm/yyyy) : " << endl;
     endDate= inputDate();
 
-    multimap<bool, Sensor *> sensorsFunctioning = sensorAnalyzer.CheckFunctioningOfAllSensors(radius, startDate, endDate, relativeDifferenceAllowed, true); // TODO true à modifier
+    multimap<bool, Sensor *> sensorsFunctioning = sensorAnalyzer.CheckFunctioningOfAllSensors(radius, startDate, endDate, relativeDifferenceAllowed, true);
 
     multimap<bool, Sensor *>::iterator it = sensorsFunctioning.begin();
-    string val;
 
     while (it != sensorsFunctioning.end())
     {
@@ -415,7 +437,6 @@ void UserInterface::checkFunctioningOfASensor()
     double radius;
     time_t startDate;
     time_t endDate;
-
 
     cout << "Sensor id (Sensorxx) :" << endl;
     cin >> sensorId;
@@ -455,7 +476,7 @@ void UserInterface::consultPointsOfPrivateIndividual()
 {
     cout << "\nYou have chosen Consult Your Points\n\n";
 
-    cout << "You have" << privateIndividual->GetPoints() << " points";
+    cout << "You have " << privateIndividual->GetPoints() << " points" << endl;
 }
 
 void UserInterface::radiusCleanedZone()
