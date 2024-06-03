@@ -148,8 +148,8 @@ pair<int, int> testParser(const string datasetPath)
     string cleanersPath = datasetPath + "/cleaners.csv";
     string providersPath = datasetPath + "/providers.csv";
 
-    Parser parser(sensorsPath, attributesPath, measurementsPath,
-        privateIndividualsPath, cleanersPath, providersPath);
+    Parser parser = Parser();
+    parser.Parse(sensorsPath, attributesPath, measurementsPath, privateIndividualsPath, cleanersPath, providersPath);
     
     cout << "\tParser Measurement Attributes tests ";
     localTestCount = 0;
@@ -756,7 +756,7 @@ pair<int,int> testRankSensorBySimilarity()
 
     cout << "\tRank Sensor By Similarity ";
 
-    //TEST1 : Sensors similaires et différents
+    // Capteurs similaires et différents
     time_t date = time(NULL) - 3;
     Sensor sensor1 = Sensor("sensor1", 0.0, 0.0);
     Sensor sensor2 = Sensor("sensor2", 0.0, 0.0);
@@ -783,15 +783,10 @@ pair<int,int> testRankSensorBySimilarity()
 
     SensorAnalyzer analyzer = SensorAnalyzer ( sensors );
 
-    expected = multimap<double, Sensor*>({{1.0, &sensor2}, {9980.0, &sensor3}});
+    expected = multimap<double, Sensor*>({{0.05, &sensor2}, {499.0, &sensor3}});
     got = analyzer.RankSensorsBySimilarity(&sensor1, "SO2", date - 30*24*60*60, date);
 
-    /*multimap<double, Sensor *>::iterator it;
-
-    for(it = got.begin(); it != got.end(); it++)
-    {
-        cout << (*it).first << ":" << (*it).second->GetId() << endl;
-    }*/
+    multimap<double, Sensor *>::iterator it;
     
     if (expected == got)
     {
@@ -805,7 +800,7 @@ pair<int,int> testRankSensorBySimilarity()
     }
     testCount++;
 
-    //Test 2 Il n’y a pas de sensors pour comparer
+    // Test sans capteurs pour comparer
 
     sensors = vector<Sensor *>({&sensor1});
     analyzer = SensorAnalyzer ( sensors );
@@ -828,7 +823,6 @@ pair<int,int> testRankSensorBySimilarity()
     cout << "[" << successCount << "/" << testCount << "]" << endl;
 
     return make_pair(successCount, testCount);
-
 } //----- fin de testRankSensorBySimilarity
 
 
