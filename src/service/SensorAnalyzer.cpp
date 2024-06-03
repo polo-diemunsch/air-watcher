@@ -88,13 +88,13 @@ double SensorAnalyzer::ComputeMeanAirQualityInArea ( const double latitude, cons
             {
                 sum += measurement.GetValue();
                 measurementCount++;
-                // sensorMeasurementCount++;
             }
-        }
 
-        if (privateIndividual != nullptr)
-        {
-            privateIndividual->AddPoints(1);
+            if (privateIndividual != nullptr)
+            {
+                privateIndividual->AddPoints(1);
+                // cout << "Private individual " << privateIndividual->GetId() << " has " << privateIndividual->GetPoints() << " points" << endl;
+            }
         }
     }
 
@@ -177,7 +177,7 @@ multimap<double, Sensor *> SensorAnalyzer::RankSensorsBySimilarity( const Sensor
     for(Sensor * sensor : sensors)
     {
         PrivateIndividual * privateIndividual = sensor->GetPrivateIndividual();
-        if (sensor != sensorToCompareTo && (privateIndividual == nullptr || privateIndividual->GetIsReliable()))
+        if (*sensor != *sensorToCompareTo && (privateIndividual == nullptr || privateIndividual->GetIsReliable()))
         {
             meanDynamic = ComputeMeanAirQualityForSensor(sensor, attributeID, startDate, endDate);            
             ranking.insert({abs(meanRefrence - meanDynamic), sensor});

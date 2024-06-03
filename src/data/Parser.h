@@ -56,6 +56,18 @@ public:
     // Contrat :
     // 
 
+    PrivateIndividual * GetPrivateIndividualById ( const string & id );
+    // Mode d'emploi :
+    //
+    // Contrat :
+    //
+
+    Provider * GetProviderById ( const string & id );
+    // Mode d'emploi :
+    //
+    // Contrat :
+    //
+
     vector<PrivateIndividual> GetPrivateIndividuals ( ) const;
     // Mode d'emploi :
     // 
