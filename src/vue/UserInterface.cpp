@@ -43,6 +43,10 @@ time_t inputDate( bool isStartDate )
         istringstream dateStringStream;
         tm tm;
 
+        // Init
+        dateStringStream = istringstream("1970-01-01 01:00:00");
+        dateStringStream >> get_time(&tm, "%Y-%m-%d %H:%M:%S");
+
         getline(cin, date);
 
         const vector<string> formats{"%d/%m/%Y", "%H:%M:%S%t%d/%m/%Y"};
@@ -89,7 +93,28 @@ string nanosecondsToDisplayableTime( chrono::nanoseconds ns )
     stringstream ss;
     ss.precision(4);
     ss << ajustedCount;
-    return ss.str() + units[i];
+    return ss.str() + ' ' + units[i];
+}
+
+string attributeValueToAtmoIndex( double value, string attribueId )
+// Algorithme :
+//
+{
+    vector<string> levels{"Good", "Average", "Degraded", "Bad", "Very Bad", "Extremely Bad"};
+    map<string, vector<double>> thresholdsByAttribute{
+        {"PM10", {20.0, 40.0, 50.0, 100.0, 150.0}},
+        {"NO2", {40.0, 90.0, 120.0, 230.0, 340.0}},
+        {"SO2", {100.0, 200.0, 350.0, 500.0, 750.0}},
+        {"O3", {50.0, 100.0, 130.0, 240.0, 380.0}},
+    };
+
+    vector<double> thresholds = thresholdsByAttribute[attribueId];
+    size_t i = 0;
+
+    while (i < thresholds.size() && value > thresholds[i])
+        i++;
+
+    return levels[i];
 }
 
 //----------------------------------------------------- Méthodes publiques
@@ -102,7 +127,10 @@ void UserInterface::MainLoop( )
     chooseRole();
 
     int option = 1;
+
+    cout << "> " << flush;
     cin >> option;
+
     while (option) 
     {
         switch (option)
@@ -418,11 +446,13 @@ void UserInterface::meanAirQuality( )
             double sensorMean = sensorAnalyzer.ComputeMeanAirQualityForSensor(sensor, attributeId, startDate, endDate);
             chrono::nanoseconds elapsed = std::chrono::steady_clock::now() - start;
 
-            cout << "\nAverage air quality of "<< attributeId << " for " << sensorId << " between "
-                 << put_time(localtime(&startDate), "%H:%M:%S %d/%m/%Y") << " and "
-                 << put_time(localtime(&endDate), "%H:%M:%S %d/%m/%Y") << " is "
-                 << sensorMean << attribute->GetUnit()
-                 << "\n\nTime elapsed: " << nanosecondsToDisplayableTime(elapsed) << endl;
+            cout << "\nAir quality of "<< attributeId << " for " << sensorId
+                 << " between " << put_time(localtime(&startDate), "%H:%M:%S %d/%m/%Y")
+                 << "\nand " << put_time(localtime(&endDate), "%H:%M:%S %d/%m/%Y")
+                 << " is " << attributeValueToAtmoIndex(sensorMean, attributeId)
+                 << " (" << sensorMean << " " << attribute->GetUnit() << ")\n";
+
+            cout << "\nTime elapsed: " << nanosecondsToDisplayableTime(elapsed) << endl;
 
             break;
         } 
@@ -431,7 +461,7 @@ void UserInterface::meanAirQuality( )
             double latitude;
             double longitude;
             double radius;
-            vector<Sensor *> sensorsToExclude = {};
+            vector<Sensor> sensorsToExclude;
             string attributeId;
             time_t startDate;
             time_t endDate;
@@ -469,12 +499,14 @@ void UserInterface::meanAirQuality( )
             double areaMean = sensorAnalyzer.ComputeMeanAirQualityInArea(latitude, longitude, radius, sensorsToExclude, attributeId, startDate, endDate);
             chrono::nanoseconds elapsed = std::chrono::steady_clock::now() - start;
 
-            cout << "\nAverage air quality of " << attributeId << " for coorinates ("
-                 << latitude << ", " << longitude << ") and radius " << radius << " km between "
-                 << put_time(localtime(&startDate), "%H:%M:%S %d/%m/%Y") << " and "
-                 << put_time(localtime(&endDate), "%H:%M:%S %d/%m/%Y") << " is "
-                 << areaMean << attribute->GetUnit()
-                 << "\n\nTime elapsed: " << nanosecondsToDisplayableTime(elapsed) << endl;
+            cout << "\nAir quality of " << attributeId << " for coorinates ("
+                 << latitude << ", " << longitude << ") and radius " << radius << " km"
+                 << " between\n" << put_time(localtime(&startDate), "%H:%M:%S %d/%m/%Y")
+                 << " and " << put_time(localtime(&endDate), "%H:%M:%S %d/%m/%Y")
+                 << " is "<< attributeValueToAtmoIndex(areaMean, attributeId)
+                 << " (" << areaMean << " " << attribute->GetUnit() << ")\n";
+
+            cout << "\nTime elapsed: " << nanosecondsToDisplayableTime(elapsed) << endl;
 
             break;
         }
@@ -601,10 +633,11 @@ void UserInterface::checkFunctioningOfASensor( )
     bool functioning = sensorAnalyzer.CheckFunctioningOfSensor(sensor, defaultRadius, startDate, endDate, relativeDifferenceAllowed, true);
     chrono::nanoseconds elapsed = std::chrono::steady_clock::now() - start;
 
-    cout << "\n" << sensorId << " is" << (functioning ? "" : "not ") << "functionnal between "
-         << put_time(localtime(&startDate), "%H:%M:%S %d/%m/%Y") << " and "
-         << put_time(localtime(&endDate), "%H:%M:%S %d/%m/%Y")
-         << "\n\nTime elapsed: " << nanosecondsToDisplayableTime(elapsed) << endl;
+    cout << "\n" << sensorId << " is " << (functioning ? "" : "not ") << "functionnal"
+         << " between " << put_time(localtime(&startDate), "%H:%M:%S %d/%m/%Y")
+         << " and " << put_time(localtime(&endDate), "%H:%M:%S %d/%m/%Y") << "\n";
+    
+    cout << "\nTime elapsed: " << nanosecondsToDisplayableTime(elapsed) << endl;
 }
 
 void UserInterface::checkReliabilityOfPrivateIndividual( )
