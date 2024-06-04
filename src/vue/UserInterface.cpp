@@ -500,7 +500,7 @@ void UserInterface::meanAirQuality( )
             double areaMean = sensorAnalyzer.ComputeMeanAirQualityInArea(latitude, longitude, radius, sensorsToExclude, attributeId, startDate, endDate);
             chrono::nanoseconds elapsed = std::chrono::steady_clock::now() - start;
 
-            cout << "\nAir quality of " << attributeId << " for coorinates ("
+            cout << "\nAir quality of " << attributeId << " for coordinates ("
                  << latitude << ", " << longitude << ") and radius " << radius << " km"
                  << " between\n" << put_time(localtime(&startDate), "%H:%M:%S %d/%m/%Y")
                  << " and " << put_time(localtime(&endDate), "%H:%M:%S %d/%m/%Y")
