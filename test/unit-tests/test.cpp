@@ -517,7 +517,7 @@ pair<int, int> testMeanAirQualityInArea()
 
     // test exclusion d'un capteur sensorMean0
     expected = 22.0;
-    got = sensorAnalyzer.ComputeMeanAirQualityInArea(20, 20, 4000, {&sensorMean0}, "SO2", 0, 2000);
+    got = sensorAnalyzer.ComputeMeanAirQualityInArea(20, 20, 4000, {sensorMean0}, "SO2", 0, 2000);
     if (got == expected)
     {
         successCount++;

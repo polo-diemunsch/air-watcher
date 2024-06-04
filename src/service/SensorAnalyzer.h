@@ -51,7 +51,7 @@ public:
         const double latitude,
         const double longitude,
         const double radius,
-        vector<Sensor *> sensorsToExclude,
+        vector<Sensor> sensorsToExclude,
         const string & attributeId,
         const time_t & startDate,
         const time_t & endDate

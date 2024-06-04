@@ -52,7 +52,7 @@ double SensorAnalyzer::ComputeMeanAirQualityForSensor( const Sensor * sensor, co
 } //----- Fin de ComputeMeanAirQualityForSensor
 
 double SensorAnalyzer::ComputeMeanAirQualityInArea ( const double latitude, const double longitude, const double radius,
-    vector<Sensor *> sensorsToExclude, const string & attributeId, const time_t & startDate, const time_t & endDate )
+    vector<Sensor> sensorsToExclude, const string & attributeId, const time_t & startDate, const time_t & endDate )
 // Algorithme :
 //
 {
@@ -64,7 +64,7 @@ double SensorAnalyzer::ComputeMeanAirQualityInArea ( const double latitude, cons
     
     for (const Sensor * sensor : sensors)
     {
-        vector<Sensor *>::iterator it = find(sensorsToExclude.begin(), sensorsToExclude.end(), sensor);
+        vector<Sensor>::iterator it = find(sensorsToExclude.begin(), sensorsToExclude.end(), *sensor);
         PrivateIndividual * privateIndividual = sensor->GetPrivateIndividual();
         if (it != sensorsToExclude.end() || !sensor->GetIsFunctioning() || (privateIndividual != nullptr && !privateIndividual->GetIsReliable()))
         {
@@ -116,7 +116,7 @@ bool SensorAnalyzer::CheckFunctioningOfSensor ( Sensor * sensor, const double ra
                 sensor->GetLatitude(),
                 sensor->GetLongitude(),
                 radius,
-                vector<Sensor *>({sensor}),
+                {*sensor},
                 attributeId,
                 startDate,
                 endDate
