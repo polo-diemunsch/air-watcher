@@ -46,6 +46,7 @@ time_t inputDate( bool isStartDate )
         // Init
         dateStringStream = istringstream("1970-01-01 01:00:00");
         dateStringStream >> get_time(&tm, "%Y-%m-%d %H:%M:%S");
+        mktime(&tm);
 
         getline(cin, date);
 
