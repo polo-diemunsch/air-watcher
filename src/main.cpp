@@ -93,8 +93,8 @@ int main(int argc, char *argv[])
     }
     
     string datasetPath = "../dataset ";
-    double relativeDifferenceAllowed = 0.1; // TODO default values
-    double defaultRadius = 10; // TODO default values
+    double relativeDifferenceAllowed = 0.2;
+    double defaultRadius = 75;
     string line;
 
     while (getline(configFile, line))
